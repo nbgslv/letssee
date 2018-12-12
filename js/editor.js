@@ -29,9 +29,14 @@ Editor.canvas.initCanvas = function (containerID, height, width) {
 
     _canvasContainer.parentNode.insertBefore(_container, _canvasContainer);
     _container.appendChild(_canvasContainer);
+
+    Editor.canvas.initToolbars(_container, plugins, options);
 };
 
-Editor.canvas.eventHandler = function (event, eventFunction){
+Editor.canvas.initToolbars = function(container, plugins, options){
+    let _mainToolbar = document.createElement('div');
+    _mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
+    container.appendChild(_mainToolbar);
 
 };
 
