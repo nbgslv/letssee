@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1d66ba1b-8eb0-4cbc-b96a-c8610c817ac0" name="Default Changelist" comment="" />
+    <list default="true" id="1d66ba1b-8eb0-4cbc-b96a-c8610c817ac0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/js/editor.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/editor.js" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="34" />
+            <state relative-caret-position="425">
+              <caret line="28" column="29" lean-forward="true" selection-start-line="27" selection-start-column="48" selection-end-line="28" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -31,7 +33,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
+            <state relative-caret-position="136">
               <caret line="8" column="35" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="35" />
             </state>
           </provider>
@@ -61,9 +63,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="951" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1296" />
+    <option name="height" value="784" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -71,28 +74,18 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="letse" type="b2602c69:ProjectViewProjectNode" />
-              <item name="letse" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="letse" type="b2602c69:ProjectViewProjectNode" />
-              <item name="letse" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="letse" type="b2602c69:ProjectViewProjectNode" />
-              <item name="letse" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="letssee" type="b2602c69:ProjectViewProjectNode" />
+              <item name="letssee" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -117,6 +110,16 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/letssee/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.index.html" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -131,11 +134,12 @@
       <workItem from="1544094592453" duration="888000" />
       <workItem from="1544117385842" duration="5832000" />
       <workItem from="1544292631402" duration="13124000" />
+      <workItem from="1544654076888" duration="5842000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34425000" />
+    <option name="totallyTimeSpent" value="40267000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -147,14 +151,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-8" y="-8" width="1296" height="784" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="Image Layers" order="1" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Learn" order="4" weight="0.32910448" />
-      <window_info content_ui="combo" id="Project" order="5" sideWeight="0.49846625" visible="true" weight="0.22604097" />
+      <window_info content_ui="combo" id="Project" order="5" sideWeight="0.49846625" visible="true" weight="0.22575517" />
       <window_info id="Favorites" order="6" sideWeight="0.50153375" side_tool="true" weight="0.25" />
       <window_info id="Structure" order="7" sideWeight="0.50153375" side_tool="true" weight="0.25" />
       <window_info id="npm" order="8" side_tool="true" />
@@ -165,7 +170,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.23970588" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32941177" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.20890938" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="10" />
@@ -223,15 +228,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
+        <state relative-caret-position="136">
           <caret line="8" column="35" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="35" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="34" />
+        <state relative-caret-position="425">
+          <caret line="28" column="29" lean-forward="true" selection-start-line="27" selection-start-column="48" selection-end-line="28" selection-end-column="29" />
         </state>
       </provider>
     </entry>
