@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1d66ba1b-8eb0-4cbc-b96a-c8610c817ac0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/editor.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/editor.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -24,8 +25,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="28" column="29" lean-forward="true" selection-start-line="27" selection-start-column="48" selection-end-line="28" selection-end-column="29" />
+            <state relative-caret-position="348">
+              <caret line="65" column="44" selection-start-line="65" selection-start-column="44" selection-end-line="65" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -134,12 +135,12 @@
       <workItem from="1544094592453" duration="888000" />
       <workItem from="1544117385842" duration="5832000" />
       <workItem from="1544292631402" duration="13124000" />
-      <workItem from="1544654076888" duration="5842000" />
+      <workItem from="1544654076888" duration="8482000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40267000" />
+    <option name="totallyTimeSpent" value="42907000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -235,8 +236,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="28" column="29" lean-forward="true" selection-start-line="27" selection-start-column="48" selection-end-line="28" selection-end-column="29" />
+        <state relative-caret-position="348">
+          <caret line="65" column="44" selection-start-line="65" selection-start-column="44" selection-end-line="65" selection-end-column="44" />
         </state>
       </provider>
     </entry>

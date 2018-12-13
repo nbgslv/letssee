@@ -10,74 +10,63 @@ Editor.canvas.initCanvas = function (containerID, height, width, plugins, option
     let _width = width || 300;
 
     /*
-    * The canvas element is nested inside the canvas container <div> which id is set by the user.
-    * The canvas container <div> is nested inside the main container <div>
+    * The canvas is built into the specified container(<div>).
+    * Each element is nested inside a <div> container, following the structure:
+    *
+    * Editor-container(containerID)
+    * |------- row container(rowA)
+    * |   |--- main tool bar
+    * |------- row container(rowB)
+    *     |--- canvas container
+    *     | |- canvas
+    *     |--- second tool bar
      */
 
-    let _canvasContainer = document.getElementById(_containerID);
-    let _canvas = document.createElement('canvas');
-    let _container = document.createElement('div');
-    let divRow = document.createElement('div');
-    divRow.setAttribute('class', 'row');
+    // rowA and rowB creation
+    let _rowA = document.createElement('div');
+    _rowA.setAttribute('class', 'row');
+    _rowA.setAttribute('id', 'rowA')
+    let _rowB = document.createElement('div');
+    _rowB.setAttribute('class', 'row');
+    _rowB.setAttribute('id', 'rowB');
+    _rowB.style.position = 'absolute';
 
+    // nesting rowA and rowB inside containerID
+    let _container = document.getElementById(_containerID);
+    _container.appendChild(_rowA);
+    _container.appendChild(_rowB);
+
+    // main tool bar creation
+    let _mainToolbar = document.createElement('div');
+    _mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
+    _mainToolbar.style.width = _width + 'px';//TODO check if attribute contains px/is textעןא
+    _mainToolbar.style.height = '50px'; //TODO select height from options
+    _mainToolbar.style.border = '1px solid rgb(0, 0, 0)'; //TODO select style from options
+    _rowA.appendChild(_mainToolbar);
+
+    // canvas container and canvas creation
+    let _canvasContainer = document.createElement('div');
+    _canvasContainer.setAttribute('id', 'letse-canvas-container');
+    _canvasContainer.style.cssFloat = 'left';
+    _rowB.appendChild(_canvasContainer);
+
+    let _canvas = document.createElement('canvas');
     _canvas.setAttribute('height', _height);
     _canvas.setAttribute('width', _width);
     _canvas.setAttribute('id', 'letse-canvas');
     _canvas.style.border = '1px solid #000'; //TODO add to css
-    let row = _canvasContainer.appendChild(divRow);
-    row.appendChild(_canvas);
+    _canvasContainer.appendChild(_canvas);
 
-    _container.setAttribute('id', 'letse-editor');
-    _container.style.height = '${_height}px'; //TODO add to css
-    _container.style.width = '${_width}px'; //TODO add to css
-
-    _canvasContainer.parentNode.insertBefore(_container, _canvasContainer);
-    _container.appendChild(_canvasContainer);
-
-    let plugins = {};
-    let options = {};
-    //Editor.canvas.initToolbars(_container, _containerID, options, _width, _height);
-};
-
-Editor.canvas.initToolbars = function(container, containerID, plugins, options, width, height){
-
-    let _width = width;
-    let _height = height;
-    let _containerID = containerID;
-
-    //Main toolbart
-    let row = container.appendChild(divRow);
-    let _mainToolbar = document.createElement('div');
-    _mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
-    _mainToolbar.style.width = _width;
-    _mainToolbar.style.height = '50px'; //TODO select height from options
-    _mainToolbar.style.border = '1px solid rgb(0, 0, 0)'; //TODO select style from options
-    row.appendChild(_mainToolbar);
-
-    //Second toolbar
+    // second tool bar creation
     let _secondToolbar = document.createElement('div');
-    let _canvas = document.getElementById(_containerID);
     _secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
-    _secondToolbar.style.height = _height;
+    _secondToolbar.style.height = _height + 'px';
     _secondToolbar.style.width = '50px'; //TODO select height from options
     _secondToolbar.style.border = '1px solid rgb(0, 0, 0)'; //TODO select style from options
-    _canvas.parentNode.insertBefore(_secondToolbar, _canvas);
-
-    // Editor.plugins.insertToToolbars(plugins, _mainToolbar, _secondToolbar);
+    _secondToolbar.style.cssFloat = 'right';
+    _rowB.appendChild(_secondToolbar);
 };
-/*
-Editor.plugins.insertToToolbars = function(plugins, mainToolbar, secondToolbar){
-    for (let i=0; i < plugins.length; i++){
-        let _pluginDiv = document.createElement('div');
-        Editor.plugins.plugin = Editor.plugins.getPlugin(plugin[i]);
-        if (Editor.plugins.plugin[i].toolbar === 'main') {
-            mainToolbar.appendChild(_pluginDiv);
-        } else {
-            secondToolbar.appendChild(_pluginDiv);
-        }
 
-    }
-};
-*/
-let editor = Editor.canvas.initCanvas('letse-canvas-container');
+
+let editor = Editor.canvas.initCanvas('letse-canvas-container', 300, 300);
 
