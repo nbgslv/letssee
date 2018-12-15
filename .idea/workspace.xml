@@ -2,8 +2,79 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1d66ba1b-8eb0-4cbc-b96a-c8610c817ac0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/pencil.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/editor.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/editor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ajv-errors/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ajv-errors/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ajv-errors/lib/dot/errorMessage.jst" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ajv-errors/lib/dot/errorMessage.jst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ajv-errors/lib/dotjs/errorMessage.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ajv-errors/lib/dotjs/errorMessage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ajv-errors/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ajv-errors/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/babel-core/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/babel-core/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-cache-dir/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-cache-dir/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-cache-dir/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-cache-dir/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-cache-dir/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-cache-dir/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-cache-dir/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-cache-dir/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/lodash/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/lodash/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-limit/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-limit/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-limit/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-limit/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-limit/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-limit/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-try/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-try/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-try/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-try/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-try/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-try/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-try/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-try/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pkg-dir/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pkg-dir/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pkg-dir/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pkg-dir/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pkg-dir/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pkg-dir/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/schema-utils/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/schema-utils/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/schema-utils/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/schema-utils/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/schema-utils/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/schema-utils/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/schema-utils/src/ValidationError.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/schema-utils/src/ValidationError.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/schema-utils/src/validateOptions.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/schema-utils/src/validateOptions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/src/ValidationError.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser-webpack-plugin/node_modules/schema-utils/src/validateOptions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser/dist/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/terser/dist/bundle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser/dist/bundle.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/terser/dist/bundle.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser/lib/compress.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/terser/lib/compress.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser/lib/scope.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/terser/lib/scope.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/terser/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/terser/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/SECURITY.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/SECURITY.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/buildin/amd-define.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/buildin/amd-define.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/buildin/amd-options.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/buildin/amd-options.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/buildin/module.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/buildin/module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/buildin/system.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/buildin/system.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/declarations/WebpackOptions.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/declarations/WebpackOptions.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/hot/emitter.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/hot/emitter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/lib/Chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/lib/Chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/lib/FlagDependencyExportsPlugin.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/lib/FlagDependencyExportsPlugin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/lib/NormalModule.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/lib/NormalModule.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/lib/ResolverFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/lib/ResolverFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/lib/optimize/SplitChunksPlugin.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/lib/optimize/SplitChunksPlugin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/lib/webpack.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/lib/webpack.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/schemas/WebpackOptions.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/schemas/WebpackOptions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,8 +96,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="65" column="44" selection-start-line="65" selection-start-column="44" selection-end-line="65" selection-end-column="44" />
+            <state relative-caret-position="174">
+              <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/main.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -34,8 +114,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="35" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="35" />
+            <state relative-caret-position="228">
+              <caret line="12" column="7" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -45,8 +125,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -56,18 +136,33 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/js/main.js" />
-        <option value="$PROJECT_DIR$/css/main.css" />
+        <option value="$PROJECT_DIR$/.eslintrc.json" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/webpack.config.js" />
+        <option value="$PROJECT_DIR$/js/pencil.js" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/css/main.css" />
         <option value="$PROJECT_DIR$/js/editor.js" />
       </list>
     </option>
   </component>
+  <component name="JsBowerSettings">
+    <node-interpreter value="project" />
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1296" />
-    <option name="height" value="784" />
+    <option name="x" value="-9" />
+    <option name="width" value="1299" />
+    <option name="height" value="785" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -75,18 +170,28 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="letssee" type="b2602c69:ProjectViewProjectNode" />
-              <item name="letssee" type="462c0819:PsiDirectoryNode" />
+              <item name="letse" type="b2602c69:ProjectViewProjectNode" />
+              <item name="letse" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="letse" type="b2602c69:ProjectViewProjectNode" />
+              <item name="letse" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="letse" type="b2602c69:ProjectViewProjectNode" />
+              <item name="letse" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -94,10 +199,17 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544037024279" />
+    <property name="ignore_missing_gitignore" value="true" />
     <property name="js.last.introduce.type" value="LET" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../DrawerJs" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="C:\xampp\htdocs\letse\node_modules\eslint" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -111,12 +223,16 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JavaScript Debug.index.html (1)">
+    <configuration name="index.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/letse/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/letssee/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.index.html (1)" />
         <item itemvalue="JavaScript Debug.index.html" />
       </list>
     </recent_temporary>
@@ -136,11 +252,14 @@
       <workItem from="1544117385842" duration="5832000" />
       <workItem from="1544292631402" duration="13124000" />
       <workItem from="1544654076888" duration="8482000" />
+      <workItem from="1544701728298" duration="489000" />
+      <workItem from="1544702243406" duration="494000" />
+      <workItem from="1544702758975" duration="33594000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42907000" />
+    <option name="totallyTimeSpent" value="78675000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -152,7 +271,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1296" height="784" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
@@ -160,18 +279,18 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info id="Learn" order="4" weight="0.32910448" />
-      <window_info content_ui="combo" id="Project" order="5" sideWeight="0.49846625" visible="true" weight="0.22575517" />
+      <window_info content_ui="combo" id="Project" order="5" sideWeight="0.49846625" visible="true" weight="0.23624161" />
       <window_info id="Favorites" order="6" sideWeight="0.50153375" side_tool="true" weight="0.25" />
       <window_info id="Structure" order="7" sideWeight="0.50153375" side_tool="true" weight="0.25" />
       <window_info id="npm" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32941177" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.23970588" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.20890938" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.20735294" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="10" />
@@ -187,22 +306,13 @@
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Google Cloud Storage" order="9" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="1" column="28" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/letse.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -224,26 +334,94 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2639" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.eslintrc.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/loader-runner/lib/loadLoader.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="34" column="12" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/bundle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1085" lean-forward="true" selection-start-column="1085" selection-end-column="1085" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/bundle.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webpack.config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/pencil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="21" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="35" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="35" />
+        <state relative-caret-position="228">
+          <caret line="12" column="7" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="65" column="44" selection-start-line="65" selection-start-column="44" selection-end-line="65" selection-end-column="44" />
+        <state relative-caret-position="174">
+          <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
         </state>
       </provider>
     </entry>
   </component>
   <component name="masterDetails">
     <states>
+      <state key="Copyright.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.39455783" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ScopeChooserConfigurable.UI">
         <settings>
           <splitter-proportions>

@@ -1,3 +1,33 @@
 .letse-canvas-editor{
     border: 1px solid black;
 }
+
+#rowB {
+    position: absolute;
+}
+
+.letse-maintoolbar{
+    height: 50px;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.letse-secondtoolbar{
+    width: 50px;
+    border: 1px solid rgb(0, 0, 0);
+    float: right;
+}
+
+#letse-canvas-container{
+    float: left;
+}
+
+#letse-canvas{
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.tool-second{
+    background-size: 100%;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+}
