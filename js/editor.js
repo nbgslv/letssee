@@ -1,3 +1,4 @@
+/*
 let clickX = [];
 let clickY = [];
 let clickDrag = [];
@@ -24,128 +25,138 @@ function Clear() {
     event: 'click',
     icon: 'assets/images/sweep.png',
   };
-  /*
+
   this.usage = {
 
   };
-  */
+
 }
 
-const plugins = [
+let plugins = [
   new Pencil(),
   new Clear(),
 ];
+*/
 
-const Editor = function EditorConstructor(containerID, height, width, options) {
+const Editor = function (containerID, height, width, options = {}, plugins = []) {
+  this.editorContainerID = containerID;
+  this.height = height;
+  this.width = width;
+  this.options = options;
+  this.plugins = plugins;
+
+  /*
+  * The canvas is built into the specified container(<div>).
+  * Each element is nested inside a <div> container, following the structure:
+  *
+  * Editor-container(containerID)
+  * |------- row container(rowA)
+  * |   |--- main tool bar
+  * |------- row container(rowB)
+  *     |--- canvas container
+  *     | |- canvas
+  *     |--- second tool bar
+  */
+
+  // Canvas initiation
   this.canvas = {};
-  this.canvas.initCanvas = ((() => {
-    /*
-      * The canvas is built into the specified container(<div>).
-      * Each element is nested inside a <div> container, following the structure:
-      *
-      * Editor-container(containerID)
-      * |------- row container(rowA)
-      * |   |--- main tool bar
-      * |------- row container(rowB)
-      *     |--- canvas container
-      *     | |- canvas
-      *     |--- second tool bar
-      */
+  this.canvas.container = document.getElementById(containerID);
+  this.canvas.canvas = document.createElement('canvas');
 
-    // rowA and rowB creation
-    const rowA = document.createElement('div');
-    rowA.setAttribute('class', 'row');
-    rowA.setAttribute('id', 'rowA');
-    const rowB = document.createElement('div');
-    rowB.setAttribute('class', 'row');
-    rowB.setAttribute('id', 'rowB');
+  // rowA and rowB creation
+  this.canvas.rowA = document.createElement('div');
+  this.canvas.rowA.setAttribute('class', 'row');
+  this.canvas.rowA.setAttribute('id', 'rowA');
+  this.canvas.rowB = document.createElement('div');
+  this.canvas.rowB.setAttribute('class', 'row');
+  this.canvas.rowB.setAttribute('id', 'rowB');
 
-    // nesting rowA and rowB inside containerID
-    const container = document.getElementById(containerID);
-    container.appendChild(rowA);
-    container.appendChild(rowB);
+  // nesting rowA and rowB inside containerID
+  this.canvas.container.appendChild(this.canvas.rowA);
+  this.canvas.container.appendChild(this.canvas.rowB);
 
-    // main tool bar creation
-    const mainToolbar = document.createElement('div');
-    mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
-    mainToolbar.setAttribute('class', 'letse-maintoolbar');
-    mainToolbar.style.width = `${width + 50}px`; // TODO check if attribute contains px/is text
-    rowA.appendChild(mainToolbar);
+  // main tool bar creation
+  this.canvas.mainToolbar = document.createElement('div');
+  this.canvas.mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
+  this.canvas.mainToolbar.setAttribute('class', 'letse-maintoolbar');
+  this.canvas.mainToolbar.style.width = `${width + 50}px`; // TODO check if attribute contains px/is text
+  this.canvas.rowA.appendChild(this.canvas.mainToolbar);
 
-    // canvas container and canvas creation
-    const canvasContainer = document.createElement('div');
-    canvasContainer.setAttribute('id', 'letse-canvas-container');
-    rowB.appendChild(canvasContainer);
+  // canvas container and canvas creation
+  this.canvas.canvasContainer = document.createElement('div');
+  this.canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
+  this.canvas.rowB.appendChild(this.canvas.canvasContainer);
+  this.canvas.canvas.setAttribute('height', height);
+  this.canvas.canvas.setAttribute('width', width);
+  this.canvas.canvas.setAttribute('id', 'letse-canvas');
+  this.canvas.canvasContainer.appendChild(this.canvas.canvas);
 
-    let paint = false;
-    const canvas = document.createElement('canvas');
-    canvas.setAttribute('height', height);
-    canvas.setAttribute('width', width);
-    canvas.setAttribute('id', 'letse-canvas');
-    function addClick(x, y, dragging) {
-      clickX.push(x);
-      clickY.push(y);
-      clickDrag.push(dragging);
-    }
-
-    function redraw() {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-      ctx.strokeStyle = '#000';
-      ctx.lineJoin = 'round';
-      ctx.lineWidth = 5;
-      for (let i = 0; i < clickX.length; i++) {
-        ctx.beginPath();
-        if (clickDrag[i] && i) {
-          ctx.moveTo(clickX[i - 1], clickY[i - 1]);
-        } else {
-          ctx.moveTo(clickX[i] - 1, clickY[i] - 1);
-        }
-        ctx.lineTo(clickX[i], clickY[i]);
-        ctx.closePath();
-        ctx.stroke();
-      }
-    }
-    canvas.addEventListener('mousedown', function (e) {
-      paint = true;
-      addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-      redraw();
-    });
-    canvas.addEventListener('mousemove', function (e) {
-      if (paint) {
-        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-        redraw();
-      }
-    });
-    canvas.addEventListener('mouseup', () => {
-      paint = false;
-    });
-    canvas.addEventListener('mouseleave', () => {
-      paint = false;
-    });
-    canvasContainer.appendChild(canvas);
-    // second tool bar creation
-    const secondToolbar = document.createElement('div');
-    secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
-    secondToolbar.setAttribute('class', 'letse-secondtoolbar');
-    secondToolbar.style.height = `${height}px`;
-    rowB.appendChild(secondToolbar);
-
-    // set plugins to tool bars
-    for (let i = 0; i < plugins.length; i++) {
-      const div = document.createElement('div');
-      div.setAttribute('id', plugins[i].options.name);
-      div.setAttribute('class', 'tool-second');
-      div.style.backgroundImage = `url("${plugins[i].options.icon}")`;
-      const usage = plugins[i].usage;
-      div.addEventListener(plugins[i].options.event, usage);
-      secondToolbar.appendChild(div);
-    }
-  })());
+  // second tool bar creation
+  this.canvas.secondToolbar = document.createElement('div');
+  this.canvas.secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
+  this.canvas.secondToolbar.setAttribute('class', 'letse-secondtoolbar');
+  this.canvas.secondToolbar.style.height = `${height}px`;
+  this.canvas.rowB.appendChild(this.canvas.secondToolbar);
 };
 
+/*
+let paint = false;
+
+function addClick(x, y, dragging) {
+  clickX.push(x);
+  clickY.push(y);
+  clickDrag.push(dragging);
+}
+
+function redraw() {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  ctx.strokeStyle = '#000';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 5;
+  for (let i = 0; i < clickX.length; i++) {
+    ctx.beginPath();
+    if (clickDrag[i] && i) {
+      ctx.moveTo(clickX[i - 1], clickY[i - 1]);
+    } else {
+      ctx.moveTo(clickX[i] - 1, clickY[i] - 1);
+    }
+    ctx.lineTo(clickX[i], clickY[i]);
+    ctx.closePath();
+    ctx.stroke();
+  }
+}
+canvas.addEventListener('mousedown', function (e) {
+  paint = true;
+  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+  redraw();
+});
+canvas.addEventListener('mousemove', function (e) {
+  if (paint) {
+    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+    redraw();
+  }
+});
+canvas.addEventListener('mouseup', () => {
+  paint = false;
+});
+canvas.addEventListener('mouseleave', () => {
+  paint = false;
+});
+canvasContainer.appendChild(canvas);
 
 
+// set plugins to tool bars
+for (let i = 0; i < plugins.length; i++) {
+  const div = document.createElement('div');
+  div.setAttribute('id', plugins[i].options.name);
+  div.setAttribute('class', 'tool-second');
+  div.style.backgroundImage = `url("${plugins[i].options.icon}")`;
+  const usage = plugins[i].usage;
+  div.addEventListener(plugins[i].options.event, usage);
+  secondToolbar.appendChild(div);
+}
+*/
 
 const editor = new Editor('letse-canvas-container', 300, 300);
