@@ -1,14 +1,22 @@
 const path = require('path');
-const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
 module.exports = {
-  entry: './js/editor.js',
+  entry: './js/main.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, './dist'),
   },
-  'rules': {
-    'no-console': 'off',
+  module: {
+    rules: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env'],
+        },
+      },
+    }],
   },
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
 };

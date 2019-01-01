@@ -12,7 +12,12 @@
   },
   "rules": {
     "linebreak-style": "off",
-    "no-plusplus": "warn"
+    "no-plusplus": "warn",
+    "no-console": "off",
+    "func-names": [
+      "warn",
+      "as-needed"
+    ]
   },
   "globals": {
     "Editor": false

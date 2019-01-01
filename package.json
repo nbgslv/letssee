@@ -4,15 +4,14 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-server": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
     "babel-loader": "^8.0.4",
-    "babel-preset-env": "^1.7.0",
     "grunt": "^1.0.3",
     "lodash": "^4.17.11",
     "node-nightly": "^1.7.3",
@@ -20,6 +19,8 @@
     "underscore": "^1.9.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "eslint": "^5.3.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-standard": "^12.0.0",

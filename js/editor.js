@@ -1,162 +1,138 @@
-/*
-let clickX = [];
-let clickY = [];
-let clickDrag = [];
+import { Elements } from './element';
 
-function Pencil() {
-  this.options = {
-    name: 'pencil',
-    enable: true,
-    event: 'click',
-    icon: 'assets/images/pencil-icon.png',
-  };
-  this.usage = function (e) {
-    const canvas = document.getElementById('letse-canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.rect(20, 10, 10, 10);
-    ctx.stroke();
-  };
-}
+export default class Editor {
+  constructor(containerID, height, width, options = {}, plugins = []) {
+    this.editorContainerID = containerID;
+    this.height = height;
+    this.width = width;
+    this.options = options;
+    this.plugins = plugins;
+    this.activeTool = undefined;
 
-function Clear() {
-  this.options = {
-    name: 'clear',
-    enable: true,
-    event: 'click',
-    icon: 'assets/images/sweep.png',
-  };
+    this.valid = false;
+    this.elements = Elements;
+    this.dragging = false;
+    this.selection = null;
+    this.dragoffx = 0;
+    this.dragoffy = 0;
 
-  this.usage = {
+    /*
+    * The canvas is built into the specified container(<div>).
+    * Each element is nested inside a <div> container, following the structure:
+    *
+    * Editor-container(containerID)
+    * |------- row container(rowA)
+    * |   |--- main tool bar
+    * |------- row container(rowB)
+    *     |--- canvas container
+    *     | |- canvas
+    *     |--- second tool bar
+    *     TODO update canvas structure
+    */
 
-  };
+    // Canvas initiation
+    const canvas = {};
+    canvas.container = document.getElementById(this.editorContainerID);
+    canvas.canvas = document.createElement('canvas');
 
-}
+    // rowA and rowB creation
+    canvas.rowA = document.createElement('div');
+    canvas.rowA.setAttribute('class', 'row');
+    canvas.rowA.setAttribute('id', 'rowA');
+    canvas.rowB = document.createElement('div');
+    canvas.rowB.setAttribute('class', 'row');
+    canvas.rowB.setAttribute('id', 'rowB');
 
-let plugins = [
-  new Pencil(),
-  new Clear(),
-];
-*/
+    // nesting rowA and rowB inside containerID
+    canvas.container.appendChild(canvas.rowA);
+    canvas.container.appendChild(canvas.rowB);
 
-const Editor = function (containerID, height, width, options = {}, plugins = []) {
-  this.editorContainerID = containerID;
-  this.height = height;
-  this.width = width;
-  this.options = options;
-  this.plugins = plugins;
+    // main tool bar creation
+    canvas.mainToolbar = document.createElement('div');
+    canvas.mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
+    canvas.mainToolbar.setAttribute('class', 'letse-maintoolbar');
+    canvas.mainToolbar.style.width = `${this.width + 50}px`; // TODO check if attribute contains px/is text
+    canvas.rowA.appendChild(canvas.mainToolbar);
 
-  /*
-  * The canvas is built into the specified container(<div>).
-  * Each element is nested inside a <div> container, following the structure:
-  *
-  * Editor-container(containerID)
-  * |------- row container(rowA)
-  * |   |--- main tool bar
-  * |------- row container(rowB)
-  *     |--- canvas container
-  *     | |- canvas
-  *     |--- second tool bar
-  */
+    // canvas container and canvas creation
+    canvas.canvasContainer = document.createElement('div');
+    canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
+    canvas.rowB.appendChild(canvas.canvasContainer);
+    canvas.canvas.setAttribute('height', this.height);
+    canvas.canvas.setAttribute('width', this.width);
+    canvas.canvas.setAttribute('id', 'letse-canvas');
+    canvas.canvasContainer.appendChild(canvas.canvas);
 
-  // Canvas initiation
-  this.canvas = {};
-  this.canvas.container = document.getElementById(containerID);
-  this.canvas.canvas = document.createElement('canvas');
+    // second tool bar creation
+    canvas.secondToolbar = document.createElement('div');
+    canvas.secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
+    canvas.secondToolbar.setAttribute('class', 'letse-secondtoolbar');
+    canvas.secondToolbar.style.height = `${this.height}px`;
+    canvas.rowB.appendChild(canvas.secondToolbar);
 
-  // rowA and rowB creation
-  this.canvas.rowA = document.createElement('div');
-  this.canvas.rowA.setAttribute('class', 'row');
-  this.canvas.rowA.setAttribute('id', 'rowA');
-  this.canvas.rowB = document.createElement('div');
-  this.canvas.rowB.setAttribute('class', 'row');
-  this.canvas.rowB.setAttribute('id', 'rowB');
+    // upper canvas
+    canvas.upperCanvas = document.createElement('canvas');
+    canvas.canvasContainer.appendChild(canvas.upperCanvas);
+    canvas.upperCanvas.setAttribute('height', this.height);
+    canvas.upperCanvas.setAttribute('width', this.width);
+    canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
 
-  // nesting rowA and rowB inside containerID
-  this.canvas.container.appendChild(this.canvas.rowA);
-  this.canvas.container.appendChild(this.canvas.rowB);
+    // canvas event listeners for element select/drag
+    canvas.upperCanvas.addEventListener('mousedown', (e) => {
+      const mousePosition = Editor.checkMousePosition(e, this.canvas);
+      const mouse = {
+        positionX: mousePosition.x,
+        positionY: mousePosition.y,
+      };
 
-  // main tool bar creation
-  this.canvas.mainToolbar = document.createElement('div');
-  this.canvas.mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
-  this.canvas.mainToolbar.setAttribute('class', 'letse-maintoolbar');
-  this.canvas.mainToolbar.style.width = `${width + 50}px`; // TODO check if attribute contains px/is text
-  this.canvas.rowA.appendChild(this.canvas.mainToolbar);
+      this.elements.forEach((element) => {
+        if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
+          let selection = this.selection;
+          this.dragoffx = mouse.positionX - this.selection.positionX;
+          this.dragoffy = mouse.positionY - this.selection.positionY;
+          this.dragging = true;
+          selection = element;
+          this.valid = false;
+          this.canvas.ctx.strokeStyle = '#CC0000';
+          this.canvas.ctx.lineWidth = 2;
+          this.canvas.ctx.strokeRect(selection.x, selection.y, selection.width, selection.height);
+          return;
+        }
+      });
+      if (this.selection) {
+        this.selection = null;
+        this.valid = false;
+      }
+    });
+    canvas.upperCanvas.addEventListener('mousemove', (e) => {
+      if (this.dragging) {
+        const mousePosition = Editor.checkMousePosition(e, this.canvas);
+        this.selection.x = mousePosition.x - this.dragoffx;
+        this.selection.y = mousePosition.y - this.dragoffy;
+        this.valid = false;
+      }
+    });
+    canvas.upperCanvas.addEventListener('mouseup', (e) => {
+      this.dragging = false;
+    });
+    this.canvas = canvas;
+  }
 
-  // canvas container and canvas creation
-  this.canvas.canvasContainer = document.createElement('div');
-  this.canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
-  this.canvas.rowB.appendChild(this.canvas.canvasContainer);
-  this.canvas.canvas.setAttribute('height', height);
-  this.canvas.canvas.setAttribute('width', width);
-  this.canvas.canvas.setAttribute('id', 'letse-canvas');
-  this.canvas.canvasContainer.appendChild(this.canvas.canvas);
-
-  // second tool bar creation
-  this.canvas.secondToolbar = document.createElement('div');
-  this.canvas.secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
-  this.canvas.secondToolbar.setAttribute('class', 'letse-secondtoolbar');
-  this.canvas.secondToolbar.style.height = `${height}px`;
-  this.canvas.rowB.appendChild(this.canvas.secondToolbar);
-};
-
-/*
-let paint = false;
-
-function addClick(x, y, dragging) {
-  clickX.push(x);
-  clickY.push(y);
-  clickDrag.push(dragging);
-}
-
-function redraw() {
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-  ctx.strokeStyle = '#000';
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = 5;
-  for (let i = 0; i < clickX.length; i++) {
-    ctx.beginPath();
-    if (clickDrag[i] && i) {
-      ctx.moveTo(clickX[i - 1], clickY[i - 1]);
-    } else {
-      ctx.moveTo(clickX[i] - 1, clickY[i] - 1);
+  static checkMousePosition(e, canvas) {
+    let offsetX = 0;
+    let offsetY = 0;
+    let mousePositionX;
+    let mousePositionY;
+    if (canvas.upperCanvas.offsetParent !== undefined) {
+      do {
+        offsetX += canvas.upperCanvas.offsetLeft;
+        offsetY += canvas.upperCanvas.offsetTop;
+      } while ((canvas.upperCanvas = canvas.upperCanvas.offsetParent));
     }
-    ctx.lineTo(clickX[i], clickY[i]);
-    ctx.closePath();
-    ctx.stroke();
+    offsetX += canvas.upperCanvas.stylePaddingLeft + canvas.upperCanvas.styleBorderLeft + canvas.upperCanvas.htmlLeft;
+    offsetY += canvas.upperCanvas.stylePaddingTop + canvas.upperCanvas.styleBorderTop + canvas.upperCanvas.htmlTop;
+    mousePositionX = e.pageX - offsetX;
+    mousePositionY = e.pageY - offsetY;
+    return { x: mousePositionX, y: mousePositionY };
   }
 }
-canvas.addEventListener('mousedown', function (e) {
-  paint = true;
-  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-  redraw();
-});
-canvas.addEventListener('mousemove', function (e) {
-  if (paint) {
-    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-    redraw();
-  }
-});
-canvas.addEventListener('mouseup', () => {
-  paint = false;
-});
-canvas.addEventListener('mouseleave', () => {
-  paint = false;
-});
-canvasContainer.appendChild(canvas);
-
-
-// set plugins to tool bars
-for (let i = 0; i < plugins.length; i++) {
-  const div = document.createElement('div');
-  div.setAttribute('id', plugins[i].options.name);
-  div.setAttribute('class', 'tool-second');
-  div.style.backgroundImage = `url("${plugins[i].options.icon}")`;
-  const usage = plugins[i].usage;
-  div.addEventListener(plugins[i].options.event, usage);
-  secondToolbar.appendChild(div);
-}
-*/
-
-const editor = new Editor('letse-canvas-container', 300, 300);
