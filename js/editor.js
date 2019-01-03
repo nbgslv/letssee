@@ -61,6 +61,7 @@ export default class Editor {
     canvas.canvas.setAttribute('height', this.height);
     canvas.canvas.setAttribute('width', this.width);
     canvas.canvas.setAttribute('id', 'letse-canvas');
+    canvas.canvas.ctx = canvas.canvas.getContext('2d');
     canvas.canvasContainer.appendChild(canvas.canvas);
 
     // second tool bar creation
@@ -76,6 +77,7 @@ export default class Editor {
     canvas.upperCanvas.setAttribute('height', this.height);
     canvas.upperCanvas.setAttribute('width', this.width);
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
+    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
 
     // canvas event listeners for element select/drag
     canvas.upperCanvas.addEventListener('mousedown', (e) => {
@@ -87,22 +89,21 @@ export default class Editor {
 
       this.elements.forEach((element) => {
         if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
-          let selection = this.selection;
-          this.dragoffx = mouse.positionX - this.selection.positionX;
-          this.dragoffy = mouse.positionY - this.selection.positionY;
+          // let selection = this.selection;
+          this.dragoffx = mouse.positionX - element.x;
+          this.dragoffy = mouse.positionY - element.y;
           this.dragging = true;
-          selection = element;
+          this.selection = element;
+          let selection = this.selection;
           this.valid = false;
-          this.canvas.ctx.strokeStyle = '#CC0000';
-          this.canvas.ctx.lineWidth = 2;
-          this.canvas.ctx.strokeRect(selection.x, selection.y, selection.width, selection.height);
-          return;
+          this.canvas.upperCanvas.ctx.strokeStyle = '#CC0000';
+          this.canvas.upperCanvas.ctx.lineWidth = 2;
+          this.canvas.upperCanvas.ctx.strokeRect(selection.x,
+            selection.y,
+            selection.width,
+            selection.height);
         }
       });
-      if (this.selection) {
-        this.selection = null;
-        this.valid = false;
-      }
     });
     canvas.upperCanvas.addEventListener('mousemove', (e) => {
       if (this.dragging) {
@@ -123,16 +124,46 @@ export default class Editor {
     let offsetY = 0;
     let mousePositionX;
     let mousePositionY;
-    if (canvas.upperCanvas.offsetParent !== undefined) {
+    const html = document.body.parentNode;
+    let upperCanvas = canvas.upperCanvas;
+    if (upperCanvas.offsetParent !== undefined) {
       do {
-        offsetX += canvas.upperCanvas.offsetLeft;
-        offsetY += canvas.upperCanvas.offsetTop;
-      } while ((canvas.upperCanvas = canvas.upperCanvas.offsetParent));
+        offsetX += upperCanvas.offsetLeft;
+        offsetY += upperCanvas.offsetTop;
+      } while ((upperCanvas = upperCanvas.offsetParent));
     }
-    offsetX += canvas.upperCanvas.stylePaddingLeft + canvas.upperCanvas.styleBorderLeft + canvas.upperCanvas.htmlLeft;
-    offsetY += canvas.upperCanvas.stylePaddingTop + canvas.upperCanvas.styleBorderTop + canvas.upperCanvas.htmlTop;
+    upperCanvas = canvas.upperCanvas;
+    const stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas)
+      .paddingLeft, 10) || 0;
+    const stylePaddingTop = parseInt(document.defaultView.getComputedStyle(upperCanvas)
+      .paddingTop, 10) || 0;
+    const styleBorderLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas)
+      .borderLeftWidth, 10) || 0;
+    const styleBorderTop = parseInt(document.defaultView.getComputedStyle(upperCanvas)
+      .borderTopWidth, 10) || 0;
+
+    offsetX += stylePaddingLeft
+  + styleBorderLeft
+  + html.offsetLeft;
+    offsetY += stylePaddingTop
+  + styleBorderTop
+  + html.offsetTop;
     mousePositionX = e.pageX - offsetX;
     mousePositionY = e.pageY - offsetY;
     return { x: mousePositionX, y: mousePositionY };
+  }
+
+  static toolHandler(tool, canvas) {
+    tool.tool.properties.active = true;
+    canvas.upperCanvas.addEventListener(tool.tool.properties.events.start, (e) => {
+      tool.tool.mouseDown(e);
+    });
+    canvas.upperCanvas.addEventListener(tool.tool.properties.events.control, (e) => {
+      tool.tool.mouseMove(e, canvas);
+    });
+    canvas.upperCanvas.addEventListener(tool.tool.properties.events.end, (e) => {
+      tool.tool.mouseUp(e, canvas);
+    });
+    this.activeToolName(tool.tool.name);
   }
 }

@@ -50,7 +50,7 @@ export default class Rectangle {
       this.mouseMove(e, canvas);
       this.started = false;
       Rectangle.canvasUpdate(this.ctx, this.upperCTX, canvas);
-      const rect = new Element(this.mouse.x, this.mouse.y, this.mouse.width, this.mouse.h);
+      const rect = new Element(this.mouse.x, this.mouse.y, this.mouse.width, this.mouse.height);
       Elements.push(rect);
     }
   }
