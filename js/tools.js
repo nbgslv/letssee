@@ -1,11 +1,13 @@
-export const tools = [];
+export const Tools = [];
 
 export class Tool {
   constructor(tool) {
     this.name = tool.name;
-    this.category = tool;
+    this.className = tool.className;
+    this.category = tool.category;
     this.properties = tool.properties;
     this.events = tool.events;
+    this.functions = tool.functions;
     this.mouse = {
       x: 0,
       y: 0,
@@ -16,6 +18,5 @@ export class Tool {
     };
     this.enable = tool.enable;
     this.active = false;
-    tools.push(this);
   }
 }

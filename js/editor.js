@@ -1,5 +1,5 @@
 import { Elements } from './element';
-import { tools } from './tools';
+import { Tools } from './tools';
 
 export default class Editor {
   constructor(containerID, height, width, options = {}, plugins = []) {
@@ -81,7 +81,7 @@ export default class Editor {
     canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
 
     // build toolbars
-    tools.forEach((tool) => {
+    Tools.forEach((tool) => {
       const div = document.createElement('div');
       div.style.backgroundImage = `url("${tool.tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
@@ -182,5 +182,10 @@ export default class Editor {
       tool.tool.mouseUp(e, canvas);
     });
     this.activeToolName(tool.tool.name);
+  }
+
+  static canvasUpdate(ctx, upperCTX, canvas) {
+    ctx.drawImage(canvas.upperCanvas, 0, 0);
+    upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
   }
 }

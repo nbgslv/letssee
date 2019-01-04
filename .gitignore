@@ -51,8 +51,8 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
-jspm_packages/
+/node_modules/
+/jspm_packages/
 
 # TypeScript v1 declaration files
 
@@ -159,4 +159,3 @@ cmake-build-*/
 .idea/caches/build_file_checksums.ser
 /js/ch.js
 dist/bundle.js.map
-js/ch.js

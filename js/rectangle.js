@@ -2,18 +2,6 @@ import { Element, Elements } from './element';
 
 export default class Rectangle {
   constructor() {
-    this.name = 'rectangle';
-    this.properties = {
-      enable: true,
-      toolbar: 'main',
-      icon: '/assets/images/sweep.png',
-      active: false,
-      events: {
-        start: 'mousedown',
-        end: 'mouseup',
-        control: 'mousemove',
-      },
-    };
     this.mouse = {
       x: 0,
       y: 0,
@@ -55,8 +43,5 @@ export default class Rectangle {
     }
   }
 
-  static canvasUpdate(ctx, upperCTX, canvas) {
-    ctx.drawImage(canvas.upperCanvas, 0, 0);
-    upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
-  }
+
 }
