@@ -1,4 +1,5 @@
 import { Elements } from './element';
+import { tools } from './tools';
 
 export default class Editor {
   constructor(containerID, height, width, options = {}, plugins = []) {
@@ -78,6 +79,22 @@ export default class Editor {
     canvas.upperCanvas.setAttribute('width', this.width);
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
     canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
+
+    // build toolbars
+    tools.forEach((tool) => {
+      const div = document.createElement('div');
+      div.style.backgroundImage = `url("${tool.tool.properties.icon}")`;
+      div.setAttribute('id', tool.name);
+      div.setAttribute('class', 'tool enable unactive');
+      div.addEventListener('click', () => Editor.toolHandler(tool));
+      if (tool.tool.properties.toolbar === 'main') {
+        canvas.mainToolbar.appendChild(div);
+      } else if (tool.tool.properties.toolbar === 'second') {
+        canvas.secondToolbar.appendChild(div);
+      }
+    });
+
+    // init default hold tool
 
     // canvas event listeners for element select/drag
     canvas.upperCanvas.addEventListener('mousedown', (e) => {

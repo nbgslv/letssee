@@ -1,37 +1,21 @@
-import Editor from "js/editor";
+export const tools = [];
 
-export default class Tools {
-  constructor(plugins) {
-    this.plugins = plugins;
-    this.tools = function () {
-      let tools = [];
-      plugins.forEach((tool) => {
-        if (tool.properties.field === 'tool') {
-          tools.push(tool);
-        }
-      });
-      return tools;
+export class Tool {
+  constructor(tool) {
+    this.name = tool.name;
+    this.category = tool;
+    this.properties = tool.properties;
+    this.events = tool.events;
+    this.mouse = {
+      x: 0,
+      y: 0,
+      startX: 0,
+      startY: 0,
+      width: 0,
+      height: 0,
     };
-  }
-
-  buildToolbar(tools, canvas) {
-    tools.plugins.forEach((tool) => {
-      const div = document.createElement('div');
-      div.style.backgroundImage = `url("${tool.tool.properties.icon}")`;
-      div.setAttribute('id', tool.name);
-      div.setAttribute('class', 'tool enable unactive');
-      div.addEventListener('click', () => Editor.toolHandler(tool));
-      if (tool.tool.properties.toolbar === 'main') {
-        canvas.mainToolbar.appendChild(div);
-      } else if (tool.tool.properties.toolbar === 'second') {
-        canvas.secondToolbar.appendChild(div);
-      }
-    });
-  }
-
-
-
-  activeToolName(toolName) {
-    this.activeTool = toolName;
+    this.enable = tool.enable;
+    this.active = false;
+    tools.push(this);
   }
 }
