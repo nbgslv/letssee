@@ -1,14 +1,14 @@
+import Settings from './settings';
 import Editor from './editor';
-import Rectangle from './rectangle';
-import Tools from './tools';
 
-const plugins = [
-  {
-    tool: new Rectangle(),
-  },
-];
+try {
+  const checkConfig = require('./letse.config');
+} catch (e) {
+  console.log('Config file doesn\'t exists');
+}
 
-const editor = new Editor('letse-canvas-container', 300, 300, null, plugins);
-// const canvas = editor.canvas();
-const tools = new Tools(plugins);
-tools.buildToolbar(tools, editor.canvas);
+import { plugins } from './letse.config';
+
+Settings.getPlugins(plugins);
+
+const editor = new Editor('letse-canvas-container', 300, 300, null);

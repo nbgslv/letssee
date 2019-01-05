@@ -1,2 +1,717 @@
-!function(e){var t={};function n(o){if(t[o])return t[o].exports;var a=t[o]={i:o,l:!1,exports:{}};return e[o].call(a.exports,a,a.exports,n),a.l=!0,a.exports}n.m=e,n.c=t,n.d=function(e,t,o){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:o})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var a in e)n.d(o,a,function(t){return e[t]}.bind(null,a));return o},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=0)}([function(e,t,n){"use strict";function o(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}n.r(t);var a=[],i=function(){function e(t,n,o,a,i){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.x=t,this.y=n,this.width=o,this.height=a,this.style=i}var t,n,a;return t=e,(n=[{key:"mouseInShape",value:function(e,t){return this.x<=e&&this.x+this.width>=e&&this.y<=t&&this.y+this.height>=t}}])&&o(t.prototype,n),a&&o(t,a),e}();function r(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}var s=function(){function e(t,n,o){var i=this,r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:{},s=arguments.length>4&&void 0!==arguments[4]?arguments[4]:[];!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.editorContainerID=t,this.height=n,this.width=o,this.options=r,this.plugins=s,this.activeTool=void 0,this.valid=!1,this.elements=a,this.dragging=!1,this.selection=null,this.dragoffx=0,this.dragoffy=0;var u={};u.container=document.getElementById(this.editorContainerID),u.canvas=document.createElement("canvas"),u.rowA=document.createElement("div"),u.rowA.setAttribute("class","row"),u.rowA.setAttribute("id","rowA"),u.rowB=document.createElement("div"),u.rowB.setAttribute("class","row"),u.rowB.setAttribute("id","rowB"),u.container.appendChild(u.rowA),u.container.appendChild(u.rowB),u.mainToolbar=document.createElement("div"),u.mainToolbar.setAttribute("id","letse-canvas-maintoolbar-container"),u.mainToolbar.setAttribute("class","letse-maintoolbar"),u.mainToolbar.style.width="".concat(this.width+50,"px"),u.rowA.appendChild(u.mainToolbar),u.canvasContainer=document.createElement("div"),u.canvasContainer.setAttribute("id","letse-canvas-container"),u.rowB.appendChild(u.canvasContainer),u.canvas.setAttribute("height",this.height),u.canvas.setAttribute("width",this.width),u.canvas.setAttribute("id","letse-canvas"),u.canvas.ctx=u.canvas.getContext("2d"),u.canvasContainer.appendChild(u.canvas),u.secondToolbar=document.createElement("div"),u.secondToolbar.setAttribute("id","letse-canvas-secondtoolbar-container"),u.secondToolbar.setAttribute("class","letse-secondtoolbar"),u.secondToolbar.style.height="".concat(this.height,"px"),u.rowB.appendChild(u.secondToolbar),u.upperCanvas=document.createElement("canvas"),u.canvasContainer.appendChild(u.upperCanvas),u.upperCanvas.setAttribute("height",this.height),u.upperCanvas.setAttribute("width",this.width),u.upperCanvas.setAttribute("id","letse-upper-canvas"),u.upperCanvas.ctx=u.upperCanvas.getContext("2d"),u.upperCanvas.addEventListener("mousedown",function(t){var n=e.checkMousePosition(t,i.canvas),o={positionX:n.x,positionY:n.y};i.elements.forEach(function(e){if(e.mouseInShape(o.positionX,o.positionY)){i.dragoffx=o.positionX-e.x,i.dragoffy=o.positionY-e.y,i.dragging=!0,i.selection=e;var t=i.selection;i.valid=!1,i.canvas.upperCanvas.ctx.strokeStyle="#CC0000",i.canvas.upperCanvas.ctx.lineWidth=2,i.canvas.upperCanvas.ctx.strokeRect(t.x,t.y,t.width,t.height)}})}),u.upperCanvas.addEventListener("mousemove",function(t){if(i.dragging){var n=e.checkMousePosition(t,i.canvas);i.selection.x=n.x-i.dragoffx,i.selection.y=n.y-i.dragoffy,i.valid=!1}}),u.upperCanvas.addEventListener("mouseup",function(e){i.dragging=!1}),this.canvas=u}var t,n,o;return t=e,o=[{key:"checkMousePosition",value:function(e,t){var n=0,o=0,a=document.body.parentNode,i=t.upperCanvas;if(void 0!==i.offsetParent)do{n+=i.offsetLeft,o+=i.offsetTop}while(i=i.offsetParent);i=t.upperCanvas;var r=parseInt(document.defaultView.getComputedStyle(i).paddingLeft,10)||0,s=parseInt(document.defaultView.getComputedStyle(i).paddingTop,10)||0,u=parseInt(document.defaultView.getComputedStyle(i).borderLeftWidth,10)||0,c=parseInt(document.defaultView.getComputedStyle(i).borderTopWidth,10)||0;return n+=r+u+a.offsetLeft,o+=s+c+a.offsetTop,{x:e.pageX-n,y:e.pageY-o}}},{key:"toolHandler",value:function(e,t){e.tool.properties.active=!0,t.upperCanvas.addEventListener(e.tool.properties.events.start,function(t){e.tool.mouseDown(t)}),t.upperCanvas.addEventListener(e.tool.properties.events.control,function(n){e.tool.mouseMove(n,t)}),t.upperCanvas.addEventListener(e.tool.properties.events.end,function(n){e.tool.mouseUp(n,t)}),this.activeToolName(e.tool.name)}}],(n=null)&&r(t.prototype,n),o&&r(t,o),e}();function u(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}var c=function(){function e(){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.name="rectangle",this.properties={enable:!0,toolbar:"main",icon:"/assets/images/sweep.png",active:!1,events:{start:"mousedown",end:"mouseup",control:"mousemove"}},this.mouse={x:0,y:0,startX:0,startY:0,width:0,height:0},this.ctx=null,this.started=!1}var t,n,o;return t=e,o=[{key:"canvasUpdate",value:function(e,t,n){e.drawImage(n.upperCanvas,0,0),t.clearRect(0,0,n.upperCanvas.width,n.upperCanvas.height)}}],(n=[{key:"mouseDown",value:function(e){this.started=!0,this.mouse.startX=e.clientX,this.mouse.startY=e.clientY}},{key:"mouseMove",value:function(e,t){this.started&&(this.mouse.x=Math.min(e.screenX,this.mouse.startX),this.mouse.y=Math.min(e.screenY,this.mouse.startY),this.mouse.width=Math.abs(e.screenX-this.mouse.startX),this.mouse.height=Math.abs(e.screenY-this.mouse.startY),this.ctx=t.canvas.getContext("2d"),this.upperCTX=t.upperCanvas.getContext("2d"),this.upperCTX.clearRect(0,0,t.upperCanvas.width,t.upperCanvas.height),this.upperCTX.strokeRect(this.mouse.x,this.mouse.y,this.mouse.width,this.mouse.height))}},{key:"mouseUp",value:function(t,n){if(this.started){this.mouseMove(t,n),this.started=!1,e.canvasUpdate(this.ctx,this.upperCTX,n);var o=new i(this.mouse.x,this.mouse.y,this.mouse.width,this.mouse.height);a.push(o)}}}])&&u(t.prototype,n),o&&u(t,o),e}();function l(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}var d=function(){function e(t){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.plugins=t,this.tools=function(){var e=[];return t.forEach(function(t){"tool"===t.properties.field&&e.push(t)}),e}}var t,n,o;return t=e,(n=[{key:"buildToolbar",value:function(e,t){e.plugins.forEach(function(e){var n=document.createElement("div");n.style.backgroundImage='url("'.concat(e.tool.properties.icon,'")'),n.setAttribute("id",e.name),n.setAttribute("class","tool enable unactive"),n.addEventListener("click",function(){return s.toolHandler(e)}),"main"===e.tool.properties.toolbar?t.mainToolbar.appendChild(n):"second"===e.tool.properties.toolbar&&t.secondToolbar.appendChild(n)})}},{key:"activeToolName",value:function(e){this.activeTool=e}}])&&l(t.prototype,n),o&&l(t,o),e}(),p=[{tool:new c}],h=new s("letse-canvas-container",300,300,null,p),v=new d(p);v.buildToolbar(v,h.canvas)}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 	};
+/******/
+/******/
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".bundle.js"
+/******/ 	}
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// JSONP chunk loading for javascript
+/******/
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
+/******/
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[2]);
+/******/ 			} else {
+/******/ 				// setup Promise in chunk cache
+/******/ 				var promise = new Promise(function(resolve, reject) {
+/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
+/******/
+/******/ 				// start chunk loading
+/******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
+/******/
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.src = jsonpScriptSrc(chunkId);
+/******/
+/******/ 				onScriptComplete = function (event) {
+/******/ 					// avoid mem leaks in IE.
+/******/ 					script.onerror = script.onload = null;
+/******/ 					clearTimeout(timeout);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 							var realSrc = event && event.target && event.target.src;
+/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.type = errorType;
+/******/ 							error.request = realSrc;
+/******/ 							chunk[1](error);
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
+/******/ 				document.head.appendChild(script);
+/******/ 			}
+/******/ 		}
+/******/ 		return Promise.all(promises);
+/******/ 	};
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+/******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./js/main.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./js lazy recursive ^\\.\\/.*$":
+/*!*******************************************!*\
+  !*** ./js lazy ^\.\/.*$ namespace object ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./editor": [
+		"./js/editor.js"
+	],
+	"./editor.js": [
+		"./js/editor.js"
+	],
+	"./element": [
+		"./js/element.js"
+	],
+	"./element.js": [
+		"./js/element.js"
+	],
+	"./letse.config": [
+		"./js/letse.config.js"
+	],
+	"./letse.config.js": [
+		"./js/letse.config.js"
+	],
+	"./main": [
+		"./js/main.js"
+	],
+	"./main.js": [
+		"./js/main.js"
+	],
+	"./rectangle": [
+		"./js/rectangle.js",
+		0
+	],
+	"./rectangle.js": [
+		"./js/rectangle.js",
+		0
+	],
+	"./settings": [
+		"./js/settings.js"
+	],
+	"./settings.js": [
+		"./js/settings.js"
+	],
+	"./tools": [
+		"./js/tools.js"
+	],
+	"./tools.js": [
+		"./js/tools.js"
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+		var id = ids[0];
+		return __webpack_require__(id);
+	});
+}
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = "./js lazy recursive ^\\.\\/.*$";
+module.exports = webpackAsyncContext;
+
+/***/ }),
+
+/***/ "./js/editor.js":
+/*!**********************!*\
+  !*** ./js/editor.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Editor; });
+/* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./element */ "./js/element.js");
+/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+var Editor =
+/*#__PURE__*/
+function () {
+  function Editor(containerID, height, width) {
+    var _this = this;
+
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+    _classCallCheck(this, Editor);
+
+    this.editorContainerID = containerID;
+    this.height = height;
+    this.width = width;
+    this.options = options;
+    this.activeTool = 'default';
+    this.valid = false;
+    this.elements = _element__WEBPACK_IMPORTED_MODULE_0__["Elements"];
+    this.dragging = false;
+    this.selection = null;
+    this.dragoffx = 0;
+    this.dragoffy = 0;
+    /*
+    * The canvas is built into the specified container(<div>).
+    * Each element is nested inside a <div> container, following the structure:
+    *
+    * Editor-container(containerID)
+    * |------- row container(rowA)
+    * |   |--- main tool bar
+    * |------- row container(rowB)
+    *     |--- canvas container
+    *     | |- canvas
+    *     |--- second tool bar
+    *     TODO update canvas structure
+    */
+    // Canvas initiation
+
+    var canvas = {};
+    canvas.container = document.getElementById(this.editorContainerID);
+    canvas.canvas = document.createElement('canvas'); // rowA and rowB creation
+
+    canvas.rowA = document.createElement('div');
+    canvas.rowA.setAttribute('class', 'row');
+    canvas.rowA.setAttribute('id', 'rowA');
+    canvas.rowB = document.createElement('div');
+    canvas.rowB.setAttribute('class', 'row');
+    canvas.rowB.setAttribute('id', 'rowB'); // nesting rowA and rowB inside containerID
+
+    canvas.container.appendChild(canvas.rowA);
+    canvas.container.appendChild(canvas.rowB); // main tool bar creation
+
+    canvas.mainToolbar = document.createElement('div');
+    canvas.mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
+    canvas.mainToolbar.setAttribute('class', 'letse-maintoolbar');
+    canvas.mainToolbar.style.width = "".concat(this.width + 50, "px"); // TODO check if attribute contains px/is text
+
+    canvas.rowA.appendChild(canvas.mainToolbar); // canvas container and canvas creation
+
+    canvas.canvasContainer = document.createElement('div');
+    canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
+    canvas.rowB.appendChild(canvas.canvasContainer);
+    canvas.canvas.setAttribute('height', this.height);
+    canvas.canvas.setAttribute('width', this.width);
+    canvas.canvas.setAttribute('id', 'letse-canvas');
+    canvas.canvas.ctx = canvas.canvas.getContext('2d');
+    canvas.canvasContainer.appendChild(canvas.canvas); // second tool bar creation
+
+    canvas.secondToolbar = document.createElement('div');
+    canvas.secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
+    canvas.secondToolbar.setAttribute('class', 'letse-secondtoolbar');
+    canvas.secondToolbar.style.height = "".concat(this.height, "px");
+    canvas.rowB.appendChild(canvas.secondToolbar); // upper canvas
+
+    canvas.upperCanvas = document.createElement('canvas');
+    canvas.canvasContainer.appendChild(canvas.upperCanvas);
+    canvas.upperCanvas.setAttribute('height', this.height);
+    canvas.upperCanvas.setAttribute('width', this.width);
+    canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
+    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d'); // init default hold tool
+
+    var defaultTool = {
+      category: 'tool',
+      name: 'hold',
+      properties: {
+        enable: true,
+        toolbar: 'main',
+        icon: '/assets/images/hand.png',
+        cursor: 'grab',
+        active: false
+      },
+      events: {
+        mouseDown: 'mousedown',
+        mouseMove: 'mousemove',
+        mouseUp: 'mouseup'
+      }
+    };
+    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"](defaultTool); // build toolbars
+
+    _tools__WEBPACK_IMPORTED_MODULE_1__["Tools"].forEach(function (tool) {
+      var div = document.createElement('div');
+      div.style.backgroundImage = "url(\"".concat(tool.properties.icon, "\")");
+      div.setAttribute('id', tool.name);
+      div.setAttribute('class', 'tool enable unactive');
+      div.addEventListener('click', function () {
+        _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].toolHandler(tool, _this.canvas);
+        _this.activeTool = tool.name;
+      });
+
+      if (tool.properties.toolbar === 'main') {
+        canvas.mainToolbar.appendChild(div);
+      } else if (tool.properties.toolbar === 'second') {
+        canvas.secondToolbar.appendChild(div);
+      }
+
+      __webpack_require__("./js lazy recursive ^\\.\\/.*$")("./" + tool.name).then(function (toolModule) {
+        // console.log(rectangleTool.default[event]);
+        Object.keys(tool.events).forEach(function (event) {
+          // const eventFuncName = toolModule + '.default[' + event + ']';
+          canvas.upperCanvas.addEventListener(tool.events[event], toolModule.default[event]);
+        });
+      });
+    }); // canvas event listeners for default tool
+
+    canvas.upperCanvas.addEventListener('mousedown', function (e) {
+      var mousePosition = Editor.checkMousePosition(e, _this.canvas);
+      var mouse = {
+        positionX: mousePosition.x,
+        positionY: mousePosition.y
+      };
+
+      _this.elements.forEach(function (element) {
+        if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
+          // let selection = this.selection;
+          _this.dragoffx = mouse.positionX - element.x;
+          _this.dragoffy = mouse.positionY - element.y;
+          _this.dragging = true;
+          _this.selection = element;
+          var selection = _this.selection;
+          _this.valid = false;
+          _this.canvas.upperCanvas.ctx.strokeStyle = '#CC0000';
+          _this.canvas.upperCanvas.ctx.lineWidth = 2;
+
+          _this.canvas.upperCanvas.ctx.strokeRect(selection.x, selection.y, selection.width, selection.height);
+        }
+      });
+    });
+    canvas.upperCanvas.addEventListener('mousemove', function (e) {
+      if (_this.dragging) {
+        var mousePosition = Editor.checkMousePosition(e, _this.canvas);
+        _this.selection.x = mousePosition.x - _this.dragoffx;
+        _this.selection.y = mousePosition.y - _this.dragoffy;
+        _this.valid = false;
+      }
+    });
+    canvas.upperCanvas.addEventListener('mouseup', function (e) {
+      _this.dragging = false;
+    });
+    this.canvas = canvas;
+  }
+
+  _createClass(Editor, null, [{
+    key: "checkMousePosition",
+    value: function checkMousePosition(e, canvas) {
+      var offsetX = 0;
+      var offsetY = 0;
+      var mousePositionX;
+      var mousePositionY;
+      var html = document.body.parentNode;
+      var upperCanvas = canvas.upperCanvas;
+
+      if (upperCanvas.offsetParent !== undefined) {
+        do {
+          offsetX += upperCanvas.offsetLeft;
+          offsetY += upperCanvas.offsetTop;
+        } while (upperCanvas = upperCanvas.offsetParent);
+      }
+
+      upperCanvas = canvas.upperCanvas;
+      var stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas).paddingLeft, 10) || 0;
+      var stylePaddingTop = parseInt(document.defaultView.getComputedStyle(upperCanvas).paddingTop, 10) || 0;
+      var styleBorderLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas).borderLeftWidth, 10) || 0;
+      var styleBorderTop = parseInt(document.defaultView.getComputedStyle(upperCanvas).borderTopWidth, 10) || 0;
+      offsetX += stylePaddingLeft + styleBorderLeft + html.offsetLeft;
+      offsetY += stylePaddingTop + styleBorderTop + html.offsetTop;
+      mousePositionX = e.pageX - offsetX;
+      mousePositionY = e.pageY - offsetY;
+      return {
+        x: mousePositionX,
+        y: mousePositionY
+      };
+    }
+  }, {
+    key: "canvasUpdate",
+    value: function canvasUpdate(ctx, upperCTX, canvas) {
+      ctx.drawImage(canvas.upperCanvas, 0, 0);
+      upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+    }
+  }, {
+    key: "capitalizeFirstLetter",
+    value: function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+  }]);
+
+  return Editor;
+}();
+
+
+
+/***/ }),
+
+/***/ "./js/element.js":
+/*!***********************!*\
+  !*** ./js/element.js ***!
+  \***********************/
+/*! exports provided: Elements, Element */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Elements", function() { return Elements; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Element", function() { return Element; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Elements = [];
+
+var Element =
+/*#__PURE__*/
+function () {
+  function Element(x, y, width, height, style) {
+    _classCallCheck(this, Element);
+
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.style = style;
+  }
+
+  _createClass(Element, [{
+    key: "mouseInShape",
+    value: function mouseInShape(mousePositionX, mousePositionY) {
+      return this.x <= mousePositionX && this.x + this.width >= mousePositionX && this.y <= mousePositionY && this.y + this.height >= mousePositionY;
+    }
+  }]);
+
+  return Element;
+}();
+
+
+
+/***/ }),
+
+/***/ "./js/letse.config.js":
+/*!****************************!*\
+  !*** ./js/letse.config.js ***!
+  \****************************/
+/*! exports provided: plugins */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugins", function() { return plugins; });
+var plugins = [{
+  category: 'tool',
+  name: 'rectangle',
+  properties: {
+    enable: true,
+    toolbar: 'main',
+    icon: '/assets/images/sweep.png',
+    cursor: 'crosshair',
+    active: false
+  },
+  events: {
+    mouseDown: 'mousedown',
+    mouseMove: 'moudemove',
+    mouseUp: 'mouseup'
+  }
+}]; // TODO validity check for plugin structure
+
+/***/ }),
+
+/***/ "./js/main.js":
+/*!********************!*\
+  !*** ./js/main.js ***!
+  \********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./settings */ "./js/settings.js");
+/* harmony import */ var _editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./editor */ "./js/editor.js");
+/* harmony import */ var _letse_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letse.config */ "./js/letse.config.js");
+
+
+
+try {
+  var checkConfig = __webpack_require__(/*! ./letse.config */ "./js/letse.config.js");
+} catch (e) {
+  console.log('Config file doesn\'t exists');
+}
+
+
+_settings__WEBPACK_IMPORTED_MODULE_0__["default"].getPlugins(_letse_config__WEBPACK_IMPORTED_MODULE_2__["plugins"]);
+var editor = new _editor__WEBPACK_IMPORTED_MODULE_1__["default"]('letse-canvas-container', 300, 300, null);
+
+/***/ }),
+
+/***/ "./js/settings.js":
+/*!************************!*\
+  !*** ./js/settings.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Settings; });
+/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Settings =
+/*#__PURE__*/
+function () {
+  function Settings() {
+    _classCallCheck(this, Settings);
+  }
+
+  _createClass(Settings, null, [{
+    key: "getPlugins",
+    value: function getPlugins(plugins) {
+      plugins.forEach(function (plugin) {
+        if (plugin.category === 'tool') {
+          var tool = new _tools__WEBPACK_IMPORTED_MODULE_0__["Tool"](plugin);
+          _tools__WEBPACK_IMPORTED_MODULE_0__["Tools"].push(tool);
+        }
+      });
+    }
+  }]);
+
+  return Settings;
+}();
+
+
+
+/***/ }),
+
+/***/ "./js/tools.js":
+/*!*********************!*\
+  !*** ./js/tools.js ***!
+  \*********************/
+/*! exports provided: Tools, Tool */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Tools", function() { return Tools; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Tool", function() { return Tool; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Tools = [];
+var Tool =
+/*#__PURE__*/
+function () {
+  function Tool(tool) {
+    _classCallCheck(this, Tool);
+
+    this.name = tool.name;
+    this.category = 'tool';
+    this.active = false;
+    this.properties = tool.properties;
+    this.events = tool.events;
+    this.mouse = {
+      x: 0,
+      y: 0,
+      startX: 0,
+      startY: 0,
+      width: 0,
+      height: 0
+    };
+    this.enable = tool.enable;
+  }
+
+  _createClass(Tool, null, [{
+    key: "toolHandler",
+    value: function toolHandler(tool, canvas) {
+      tool.properties.active = true;
+      canvas.upperCanvas.addEventListener(tool.tool.properties.events.start, function (e) {
+        tool.tool.mouseDown(e);
+      });
+      canvas.upperCanvas.addEventListener(tool.tool.properties.events.control, function (e) {
+        tool.tool.mouseMove(e, canvas);
+      });
+      canvas.upperCanvas.addEventListener(tool.tool.properties.events.end, function (e) {
+        tool.tool.mouseUp(e, canvas);
+      });
+      this.activeToolName(tool.tool.name);
+    }
+  }]);
+
+  return Tool;
+}();
+
+/***/ })
+
+/******/ });
 //# sourceMappingURL=bundle.js.map

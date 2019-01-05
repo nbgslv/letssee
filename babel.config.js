@@ -1,6 +1,8 @@
 module.exports = function (api) {
   api.cache(true);
   return {
-    plugins: [],
+    plugins: [
+      '@babel/plugin-syntax-dynamic-import',
+    ],
   };
 };

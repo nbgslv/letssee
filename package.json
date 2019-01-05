@@ -6,11 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev-server": "webpack-dev-server --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode development"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "babel-loader": "^8.0.4",
     "grunt": "^1.0.3",
     "lodash": "^4.17.11",

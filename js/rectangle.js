@@ -2,18 +2,6 @@ import { Element, Elements } from './element';
 
 export default class Rectangle {
   constructor() {
-    this.name = 'rectangle';
-    this.properties = {
-      enable: true,
-      toolbar: 'main',
-      icon: '/assets/images/sweep.png',
-      active: false,
-      events: {
-        start: 'mousedown',
-        end: 'mouseup',
-        control: 'mousemove',
-      },
-    };
     this.mouse = {
       x: 0,
       y: 0,
@@ -26,13 +14,13 @@ export default class Rectangle {
     this.started = false;
   }
 
-  mouseDown(e) {
+  static mouseDown(e) {
     this.started = true;
     this.mouse.startX = e.clientX;
     this.mouse.startY = e.clientY;
   }
 
-  mouseMove(e, canvas) {
+  static mouseMove(e, canvas) {
     if (this.started) {
       this.mouse.x = Math.min(e.screenX, this.mouse.startX);
       this.mouse.y = Math.min(e.screenY, this.mouse.startY);
@@ -45,7 +33,7 @@ export default class Rectangle {
     }
   }
 
-  mouseUp(e, canvas) {
+  static mouseUp(e, canvas) {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
@@ -53,10 +41,5 @@ export default class Rectangle {
       const rect = new Element(this.mouse.x, this.mouse.y, this.mouse.width, this.mouse.height);
       Elements.push(rect);
     }
-  }
-
-  static canvasUpdate(ctx, upperCTX, canvas) {
-    ctx.drawImage(canvas.upperCanvas, 0, 0);
-    upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
   }
 }

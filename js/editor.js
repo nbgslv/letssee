@@ -1,14 +1,13 @@
 import { Elements } from './element';
-import { tools } from './tools';
+import { Tool, Tools } from './tools';
 
 export default class Editor {
-  constructor(containerID, height, width, options = {}, plugins = []) {
+  constructor(containerID, height, width, options = {}) {
     this.editorContainerID = containerID;
     this.height = height;
     this.width = width;
     this.options = options;
-    this.plugins = plugins;
-    this.activeTool = undefined;
+    this.activeTool = 'default';
 
     this.valid = false;
     this.elements = Elements;
@@ -80,23 +79,51 @@ export default class Editor {
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
     canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
 
+    // init default hold tool
+    const defaultTool = {
+      category: 'tool',
+      name: 'hold',
+      properties: {
+        enable: true,
+        toolbar: 'main',
+        icon: '/assets/images/hand.png',
+        cursor: 'grab',
+        active: false,
+      },
+      events: {
+        mouseDown: 'mousedown',
+        mouseMove: 'mousemove',
+        mouseUp: 'mouseup',
+      },
+    };
+
+    const defaultToolInstance = new Tool(defaultTool);
+
     // build toolbars
-    tools.forEach((tool) => {
+    Tools.forEach((tool) => {
       const div = document.createElement('div');
-      div.style.backgroundImage = `url("${tool.tool.properties.icon}")`;
+      div.style.backgroundImage = `url("${tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
-      div.addEventListener('click', () => Editor.toolHandler(tool));
-      if (tool.tool.properties.toolbar === 'main') {
+      div.addEventListener('click', () => {
+        Tool.toolHandler(tool, this.canvas);
+        this.activeTool = tool.name;
+      });
+      if (tool.properties.toolbar === 'main') {
         canvas.mainToolbar.appendChild(div);
-      } else if (tool.tool.properties.toolbar === 'second') {
+      } else if (tool.properties.toolbar === 'second') {
         canvas.secondToolbar.appendChild(div);
       }
+      import('./' + tool.name).then((toolModule) => {
+        // console.log(rectangleTool.default[event]);
+
+        Object.keys(tool.events).forEach((event) => {
+          // const eventFuncName = toolModule + '.default[' + event + ']';
+          canvas.upperCanvas.addEventListener(tool.events[event], toolModule.default[event]);
+        });
+      });
     });
-
-    // init default hold tool
-
-    // canvas event listeners for element select/drag
+    // canvas event listeners for default tool
     canvas.upperCanvas.addEventListener('mousedown', (e) => {
       const mousePosition = Editor.checkMousePosition(e, this.canvas);
       const mouse = {
@@ -170,17 +197,12 @@ export default class Editor {
     return { x: mousePositionX, y: mousePositionY };
   }
 
-  static toolHandler(tool, canvas) {
-    tool.tool.properties.active = true;
-    canvas.upperCanvas.addEventListener(tool.tool.properties.events.start, (e) => {
-      tool.tool.mouseDown(e);
-    });
-    canvas.upperCanvas.addEventListener(tool.tool.properties.events.control, (e) => {
-      tool.tool.mouseMove(e, canvas);
-    });
-    canvas.upperCanvas.addEventListener(tool.tool.properties.events.end, (e) => {
-      tool.tool.mouseUp(e, canvas);
-    });
-    this.activeToolName(tool.tool.name);
+  static canvasUpdate(ctx, upperCTX, canvas) {
+    ctx.drawImage(canvas.upperCanvas, 0, 0);
+    upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+  }
+
+  static capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 }

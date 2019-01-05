@@ -1,10 +1,11 @@
-import { Tool } from './tools'
+import { Tool, Tools } from './tools';
 
 export default class Settings {
-  static plugins(plugins) {
+  static getPlugins(plugins) {
     plugins.forEach((plugin) => {
       if (plugin.category === 'tool') {
         const tool = new Tool(plugin);
+        Tools.push(tool);
       }
     });
   }
