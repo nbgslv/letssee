@@ -206,49 +206,83 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./ch": [
+		"./js/ch.js",
+		7,
+		0
+	],
+	"./ch.js": [
+		"./js/ch.js",
+		7,
+		0
+	],
 	"./editor": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./editor.js": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./element": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./element.js": [
-		"./js/element.js"
+		"./js/element.js",
+		9
+	],
+	"./hold": [
+		"./js/hold.js",
+		9,
+		1
+	],
+	"./hold.js": [
+		"./js/hold.js",
+		9,
+		1
 	],
 	"./letse.config": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./main": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./main.js": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		0
+		9,
+		2
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		0
+		9,
+		2
 	],
 	"./settings": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./settings.js": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./tools": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./tools.js": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	]
 };
 function webpackAsyncContext(req) {
@@ -260,9 +294,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__(id);
+		return __webpack_require__.t(id, ids[1])
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -308,7 +342,7 @@ function () {
     this.height = height;
     this.width = width;
     this.options = options;
-    this.activeTool = 'default';
+    this.activeTool = null;
     this.valid = false;
     this.elements = _element__WEBPACK_IMPORTED_MODULE_0__["Elements"];
     this.dragging = false;
@@ -389,7 +423,9 @@ function () {
         mouseUp: 'mouseup'
       }
     };
-    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"](defaultTool); // build toolbars
+    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"](defaultTool);
+    _tools__WEBPACK_IMPORTED_MODULE_1__["Tools"].push(defaultTool);
+    this.activeTool = defaultTool; // build toolbars
 
     _tools__WEBPACK_IMPORTED_MODULE_1__["Tools"].forEach(function (tool) {
       var div = document.createElement('div');
@@ -397,8 +433,7 @@ function () {
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
       div.addEventListener('click', function () {
-        _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].toolHandler(tool, _this.canvas);
-        _this.activeTool = tool.name;
+        _this.activeTool = tool;
       });
 
       if (tool.properties.toolbar === 'main') {
@@ -406,49 +441,16 @@ function () {
       } else if (tool.properties.toolbar === 'second') {
         canvas.secondToolbar.appendChild(div);
       }
-
-      __webpack_require__("./js lazy recursive ^\\.\\/.*$")("./" + tool.name).then(function (toolModule) {
-        // console.log(rectangleTool.default[event]);
-        Object.keys(tool.events).forEach(function (event) {
-          // const eventFuncName = toolModule + '.default[' + event + ']';
-          canvas.upperCanvas.addEventListener(tool.events[event], toolModule.default[event]);
-        });
-      });
     }); // canvas event listeners for default tool
 
     canvas.upperCanvas.addEventListener('mousedown', function (e) {
-      var mousePosition = Editor.checkMousePosition(e, _this.canvas);
-      var mouse = {
-        positionX: mousePosition.x,
-        positionY: mousePosition.y
-      };
-
-      _this.elements.forEach(function (element) {
-        if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
-          // let selection = this.selection;
-          _this.dragoffx = mouse.positionX - element.x;
-          _this.dragoffy = mouse.positionY - element.y;
-          _this.dragging = true;
-          _this.selection = element;
-          var selection = _this.selection;
-          _this.valid = false;
-          _this.canvas.upperCanvas.ctx.strokeStyle = '#CC0000';
-          _this.canvas.upperCanvas.ctx.lineWidth = 2;
-
-          _this.canvas.upperCanvas.ctx.strokeRect(selection.x, selection.y, selection.width, selection.height);
-        }
-      });
+      return _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].eventHandler(e, _this.activeTool);
     });
     canvas.upperCanvas.addEventListener('mousemove', function (e) {
-      if (_this.dragging) {
-        var mousePosition = Editor.checkMousePosition(e, _this.canvas);
-        _this.selection.x = mousePosition.x - _this.dragoffx;
-        _this.selection.y = mousePosition.y - _this.dragoffy;
-        _this.valid = false;
-      }
+      return _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].eventHandler(e, _this.activeTool);
     });
     canvas.upperCanvas.addEventListener('mouseup', function (e) {
-      _this.dragging = false;
+      return _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].eventHandler(e, _this.activeTool);
     });
     this.canvas = canvas;
   }
@@ -489,11 +491,6 @@ function () {
     value: function canvasUpdate(ctx, upperCTX, canvas) {
       ctx.drawImage(canvas.upperCanvas, 0, 0);
       upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
-    }
-  }, {
-    key: "capitalizeFirstLetter",
-    value: function capitalizeFirstLetter(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
     }
   }]);
 
@@ -692,19 +689,15 @@ function () {
   }
 
   _createClass(Tool, null, [{
-    key: "toolHandler",
-    value: function toolHandler(tool, canvas) {
-      tool.properties.active = true;
-      canvas.upperCanvas.addEventListener(tool.tool.properties.events.start, function (e) {
-        tool.tool.mouseDown(e);
+    key: "eventHandler",
+    value: function eventHandler(e, tool) {
+      __webpack_require__("./js lazy recursive ^\\.\\/.*$")("./" + tool.name).then(function (toolModule) {
+        Object.keys(tool.events).forEach(function (event) {
+          if (tool.events[event] === e.type) {
+            toolModule.default[event];
+          }
+        });
       });
-      canvas.upperCanvas.addEventListener(tool.tool.properties.events.control, function (e) {
-        tool.tool.mouseMove(e, canvas);
-      });
-      canvas.upperCanvas.addEventListener(tool.tool.properties.events.end, function (e) {
-        tool.tool.mouseUp(e, canvas);
-      });
-      this.activeToolName(tool.tool.name);
     }
   }]);
 

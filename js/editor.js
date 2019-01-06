@@ -7,7 +7,7 @@ export default class Editor {
     this.height = height;
     this.width = width;
     this.options = options;
-    this.activeTool = 'default';
+    this.activeTool = null;
 
     this.valid = false;
     this.elements = Elements;
@@ -98,6 +98,8 @@ export default class Editor {
     };
 
     const defaultToolInstance = new Tool(defaultTool);
+    Tools.push(defaultTool);
+    this.activeTool = defaultTool;
 
     // build toolbars
     Tools.forEach((tool) => {
@@ -105,61 +107,18 @@ export default class Editor {
       div.style.backgroundImage = `url("${tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
-      div.addEventListener('click', () => {
-        Tool.toolHandler(tool, this.canvas);
-        this.activeTool = tool.name;
-      });
+      div.addEventListener('click', () => { this.activeTool = tool; });
       if (tool.properties.toolbar === 'main') {
         canvas.mainToolbar.appendChild(div);
       } else if (tool.properties.toolbar === 'second') {
         canvas.secondToolbar.appendChild(div);
       }
-      import('./' + tool.name).then((toolModule) => {
-        // console.log(rectangleTool.default[event]);
-
-        Object.keys(tool.events).forEach((event) => {
-          // const eventFuncName = toolModule + '.default[' + event + ']';
-          canvas.upperCanvas.addEventListener(tool.events[event], toolModule.default[event]);
-        });
-      });
     });
     // canvas event listeners for default tool
-    canvas.upperCanvas.addEventListener('mousedown', (e) => {
-      const mousePosition = Editor.checkMousePosition(e, this.canvas);
-      const mouse = {
-        positionX: mousePosition.x,
-        positionY: mousePosition.y,
-      };
+    canvas.upperCanvas.addEventListener('mousedown', e => Tool.eventHandler(e, this.activeTool));
+    canvas.upperCanvas.addEventListener('mousemove', e => Tool.eventHandler(e, this.activeTool));
+    canvas.upperCanvas.addEventListener('mouseup', e => Tool.eventHandler(e, this.activeTool));
 
-      this.elements.forEach((element) => {
-        if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
-          // let selection = this.selection;
-          this.dragoffx = mouse.positionX - element.x;
-          this.dragoffy = mouse.positionY - element.y;
-          this.dragging = true;
-          this.selection = element;
-          let selection = this.selection;
-          this.valid = false;
-          this.canvas.upperCanvas.ctx.strokeStyle = '#CC0000';
-          this.canvas.upperCanvas.ctx.lineWidth = 2;
-          this.canvas.upperCanvas.ctx.strokeRect(selection.x,
-            selection.y,
-            selection.width,
-            selection.height);
-        }
-      });
-    });
-    canvas.upperCanvas.addEventListener('mousemove', (e) => {
-      if (this.dragging) {
-        const mousePosition = Editor.checkMousePosition(e, this.canvas);
-        this.selection.x = mousePosition.x - this.dragoffx;
-        this.selection.y = mousePosition.y - this.dragoffy;
-        this.valid = false;
-      }
-    });
-    canvas.upperCanvas.addEventListener('mouseup', (e) => {
-      this.dragging = false;
-    });
     this.canvas = canvas;
   }
 
@@ -200,9 +159,5 @@ export default class Editor {
   static canvasUpdate(ctx, upperCTX, canvas) {
     ctx.drawImage(canvas.upperCanvas, 0, 0);
     upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
-  }
-
-  static capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 }

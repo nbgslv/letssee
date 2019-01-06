@@ -18,17 +18,14 @@ export class Tool {
     this.enable = tool.enable;
   }
 
-  static toolHandler(tool, canvas) {
-    tool.properties.active = true;
-    canvas.upperCanvas.addEventListener(tool.tool.properties.events.start, (e) => {
-      tool.tool.mouseDown(e);
+  static eventHandler(e, tool) {
+    import('./' + tool.name).then((toolModule) => {
+
+      Object.keys(tool.events).forEach((event) => {
+        if (tool.events[event] === e.type) {
+          toolModule.default[event];
+        }
+      });
     });
-    canvas.upperCanvas.addEventListener(tool.tool.properties.events.control, (e) => {
-      tool.tool.mouseMove(e, canvas);
-    });
-    canvas.upperCanvas.addEventListener(tool.tool.properties.events.end, (e) => {
-      tool.tool.mouseUp(e, canvas);
-    });
-    this.activeToolName(tool.tool.name);
   }
 }
