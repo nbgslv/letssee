@@ -7,23 +7,15 @@ export class Tool {
     this.active = false;
     this.properties = tool.properties;
     this.events = tool.events;
-    this.mouse = {
-      x: 0,
-      y: 0,
-      startX: 0,
-      startY: 0,
-      width: 0,
-      height: 0,
-    };
     this.enable = tool.enable;
   }
 
-  static eventHandler(e, tool) {
+  static eventHandler(e, tool, canvas) {
     import('./' + tool.name).then((toolModule) => {
 
       Object.keys(tool.events).forEach((event) => {
         if (tool.events[event] === e.type) {
-          toolModule.default[event];
+          const toolEventFunction = toolModule.default[event](e, canvas);
         }
       });
     });

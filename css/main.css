@@ -34,6 +34,8 @@
 
 .tool{
     background-size: 100%;
+    position: relative;
+    float: right;
     width: 30px;
     height: 50px;
     cursor: pointer;

@@ -206,83 +206,57 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./ch": [
-		"./js/ch.js",
-		7,
-		0
-	],
-	"./ch.js": [
-		"./js/ch.js",
-		7,
-		0
-	],
 	"./editor": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./editor.js": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./element": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./element.js": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./hold": [
 		"./js/hold.js",
-		9,
-		1
+		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		9,
-		1
+		0
 	],
 	"./letse.config": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./main": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./main.js": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		9,
-		2
+		1
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		9,
-		2
+		1
 	],
 	"./settings": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./settings.js": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./tools": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./tools.js": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	]
 };
 function webpackAsyncContext(req) {
@@ -294,9 +268,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__.t(id, ids[1])
+		return __webpack_require__(id);
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -694,7 +668,7 @@ function () {
       __webpack_require__("./js lazy recursive ^\\.\\/.*$")("./" + tool.name).then(function (toolModule) {
         Object.keys(tool.events).forEach(function (event) {
           if (tool.events[event] === e.type) {
-            toolModule.default[event];
+            var toolEventFunction = toolModule.default[event]();
           }
         });
       });

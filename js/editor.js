@@ -1,4 +1,5 @@
 import { Elements } from './element';
+import { CANVAS_STATE } from './globals';
 import { Tool, Tools } from './tools';
 
 export default class Editor {
@@ -7,14 +8,6 @@ export default class Editor {
     this.height = height;
     this.width = width;
     this.options = options;
-    this.activeTool = null;
-
-    this.valid = false;
-    this.elements = Elements;
-    this.dragging = false;
-    this.selection = null;
-    this.dragoffx = 0;
-    this.dragoffy = 0;
 
     /*
     * The canvas is built into the specified container(<div>).
@@ -99,7 +92,7 @@ export default class Editor {
 
     const defaultToolInstance = new Tool(defaultTool);
     Tools.push(defaultTool);
-    this.activeTool = defaultTool;
+    CANVAS_STATE.activeTool = defaultTool;
 
     // build toolbars
     Tools.forEach((tool) => {
@@ -107,7 +100,7 @@ export default class Editor {
       div.style.backgroundImage = `url("${tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
-      div.addEventListener('click', () => { this.activeTool = tool; });
+      div.addEventListener('click', () => { CANVAS_STATE.activeTool = tool; });
       if (tool.properties.toolbar === 'main') {
         canvas.mainToolbar.appendChild(div);
       } else if (tool.properties.toolbar === 'second') {
@@ -115,9 +108,9 @@ export default class Editor {
       }
     });
     // canvas event listeners for default tool
-    canvas.upperCanvas.addEventListener('mousedown', e => Tool.eventHandler(e, this.activeTool));
-    canvas.upperCanvas.addEventListener('mousemove', e => Tool.eventHandler(e, this.activeTool));
-    canvas.upperCanvas.addEventListener('mouseup', e => Tool.eventHandler(e, this.activeTool));
+    canvas.upperCanvas.addEventListener('mousedown', e => Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas));
+    canvas.upperCanvas.addEventListener('mousemove', e => Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas));
+    canvas.upperCanvas.addEventListener('mouseup', e => Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas));
 
     this.canvas = canvas;
   }
@@ -156,8 +149,8 @@ export default class Editor {
     return { x: mousePositionX, y: mousePositionY };
   }
 
-  static canvasUpdate(ctx, upperCTX, canvas) {
-    ctx.drawImage(canvas.upperCanvas, 0, 0);
-    upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+  static canvasUpdate(canvas) {
+    canvas.canvas.ctx.drawImage(canvas.upperCanvas, 0, 0);
+    canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
   }
 }

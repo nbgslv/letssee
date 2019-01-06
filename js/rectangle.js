@@ -1,35 +1,34 @@
 import { Element, Elements } from './element';
+import Editor from './editor';
+
+const mouse = {
+  x: 0,
+  y: 0,
+  startX: 0,
+  startY: 0,
+  width: 0,
+  height: 0,
+};
 
 export default class Rectangle {
   constructor() {
-    this.mouse = {
-      x: 0,
-      y: 0,
-      startX: 0,
-      startY: 0,
-      width: 0,
-      height: 0,
-    };
-    this.ctx = null;
     this.started = false;
   }
 
   static mouseDown(e) {
     this.started = true;
-    this.mouse.startX = e.clientX;
-    this.mouse.startY = e.clientY;
+    mouse.startX = e.clientX;
+    mouse.startY = e.clientY;
   }
 
   static mouseMove(e, canvas) {
     if (this.started) {
-      this.mouse.x = Math.min(e.screenX, this.mouse.startX);
-      this.mouse.y = Math.min(e.screenY, this.mouse.startY);
-      this.mouse.width = Math.abs(e.screenX - this.mouse.startX);
-      this.mouse.height = Math.abs(e.screenY - this.mouse.startY);
-      this.ctx = canvas.canvas.getContext('2d');
-      this.upperCTX = canvas.upperCanvas.getContext('2d');
-      this.upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
-      this.upperCTX.strokeRect(this.mouse.x, this.mouse.y, this.mouse.width, this.mouse.height);
+      mouse.x = Math.min(e.screenX, mouse.startX);
+      mouse.y = Math.min(e.screenY, mouse.startY);
+      mouse.width = Math.abs(e.screenX - mouse.startX);
+      mouse.height = Math.abs(e.screenY - mouse.startY);
+      canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+      canvas.upperCanvas.ctx.strokeRect(mouse.x, mouse.y, mouse.width, mouse.height);
     }
   }
 
@@ -37,8 +36,8 @@ export default class Rectangle {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      Rectangle.canvasUpdate(this.ctx, this.upperCTX, canvas);
-      const rect = new Element(this.mouse.x, this.mouse.y, this.mouse.width, this.mouse.height);
+      Editor.canvasUpdate(canvas);
+      const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
       Elements.push(rect);
     }
   }

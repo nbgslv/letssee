@@ -32,6 +32,7 @@ export default class Hold {
       this.selection.y = mousePosition.y - this.dragoffy;
       this.valid = false;
     }
+    console.log('It worked!');
   }
 
   static mouseUp(e) {

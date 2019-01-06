@@ -158,4 +158,4 @@ cmake-build-*/
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 /js/ch.js
-dist/bundle.js.map
+/dist/
