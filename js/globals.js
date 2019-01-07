@@ -6,3 +6,6 @@ export const CANVAS_STATE = {
   dragoffx: 0,
   dragoffy: 0,
 };
+
+export const Undo = [];
+export const Redo = [];
