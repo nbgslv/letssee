@@ -11,7 +11,7 @@ export const plugins = [
     },
     events: {
       mouseDown: 'mousedown',
-      mouseMove: 'moudemove',
+      mouseMove: 'mousemove',
       mouseUp: 'mouseup',
     },
   },

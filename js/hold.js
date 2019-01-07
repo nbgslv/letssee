@@ -1,41 +1,65 @@
+import { Elements } from './element';
+import Editor from './editor';
+import { CANVAS_STATE } from './globals';
+
+let selection;
+
 export default class Hold {
-  static mouseDown(e) {
-    const mousePosition = Editor.checkMousePosition(e, this.canvas);
+  static mouseDown(e, canvas) {
+    const mousePosition = Editor.checkMousePosition(e, canvas);
     const mouse = {
       positionX: mousePosition.x,
       positionY: mousePosition.y,
     };
-
-    this.elements.forEach((element) => {
+    Elements.forEach((element) => {
       if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
         // let selection = this.selection;
         this.dragoffx = mouse.positionX - element.x;
         this.dragoffy = mouse.positionY - element.y;
-        this.dragging = true;
-        this.selection = element;
-        let selection = this.selection;
-        this.valid = false;
-        this.canvas.upperCanvas.ctx.strokeStyle = '#CC0000';
-        this.canvas.upperCanvas.ctx.lineWidth = 2;
-        this.canvas.upperCanvas.ctx.strokeRect(selection.x,
-          selection.y,
-          selection.width,
-          selection.height);
-      }
+        CANVAS_STATE.dragging = true;
+        CANVAS_STATE.selection = element;
+        selection = CANVAS_STATE.selection;
+        Hold.draw(canvas);
+        //return;
+      }/*
+      if (CANVAS_STATE.selection) {
+        CANVAS_STATE.selection = null;
+        selection = null;
+        Hold.draw(canvas);
+      } */
     });
   }
 
-  static mouseMove(e) {
-    if (this.dragging) {
-      const mousePosition = Editor.checkMousePosition(e, this.canvas);
-      this.selection.x = mousePosition.x - this.dragoffx;
-      this.selection.y = mousePosition.y - this.dragoffy;
-      this.valid = false;
+  static mouseMove(e, canvas) {
+    if (CANVAS_STATE.dragging) {
+      const mousePosition = Editor.checkMousePosition(e, canvas);
+      selection.x = mousePosition.x - this.dragoffx;
+      selection.y = mousePosition.y - this.dragoffy;
+      Hold.draw(canvas);
     }
-    console.log('It worked!');
   }
 
-  static mouseUp(e) {
-    this.dragging = false;
+  static mouseUp(e, canvas) {
+    CANVAS_STATE.dragging = false;
+  }
+
+  static draw(canvas) {
+    canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+    canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+    Elements.forEach((element) => {
+      if (!(element.x > canvas.upperCanvas.width || element.y > canvas.upperCanvas.height
+        || element.x + element.width < 0 || element.y + element.height < 0)) {
+        canvas.upperCanvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+      }
+      if (selection !== null) {
+        canvas.upperCanvas.ctx.strokeRect(
+          selection.x,
+          selection.y,
+          selection.width,
+          selection.height,
+        );
+      }
+      Editor.canvasUpdate(canvas);
+    });
   }
 }

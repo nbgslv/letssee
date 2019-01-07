@@ -206,57 +206,91 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./ch": [
+		"./js/ch.js",
+		7,
+		0
+	],
+	"./ch.js": [
+		"./js/ch.js",
+		7,
+		0
+	],
 	"./editor": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./editor.js": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./element": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./element.js": [
-		"./js/element.js"
+		"./js/element.js",
+		9
+	],
+	"./globals": [
+		"./js/globals.js",
+		9
+	],
+	"./globals.js": [
+		"./js/globals.js",
+		9
 	],
 	"./hold": [
 		"./js/hold.js",
-		0
+		9,
+		1
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		0
+		9,
+		1
 	],
 	"./letse.config": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./main": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./main.js": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		1
+		9,
+		2
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		1
+		9,
+		2
 	],
 	"./settings": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./settings.js": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./tools": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./tools.js": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	]
 };
 function webpackAsyncContext(req) {
@@ -268,9 +302,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__(id);
+		return __webpack_require__.t(id, ids[1])
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -292,7 +326,8 @@ module.exports = webpackAsyncContext;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Editor; });
 /* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./element */ "./js/element.js");
-/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -302,12 +337,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var Editor =
 /*#__PURE__*/
 function () {
   function Editor(containerID, height, width) {
-    var _this = this;
-
     var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
     _classCallCheck(this, Editor);
@@ -316,13 +350,6 @@ function () {
     this.height = height;
     this.width = width;
     this.options = options;
-    this.activeTool = null;
-    this.valid = false;
-    this.elements = _element__WEBPACK_IMPORTED_MODULE_0__["Elements"];
-    this.dragging = false;
-    this.selection = null;
-    this.dragoffx = 0;
-    this.dragoffy = 0;
     /*
     * The canvas is built into the specified container(<div>).
     * Each element is nested inside a <div> container, following the structure:
@@ -397,17 +424,17 @@ function () {
         mouseUp: 'mouseup'
       }
     };
-    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"](defaultTool);
-    _tools__WEBPACK_IMPORTED_MODULE_1__["Tools"].push(defaultTool);
-    this.activeTool = defaultTool; // build toolbars
+    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](defaultTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(defaultTool);
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // build toolbars
 
-    _tools__WEBPACK_IMPORTED_MODULE_1__["Tools"].forEach(function (tool) {
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].forEach(function (tool) {
       var div = document.createElement('div');
       div.style.backgroundImage = "url(\"".concat(tool.properties.icon, "\")");
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
       div.addEventListener('click', function () {
-        _this.activeTool = tool;
+        _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = tool;
       });
 
       if (tool.properties.toolbar === 'main') {
@@ -418,13 +445,13 @@ function () {
     }); // canvas event listeners for default tool
 
     canvas.upperCanvas.addEventListener('mousedown', function (e) {
-      return _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].eventHandler(e, _this.activeTool);
+      return _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
     });
     canvas.upperCanvas.addEventListener('mousemove', function (e) {
-      return _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].eventHandler(e, _this.activeTool);
+      return _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
     });
     canvas.upperCanvas.addEventListener('mouseup', function (e) {
-      return _tools__WEBPACK_IMPORTED_MODULE_1__["Tool"].eventHandler(e, _this.activeTool);
+      return _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
     });
     this.canvas = canvas;
   }
@@ -462,9 +489,9 @@ function () {
     }
   }, {
     key: "canvasUpdate",
-    value: function canvasUpdate(ctx, upperCTX, canvas) {
-      ctx.drawImage(canvas.upperCanvas, 0, 0);
-      upperCTX.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+    value: function canvasUpdate(canvas) {
+      canvas.canvas.ctx.drawImage(canvas.upperCanvas, 0, 0);
+      canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
     }
   }]);
 
@@ -521,6 +548,27 @@ function () {
 
 /***/ }),
 
+/***/ "./js/globals.js":
+/*!***********************!*\
+  !*** ./js/globals.js ***!
+  \***********************/
+/*! exports provided: CANVAS_STATE */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_STATE", function() { return CANVAS_STATE; });
+var CANVAS_STATE = {
+  dragging: false,
+  activeTool: 'hold',
+  valid: false,
+  selection: [],
+  dragoffx: 0,
+  dragoffy: 0
+};
+
+/***/ }),
+
 /***/ "./js/letse.config.js":
 /*!****************************!*\
   !*** ./js/letse.config.js ***!
@@ -543,7 +591,7 @@ var plugins = [{
   },
   events: {
     mouseDown: 'mousedown',
-    mouseMove: 'moudemove',
+    mouseMove: 'mousemove',
     mouseUp: 'mouseup'
   }
 }]; // TODO validity check for plugin structure
@@ -651,24 +699,16 @@ function () {
     this.active = false;
     this.properties = tool.properties;
     this.events = tool.events;
-    this.mouse = {
-      x: 0,
-      y: 0,
-      startX: 0,
-      startY: 0,
-      width: 0,
-      height: 0
-    };
     this.enable = tool.enable;
   }
 
   _createClass(Tool, null, [{
     key: "eventHandler",
-    value: function eventHandler(e, tool) {
+    value: function eventHandler(e, tool, canvas) {
       __webpack_require__("./js lazy recursive ^\\.\\/.*$")("./" + tool.name).then(function (toolModule) {
         Object.keys(tool.events).forEach(function (event) {
           if (tool.events[event] === e.type) {
-            var toolEventFunction = toolModule.default[event]();
+            var toolEventFunction = toolModule.default[event](e, canvas);
           }
         });
       });
