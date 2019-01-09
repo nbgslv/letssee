@@ -129,7 +129,7 @@ export default class Editor {
         active: false,
       },
       events: {
-        canvasUndo: 'click',
+        canvasRedo: 'click',
       },
     };
     const redoToolInstance = new Tool(redoTool);

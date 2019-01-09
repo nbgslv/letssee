@@ -440,7 +440,7 @@ function () {
         active: false
       },
       events: {
-        canvasUndo: 'click'
+        canvasRedo: 'click'
       }
     };
     var redoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](redoTool);

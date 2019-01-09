@@ -24,6 +24,7 @@
 
 #letse-canvas{
     border: 1px solid rgb(0, 0, 0);
+    /* visibility: hidden; */
 }
 
 #letse-upper-canvas{
