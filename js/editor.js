@@ -78,6 +78,7 @@ export default class Editor {
       name: 'hold',
       properties: {
         enable: true,
+        type: 'canvas-tool',
         toolbar: 'main',
         icon: '/assets/images/hand.png',
         cursor: 'grab',
@@ -94,13 +95,58 @@ export default class Editor {
     Tools.push(defaultTool);
     CANVAS_STATE.activeTool = defaultTool;
 
+    // build-in tools
+    // Undo
+    const undoTool = {
+      category: 'tool',
+      name: 'undoredo',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/reply.png',
+        cursor: 'default',
+        active: false,
+      },
+      events: {
+        canvasUndo: 'click',
+      },
+    };
+
+    const undoToolInstance = new Tool(undoTool);
+    Tools.push(undoTool);
+
+    // Redo
+    const redoTool = {
+      category: 'tool',
+      name: 'undoredo',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/redo.png',
+        cursor: 'default',
+        active: false,
+      },
+      events: {
+        canvasUndo: 'click',
+      },
+    };
+    const redoToolInstance = new Tool(redoTool);
+    Tools.push(redoTool);
+
+    // TODO change css by tool events
     // build toolbars
     Tools.forEach((tool) => {
       const div = document.createElement('div');
       div.style.backgroundImage = `url("${tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
-      div.addEventListener('click', () => { CANVAS_STATE.activeTool = tool; });
+      if (tool.properties.type === 'canvas-tool') {
+        div.addEventListener('click', () => { CANVAS_STATE.activeTool = tool; });
+      } else if (tool.properties.type === 'own-click') {
+        div.addEventListener('click', (e) => { Tool.eventHandler(e, tool, canvas); });
+      }
       if (tool.properties.toolbar === 'main') {
         canvas.mainToolbar.appendChild(div);
       } else if (tool.properties.toolbar === 'second') {
@@ -108,9 +154,15 @@ export default class Editor {
       }
     });
     // canvas event listeners for default tool
-    canvas.upperCanvas.addEventListener('mousedown', e => Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas));
-    canvas.upperCanvas.addEventListener('mousemove', e => Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas));
-    canvas.upperCanvas.addEventListener('mouseup', e => Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas));
+    const toolEventHandler = (function (e) {
+      const promise = new Promise((resolve) => {
+        Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas);
+        resolve(Tool.recordUndo());
+      });
+    });
+    canvas.upperCanvas.addEventListener('mousedown', e => toolEventHandler(e));
+    canvas.upperCanvas.addEventListener('mousemove', e => toolEventHandler(e));
+    canvas.upperCanvas.addEventListener('mouseup', e => toolEventHandler(e));
 
     this.canvas = canvas;
   }

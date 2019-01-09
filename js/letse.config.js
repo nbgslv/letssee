@@ -4,6 +4,7 @@ export const plugins = [
     name: 'rectangle',
     properties: {
       enable: true,
+      type: 'canvas-tool',
       toolbar: 'main',
       icon: '/assets/images/sweep.png',
       cursor: 'crosshair',

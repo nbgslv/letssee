@@ -1,3 +1,6 @@
+import { Undo } from './globals';
+import { Elements } from './element';
+
 export const Tools = [];
 
 export class Tool {
@@ -18,6 +21,13 @@ export class Tool {
           const toolEventFunction = toolModule.default[event](e, canvas);
         }
       });
+    });
+  }
+
+  static recordUndo() {
+    Undo.length = 0;
+    Elements.forEach((element) => {
+      Undo.push(element);
     });
   }
 }

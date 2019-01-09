@@ -29,14 +29,6 @@ function () {
   }
 
   _createClass(UndoRedo, null, [{
-    key: "recordUndo",
-    value: function recordUndo(e, canvas, Elements) {
-      _globals__WEBPACK_IMPORTED_MODULE_0__["Undo"].length = 0;
-      Elements.forEach(function (element) {
-        _globals__WEBPACK_IMPORTED_MODULE_0__["Undo"].push(element);
-      });
-    }
-  }, {
     key: "canvasUndo",
     value: function canvasUndo(e, canvas) {
       var i = 0;

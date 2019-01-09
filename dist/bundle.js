@@ -393,6 +393,7 @@ function () {
       name: 'hold',
       properties: {
         enable: true,
+        type: 'canvas-tool',
         toolbar: 'main',
         icon: '/assets/images/hand.png',
         cursor: 'grab',
@@ -406,16 +407,61 @@ function () {
     };
     var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](defaultTool);
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(defaultTool);
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // build toolbars
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // build-in tools
+    // Undo
+
+    var undoTool = {
+      category: 'tool',
+      name: 'undoredo',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/reply.png',
+        cursor: 'default',
+        active: false
+      },
+      events: {
+        canvasUndo: 'click'
+      }
+    };
+    var undoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](undoTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(undoTool); // Redo
+
+    var redoTool = {
+      category: 'tool',
+      name: 'undoredo',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/redo.png',
+        cursor: 'default',
+        active: false
+      },
+      events: {
+        canvasUndo: 'click'
+      }
+    };
+    var redoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](redoTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(redoTool); // TODO change css by tool events
+    // build toolbars
 
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].forEach(function (tool) {
       var div = document.createElement('div');
       div.style.backgroundImage = "url(\"".concat(tool.properties.icon, "\")");
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
-      div.addEventListener('click', function () {
-        _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = tool;
-      });
+
+      if (tool.properties.type === 'canvas-tool') {
+        div.addEventListener('click', function () {
+          _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = tool;
+        });
+      } else if (tool.properties.type === 'own-click') {
+        div.addEventListener('click', function (e) {
+          _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, tool, canvas);
+        });
+      }
 
       if (tool.properties.toolbar === 'main') {
         canvas.mainToolbar.appendChild(div);
@@ -424,14 +470,21 @@ function () {
       }
     }); // canvas event listeners for default tool
 
+    var toolEventHandler = function toolEventHandler(e) {
+      var promise = new Promise(function (resolve) {
+        _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
+        resolve(_tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].recordUndo());
+      });
+    };
+
     canvas.upperCanvas.addEventListener('mousedown', function (e) {
-      return _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
+      return toolEventHandler(e);
     });
     canvas.upperCanvas.addEventListener('mousemove', function (e) {
-      return _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
+      return toolEventHandler(e);
     });
     canvas.upperCanvas.addEventListener('mouseup', function (e) {
-      return _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
+      return toolEventHandler(e);
     });
     this.canvas = canvas;
   }
@@ -568,6 +621,7 @@ var plugins = [{
   name: 'rectangle',
   properties: {
     enable: true,
+    type: 'canvas-tool',
     toolbar: 'main',
     icon: '/assets/images/sweep.png',
     cursor: 'crosshair',
@@ -665,11 +719,15 @@ function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Tools", function() { return Tools; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Tool", function() { return Tool; });
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+/* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./element */ "./js/element.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 var Tools = [];
 var Tool =
@@ -695,6 +753,14 @@ function () {
             var toolEventFunction = toolModule.default[event](e, canvas);
           }
         });
+      });
+    }
+  }, {
+    key: "recordUndo",
+    value: function recordUndo() {
+      _globals__WEBPACK_IMPORTED_MODULE_0__["Undo"].length = 0;
+      _element__WEBPACK_IMPORTED_MODULE_1__["Elements"].forEach(function (element) {
+        _globals__WEBPACK_IMPORTED_MODULE_0__["Undo"].push(element);
       });
     }
   }]);
