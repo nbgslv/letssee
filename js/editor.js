@@ -95,7 +95,7 @@ export default class Editor {
     Tools.push(defaultTool);
     CANVAS_STATE.activeTool = defaultTool;
 
-    // build-in tools
+    // built-in tools
     // Undo
     const undoTool = {
       category: 'tool',
@@ -134,6 +134,45 @@ export default class Editor {
     };
     const redoToolInstance = new Tool(redoTool);
     Tools.push(redoTool);
+
+    // Zoom in
+    const ZoominTool = {
+      category: 'tool',
+      name: 'zoominout',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/zoom.png',
+        cursor: 'default',
+        active: false,
+      },
+      events: {
+        canvasZoomIn: 'click',
+      },
+    };
+    const ZoominToolInstance = new Tool(ZoominTool);
+    Tools.push(ZoominTool);
+
+    // Zoom out
+    const ZoomoutTool = {
+      category: 'tool',
+      name: 'zoominout',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/zoom-out.png',
+        cursor: 'default',
+        active: false,
+      },
+      events: {
+        canvasZoomOut: 'click',
+      },
+    };
+    const ZoomoutToolInstance = new Tool(ZoomoutTool);
+    Tools.push(ZoomoutTool);
+
 
     // TODO change css by tool events
     // build toolbars

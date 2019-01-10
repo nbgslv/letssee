@@ -207,70 +207,100 @@
 
 var map = {
 	"./editor": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./editor.js": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./element": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./element.js": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./globals": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./globals.js": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./hold": [
 		"./js/hold.js",
+		9,
 		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
+		9,
 		0
 	],
 	"./letse.config": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./main": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./main.js": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
+		9,
 		1
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
+		9,
 		1
 	],
 	"./settings": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./settings.js": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./tools": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./tools.js": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
+		9,
 		2
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
+		9,
 		2
+	],
+	"./zoominout": [
+		"./js/zoominout.js",
+		7,
+		3
+	],
+	"./zoominout.js": [
+		"./js/zoominout.js",
+		7,
+		3
 	]
 };
 function webpackAsyncContext(req) {
@@ -282,9 +312,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__(id);
+		return __webpack_require__.t(id, ids[1])
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -407,7 +437,7 @@ function () {
     };
     var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](defaultTool);
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(defaultTool);
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // build-in tools
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // built-in tools
     // Undo
 
     var undoTool = {
@@ -444,7 +474,43 @@ function () {
       }
     };
     var redoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](redoTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(redoTool); // TODO change css by tool events
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(redoTool); // Zoom in
+
+    var ZoominTool = {
+      category: 'tool',
+      name: 'zoominout',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/zoom.png',
+        cursor: 'default',
+        active: false
+      },
+      events: {
+        canvasZoomIn: 'click'
+      }
+    };
+    var ZoominToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](ZoominTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(ZoominTool); // Zoom out
+
+    var ZoomoutTool = {
+      category: 'tool',
+      name: 'zoominout',
+      properties: {
+        enable: true,
+        type: 'own-click',
+        toolbar: 'second',
+        icon: '/assets/images/zoom-out.png',
+        cursor: 'default',
+        active: false
+      },
+      events: {
+        canvasZoomOut: 'click'
+      }
+    };
+    var ZoomoutToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](ZoomoutTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(ZoomoutTool); // TODO change css by tool events
     // build toolbars
 
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].forEach(function (tool) {
