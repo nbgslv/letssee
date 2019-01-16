@@ -71,6 +71,7 @@ export default class Editor {
     canvas.upperCanvas.setAttribute('width', this.width);
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
     canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
+    canvas.upperCanvas.ctx.strokeRect(150, 150, 100, 100);
 
     // init default hold tool
     const defaultTool = {

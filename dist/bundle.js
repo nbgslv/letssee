@@ -207,99 +207,77 @@
 
 var map = {
 	"./editor": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./editor.js": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./element": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./element.js": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./globals": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./globals.js": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./hold": [
 		"./js/hold.js",
-		9,
 		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		9,
 		0
 	],
 	"./letse.config": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./main": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./main.js": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		9,
 		1
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		9,
 		1
 	],
 	"./settings": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./settings.js": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./tools": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./tools.js": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		9,
 		2
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		9,
 		2
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		7,
 		3
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		7,
 		3
 	]
 };
@@ -312,9 +290,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__.t(id, ids[1])
+		return __webpack_require__(id);
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -416,7 +394,8 @@ function () {
     canvas.upperCanvas.setAttribute('height', this.height);
     canvas.upperCanvas.setAttribute('width', this.width);
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
-    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d'); // init default hold tool
+    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
+    canvas.upperCanvas.ctx.strokeRect(150, 150, 100, 100); // init default hold tool
 
     var defaultTool = {
       category: 'tool',
