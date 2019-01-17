@@ -51,8 +51,10 @@ function () {
       if (this.started) {
         mouse.x = Math.min(e.screenX, mouse.startX);
         mouse.y = Math.min(e.screenY, mouse.startY);
+        console.log(mouse.x + ',' + mouse.y);
         mouse.width = Math.abs(e.screenX - mouse.startX);
         mouse.height = Math.abs(e.screenY - mouse.startY);
+        console.log(mouse.width + ',' + mouse.height);
         canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
         canvas.upperCanvas.ctx.strokeRect(mouse.x, mouse.y, mouse.width, mouse.height);
       }
@@ -62,10 +64,11 @@ function () {
     value: function mouseUp(e, canvas) {
       if (this.started) {
         this.mouseMove(e, canvas);
-        this.started = false;
-        _editor__WEBPACK_IMPORTED_MODULE_1__["default"].canvasUpdate(canvas);
+        this.started = false; //Editor.canvasUpdate(canvas);
+
         var rect = new _element__WEBPACK_IMPORTED_MODULE_0__["Element"](mouse.x, mouse.y, mouse.width, mouse.height);
         _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].push(rect);
+        console.log(rect);
       }
     }
   }]);

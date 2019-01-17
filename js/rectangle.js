@@ -25,8 +25,10 @@ export default class Rectangle {
     if (this.started) {
       mouse.x = Math.min(e.screenX, mouse.startX);
       mouse.y = Math.min(e.screenY, mouse.startY);
+      console.log(mouse.x + ',' + mouse.y);
       mouse.width = Math.abs(e.screenX - mouse.startX);
       mouse.height = Math.abs(e.screenY - mouse.startY);
+      console.log(mouse.width + ',' + mouse.height);
       canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
       canvas.upperCanvas.ctx.strokeRect(mouse.x, mouse.y, mouse.width, mouse.height);
     }
@@ -36,9 +38,10 @@ export default class Rectangle {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      Editor.canvasUpdate(canvas);
+      //Editor.canvasUpdate(canvas);
       const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
       Elements.push(rect);
+      console.log(rect);
     }
   }
 }

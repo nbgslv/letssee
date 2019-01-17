@@ -18,7 +18,7 @@
 }
 
 #letse-canvas-container{
-    position: relative;
+    /* position: relative; */
     float: left;
 }
 
@@ -29,8 +29,9 @@
 
 #letse-upper-canvas{
     position: absolute;
-    top: 1px;
-    left: 1px;
+    /* top: 1px; */
+    left: 0px;
+    border: 1px solid;
     /* visibility: hidden; */
 }
 
