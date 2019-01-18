@@ -242,7 +242,9 @@ export default class Editor {
   }
 
   static canvasUpdate(canvas) {
-    canvas.canvas.ctx.drawImage(canvas.upperCanvas, 0, 0);
-    canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+    canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+    Elements.forEach((element) => {
+      canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+    });
   }
 }

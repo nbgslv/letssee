@@ -206,79 +206,111 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./ch": [
+		"./js/ch.js",
+		7,
+		0
+	],
+	"./ch.js": [
+		"./js/ch.js",
+		7,
+		0
+	],
 	"./editor": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./editor.js": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./element": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./element.js": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./globals": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./globals.js": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./hold": [
 		"./js/hold.js",
-		0
+		9,
+		1
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		0
+		9,
+		1
 	],
 	"./letse.config": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./main": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./main.js": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		1
+		9,
+		2
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		1
+		9,
+		2
 	],
 	"./settings": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./settings.js": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./tools": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./tools.js": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		2
+		9,
+		3
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		2
+		9,
+		3
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		3
+		9,
+		4
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		3
+		9,
+		4
 	]
 };
 function webpackAsyncContext(req) {
@@ -290,9 +322,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__(id);
+		return __webpack_require__.t(id, ids[1])
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -568,8 +600,10 @@ function () {
   }, {
     key: "canvasUpdate",
     value: function canvasUpdate(canvas) {
-      canvas.canvas.ctx.drawImage(canvas.upperCanvas, 0, 0);
-      canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+      canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+      _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].forEach(function (element) {
+        canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+      });
     }
   }]);
 

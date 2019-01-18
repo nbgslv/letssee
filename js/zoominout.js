@@ -5,14 +5,14 @@ export default class ZoomInOut {
   static canvasZoomIn(e, canvas) {
     const scale = 1.1;
 
-    /*canvas.upperCanvas.ctx.translate(
+    canvas.upperCanvas.ctx.translate(
       -(
         (canvas.upperCanvas.width * scale - canvas.upperCanvas.width)
         / scale * scale),
       -(
         (canvas.upperCanvas.height * scale - canvas.upperCanvas.height)
         / scale * scale),
-    );*/
+    );
     canvas.upperCanvas.ctx.scale(scale, scale);
     canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
 
@@ -38,15 +38,16 @@ export default class ZoomInOut {
   static canvasZoomOut(e, canvas) {
     const scale = 0.9;
 
-    /* canvas.upperCanvas.ctx.translate(
+    canvas.upperCanvas.ctx.translate(
       -(
         (canvas.upperCanvas.width * scale - canvas.upperCanvas.width)
         / scale * scale),
       -(
         (canvas.upperCanvas.height * scale - canvas.upperCanvas.height)
         / scale * scale),
-    ); */
+    );
     canvas.upperCanvas.ctx.scale(scale, scale);
+    canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
 
     canvas.canvas.ctx.translate(
       -(

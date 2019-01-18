@@ -38,9 +38,9 @@ export default class Rectangle {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      //Editor.canvasUpdate(canvas);
       const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
       Elements.push(rect);
+      Editor.canvasUpdate(canvas);
       console.log(rect);
     }
   }
