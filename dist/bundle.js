@@ -206,94 +206,130 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./ch": [
+		"./js/ch.js",
+		7,
+		2
+	],
+	"./ch.js": [
+		"./js/ch.js",
+		7,
+		2
+	],
 	"./editor": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./editor.js": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./element": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./element.js": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./globals": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./globals.js": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./hold": [
 		"./js/hold.js",
+		9,
 		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
+		9,
 		0
 	],
 	"./letse.config": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./main": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./main.js": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		2
+		9,
+		3
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		2
+		9,
+		3
 	],
 	"./settings": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./settings.js": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./tools": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./tools.js": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		3
+		9,
+		4
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		3
+		9,
+		4
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		4
+		9,
+		5
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		4
+		9,
+		5
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		5
+		9,
+		6
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		5
+		9,
+		6
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
+		9,
 		1
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
+		9,
 		1
 	]
 };
@@ -306,9 +342,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__(id);
+		return __webpack_require__.t(id, ids[1])
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -419,7 +455,9 @@ function () {
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.width = canvas.canvas.width;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.height = canvas.canvas.height;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.width = canvas.canvas.width;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.height = canvas.canvas.height; // init default hold tool
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.height = canvas.canvas.height;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height; // init default hold tool
 
     var defaultTool = {
       category: 'tool',

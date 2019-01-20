@@ -110,14 +110,25 @@ function () {
       _element__WEBPACK_IMPORTED_MODULE_1__["Elements"].forEach(function (element) {
         canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
       });
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x += canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.y += canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x += canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.y += canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom = newZoom;
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width *= scale;
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height *= scale;
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.draggable = canvas.canvas.width > _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width || canvas.canvas.height > _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height;
+
+      if (newZoom === 1) {
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x = 0;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.y = 0;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height;
+      } else {
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x += canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.y += canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x -= canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.y -= canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
+        console.log(_globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x);
+        console.log(_globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom = newZoom;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width *= scale;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height *= scale;
+      }
+
+      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.draggable = canvas.canvas.width < _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width || canvas.canvas.height < _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height;
     }
   }, {
     key: "canvasZoomOut",
@@ -134,19 +145,33 @@ function () {
       _element__WEBPACK_IMPORTED_MODULE_1__["Elements"].forEach(function (element) {
         canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
       });
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x -= canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.y -= canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x -= canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.y -= canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
+
+      if (newZoom === 1) {
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x = 0;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.y = 0;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height;
+      } else {
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x += canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.y += canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x -= canvas.canvas.width / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.width / 2);
+        _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.y -= canvas.canvas.height / 2 - newZoom / _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom * (canvas.canvas.height / 2);
+      }
+
+      console.log(_globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.topLeft.x);
+      console.log(_globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.viewPort.bottomRight.x);
       _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.zoom = newZoom;
       _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width *= scale;
       _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height *= scale;
-      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.draggable = canvas.canvas.width > _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width || canvas.canvas.height > _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height;
+      _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.draggable = canvas.canvas.width < _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.width || canvas.canvas.height < _globals__WEBPACK_IMPORTED_MODULE_2__["CANVAS_STATE"].canvas.height;
     }
   }]);
 
   return ZoomInOut;
-}();
+}(); // TODO make newZoom integer
+// TODO set canvas place on zoom = 1
+// TODO set zoom min and max
+
 
 
 

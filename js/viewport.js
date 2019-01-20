@@ -10,14 +10,60 @@ export default class Viewport {
 
   static drag(e, canvas) {
     if (CANVAS_STATE.canvas.dragging) {
-      if (CANVAS_STATE.canvas.viewPort.topLeft.x === 0
-        || CANVAS_STATE.canvas.viewPort.topLeft.x === 0) {
-        CANVAS_STATE.canvas.dragging = false;
-        CANVAS_STATE.canvas.draggable = false;
-        return;
+      let deltaX;
+      let deltaY;
+
+      if (
+        CANVAS_STATE.canvas.viewPort.topLeft.x >= 0
+        && (
+          e.movementX > 0 || e.movementY > 0
+        )
+      ) {
+        deltaX = 0;
+      } else {
+        deltaX = e.movementX;
       }
-      const deltaX = e.movementX;
-      const deltaY = e.movementY;
+
+      if (
+        CANVAS_STATE.canvas.viewPort.topLeft.y >= 0
+        && (
+          e.movementX > 0 || e.movementY > 0
+        )
+      ) {
+        deltaY = 0;
+      } else {
+        deltaY = e.movementY;
+      }
+
+      if (
+        (
+          CANVAS_STATE.canvas.viewPort.bottomRight.x <= canvas.canvas.width
+          && (
+            e.movementX < 0 || e.movementY < 0
+          )
+        )
+        || deltaX === 0
+      ) {
+        deltaX = 0;
+      } else {
+        deltaX = e.movementX;
+      }
+
+      if (
+        (CANVAS_STATE.canvas.viewPort.bottomRight.y <= canvas.canvas.height
+          && (
+            e.movementX < 0 || e.movementY < 0
+          )
+        )
+        || deltaY === 0
+      ) {
+        deltaY = 0;
+      } else {
+        deltaY = e.movementY;
+      }
+
+      console.log(deltaX);
+      console.log(deltaY);
 
       canvas.canvas.ctx.translate(deltaX, deltaY);
       canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -27,6 +73,14 @@ export default class Viewport {
 
       canvas.upperCanvas.ctx.translate(deltaX, deltaY);
       canvas.upperCanvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+
+      CANVAS_STATE.canvas.viewPort.topLeft.x += deltaX;
+      CANVAS_STATE.canvas.viewPort.topLeft.y += deltaY;
+      CANVAS_STATE.canvas.viewPort.bottomRight.x += deltaX;
+      CANVAS_STATE.canvas.viewPort.bottomRight.y += deltaY;
+
+      console.log(CANVAS_STATE.canvas.viewPort.topLeft.x);
+      console.log(CANVAS_STATE.canvas.viewPort.bottomRight.x);
     }
   }
 

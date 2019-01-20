@@ -82,6 +82,9 @@ export default class Editor {
     CANVAS_STATE.canvas.width = canvas.canvas.width;
     CANVAS_STATE.canvas.height = canvas.canvas.height;
 
+    CANVAS_STATE.canvas.viewPort.bottomRight.x = canvas.canvas.width;
+    CANVAS_STATE.canvas.viewPort.bottomRight.y = canvas.canvas.height;
+
     // init default hold tool
     const defaultTool = {
       category: 'tool',

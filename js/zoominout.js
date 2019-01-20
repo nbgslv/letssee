@@ -31,24 +31,33 @@ export default class ZoomInOut {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
 
-    CANVAS_STATE.canvas.viewPort.topLeft.x += (canvas.canvas.width / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.width / 2));
-    CANVAS_STATE.canvas.viewPort.topLeft.y += (canvas.canvas.height / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.height / 2));
-    CANVAS_STATE.canvas.viewPort.bottomRight.x += (canvas.canvas.width / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.width / 2));
-    CANVAS_STATE.canvas.viewPort.bottomRight.y += (canvas.canvas.height / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.height / 2));
-    CANVAS_STATE.canvas.zoom = newZoom;
-    CANVAS_STATE.canvas.width *= scale;
-    CANVAS_STATE.canvas.height *= scale;
+    if (newZoom === 1) {
+      CANVAS_STATE.canvas.viewPort.topLeft.x = 0;
+      CANVAS_STATE.canvas.viewPort.topLeft.y = 0;
+      CANVAS_STATE.canvas.viewPort.bottomRight.x = canvas.canvas.width;
+      CANVAS_STATE.canvas.viewPort.bottomRight.y = canvas.canvas.height;
+    } else {
+      CANVAS_STATE.canvas.viewPort.topLeft.x += (canvas.canvas.width / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.width / 2));
+      CANVAS_STATE.canvas.viewPort.topLeft.y += (canvas.canvas.height / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.height / 2));
+      CANVAS_STATE.canvas.viewPort.bottomRight.x -= (canvas.canvas.width / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.width / 2));
+      CANVAS_STATE.canvas.viewPort.bottomRight.y -= (canvas.canvas.height / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.height / 2));
+      console.log(CANVAS_STATE.canvas.viewPort.topLeft.x);
+      console.log(CANVAS_STATE.canvas.viewPort.bottomRight.x);
+      CANVAS_STATE.canvas.zoom = newZoom;
+      CANVAS_STATE.canvas.width *= scale;
+      CANVAS_STATE.canvas.height *= scale;
+    }
 
-    CANVAS_STATE.canvas.draggable = canvas.canvas.width > CANVAS_STATE.canvas.width
-      || canvas.canvas.height > CANVAS_STATE.canvas.height;
+    CANVAS_STATE.canvas.draggable = canvas.canvas.width < CANVAS_STATE.canvas.width
+      || canvas.canvas.height < CANVAS_STATE.canvas.height;
   }
 
   static canvasZoomOut(e, canvas) {
@@ -79,23 +88,35 @@ export default class ZoomInOut {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
 
-    CANVAS_STATE.canvas.viewPort.topLeft.x -= (canvas.canvas.width / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.width / 2));
-    CANVAS_STATE.canvas.viewPort.topLeft.y -= (canvas.canvas.height / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.height / 2));
-    CANVAS_STATE.canvas.viewPort.bottomRight.x -= (canvas.canvas.width / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.width / 2));
-    CANVAS_STATE.canvas.viewPort.bottomRight.y -= (canvas.canvas.height / 2
-      - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.height / 2));
+    if (newZoom === 1) {
+      CANVAS_STATE.canvas.viewPort.topLeft.x = 0;
+      CANVAS_STATE.canvas.viewPort.topLeft.y = 0;
+      CANVAS_STATE.canvas.viewPort.bottomRight.x = canvas.canvas.width;
+      CANVAS_STATE.canvas.viewPort.bottomRight.y = canvas.canvas.height;
+    } else {
+      CANVAS_STATE.canvas.viewPort.topLeft.x += (canvas.canvas.width / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.width / 2));
+      CANVAS_STATE.canvas.viewPort.topLeft.y += (canvas.canvas.height / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.height / 2));
+      CANVAS_STATE.canvas.viewPort.bottomRight.x -= (canvas.canvas.width / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.width / 2));
+      CANVAS_STATE.canvas.viewPort.bottomRight.y -= (canvas.canvas.height / 2
+        - (newZoom / CANVAS_STATE.canvas.zoom)
+        * (canvas.canvas.height / 2));
+    }
+    console.log(CANVAS_STATE.canvas.viewPort.topLeft.x);
+    console.log(CANVAS_STATE.canvas.viewPort.bottomRight.x);
     CANVAS_STATE.canvas.zoom = newZoom;
     CANVAS_STATE.canvas.width *= scale;
     CANVAS_STATE.canvas.height *= scale;
 
-    CANVAS_STATE.canvas.draggable = canvas.canvas.width > CANVAS_STATE.canvas.width
-      || canvas.canvas.height > CANVAS_STATE.canvas.height;
+    CANVAS_STATE.canvas.draggable = canvas.canvas.width < CANVAS_STATE.canvas.width
+      || canvas.canvas.height < CANVAS_STATE.canvas.height;
   }
 }
+// TODO make newZoom integer
+// TODO set canvas place on zoom = 1
+// TODO set zoom min and max
