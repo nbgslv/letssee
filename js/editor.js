@@ -1,5 +1,5 @@
 import { Elements } from './element';
-import { CANVAS_STATE } from './globals';
+import { CANVAS_PROPERTIES, CANVAS_STATE } from './globals';
 import { Tool, Tools } from './tools';
 
 export default class Editor {
@@ -52,7 +52,9 @@ export default class Editor {
     canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
     canvas.rowB.appendChild(canvas.canvasContainer);
     canvas.canvas.setAttribute('height', this.height);
+    canvas.canvas.height = this.height;
     canvas.canvas.setAttribute('width', this.width);
+    canvas.canvas.width = this.width;
     canvas.canvas.setAttribute('id', 'letse-canvas');
     canvas.canvas.ctx = canvas.canvas.getContext('2d');
     canvas.canvasContainer.appendChild(canvas.canvas);
@@ -68,10 +70,17 @@ export default class Editor {
     canvas.upperCanvas = document.createElement('canvas');
     canvas.canvasContainer.appendChild(canvas.upperCanvas);
     canvas.upperCanvas.setAttribute('height', this.height);
+    canvas.upperCanvas.height = height;
     canvas.upperCanvas.setAttribute('width', this.width);
+    canvas.upperCanvas.width = width;
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
     canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
-    canvas.upperCanvas.ctx.strokeRect(150, 150, 100, 100);
+
+    // TODO put it as part of canvas options deconstruction
+    CANVAS_PROPERTIES.document.width = canvas.canvas.width;
+    CANVAS_PROPERTIES.document.height = canvas.canvas.height;
+    CANVAS_STATE.canvas.width = canvas.canvas.width;
+    CANVAS_STATE.canvas.height = canvas.canvas.height;
 
     // init default hold tool
     const defaultTool = {
@@ -205,40 +214,6 @@ export default class Editor {
     canvas.upperCanvas.addEventListener('mouseup', e => toolEventHandler(e));
 
     this.canvas = canvas;
-  }
-
-  static checkMousePosition(e, canvas) {
-    let offsetX = 0;
-    let offsetY = 0;
-    let mousePositionX;
-    let mousePositionY;
-    const html = document.body.parentNode;
-    let upperCanvas = canvas.upperCanvas;
-    if (upperCanvas.offsetParent !== undefined) {
-      do {
-        offsetX += upperCanvas.offsetLeft;
-        offsetY += upperCanvas.offsetTop;
-      } while ((upperCanvas = upperCanvas.offsetParent));
-    }
-    upperCanvas = canvas.upperCanvas;
-    const stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas)
-      .paddingLeft, 10) || 0;
-    const stylePaddingTop = parseInt(document.defaultView.getComputedStyle(upperCanvas)
-      .paddingTop, 10) || 0;
-    const styleBorderLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas)
-      .borderLeftWidth, 10) || 0;
-    const styleBorderTop = parseInt(document.defaultView.getComputedStyle(upperCanvas)
-      .borderTopWidth, 10) || 0;
-
-    offsetX += stylePaddingLeft
-  + styleBorderLeft
-  + html.offsetLeft;
-    offsetY += stylePaddingTop
-  + styleBorderTop
-  + html.offsetTop;
-    mousePositionX = e.pageX - offsetX;
-    mousePositionY = e.pageY - offsetY;
-    return { x: mousePositionX, y: mousePositionY };
   }
 
   static canvasUpdate(canvas) {

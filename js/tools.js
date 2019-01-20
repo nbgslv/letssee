@@ -1,4 +1,4 @@
-import { Undo } from './globals';
+import { UNDO } from './globals';
 import { Elements } from './element';
 
 export const Tools = [];
@@ -25,9 +25,9 @@ export class Tool {
   }
 
   static recordUndo() {
-    Undo.length = 0;
+    UNDO.length = 0;
     Elements.forEach((element) => {
-      Undo.push(element);
+      UNDO.push(element);
     });
   }
 }

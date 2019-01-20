@@ -29,7 +29,7 @@
 
 #letse-upper-canvas{
     position: absolute;
-    /* top: 1px; */
+    top: 0px;
     left: 0px;
     border: 1px solid;
     /* visibility: hidden; */

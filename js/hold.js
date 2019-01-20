@@ -1,12 +1,13 @@
 import { Elements } from './element';
 import Editor from './editor';
 import { CANVAS_STATE } from './globals';
+import Utilities from './utilities';
 
 let selection;
 
 export default class Hold {
   static mouseDown(e, canvas) {
-    const mousePosition = Editor.checkMousePosition(e, canvas);
+    const mousePosition = Utilities.checkMousePosition(e, canvas);
     const mouse = {
       positionX: mousePosition.x,
       positionY: mousePosition.y,
@@ -32,7 +33,7 @@ export default class Hold {
 
   static mouseMove(e, canvas) {
     if (CANVAS_STATE.dragging) {
-      const mousePosition = Editor.checkMousePosition(e, canvas);
+      const mousePosition = Utilities.checkMousePosition(e, canvas);
       selection.x = mousePosition.x - this.dragoffx;
       selection.y = mousePosition.y - this.dragoffy;
       Hold.draw(canvas);

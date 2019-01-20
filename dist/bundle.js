@@ -206,111 +206,95 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./ch": [
-		"./js/ch.js",
-		7,
-		0
-	],
-	"./ch.js": [
-		"./js/ch.js",
-		7,
-		0
-	],
 	"./editor": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./editor.js": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./element": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./element.js": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./globals": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./globals.js": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./hold": [
 		"./js/hold.js",
-		9,
-		1
+		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		9,
-		1
+		0
 	],
 	"./letse.config": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./main": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./main.js": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		9,
-		2
+		1
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		9,
-		2
+		1
 	],
 	"./settings": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./settings.js": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./tools": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./tools.js": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		9,
-		3
+		2
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		9,
+		2
+	],
+	"./utilities": [
+		"./js/utilities.js",
 		3
+	],
+	"./utilities.js": [
+		"./js/utilities.js",
+		3
+	],
+	"./viewport": [
+		"./js/viewport.js",
+		4
+	],
+	"./viewport.js": [
+		"./js/viewport.js",
+		4
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		9,
-		4
+		5
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		9,
-		4
+		5
 	]
 };
 function webpackAsyncContext(req) {
@@ -322,9 +306,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__.t(id, ids[1])
+		return __webpack_require__(id);
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -410,7 +394,9 @@ function () {
     canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
     canvas.rowB.appendChild(canvas.canvasContainer);
     canvas.canvas.setAttribute('height', this.height);
+    canvas.canvas.height = this.height;
     canvas.canvas.setAttribute('width', this.width);
+    canvas.canvas.width = this.width;
     canvas.canvas.setAttribute('id', 'letse-canvas');
     canvas.canvas.ctx = canvas.canvas.getContext('2d');
     canvas.canvasContainer.appendChild(canvas.canvas); // second tool bar creation
@@ -424,10 +410,16 @@ function () {
     canvas.upperCanvas = document.createElement('canvas');
     canvas.canvasContainer.appendChild(canvas.upperCanvas);
     canvas.upperCanvas.setAttribute('height', this.height);
+    canvas.upperCanvas.height = height;
     canvas.upperCanvas.setAttribute('width', this.width);
+    canvas.upperCanvas.width = width;
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
-    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
-    canvas.upperCanvas.ctx.strokeRect(150, 150, 100, 100); // init default hold tool
+    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d'); // TODO put it as part of canvas options deconstruction
+
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.width = canvas.canvas.width;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.height = canvas.canvas.height;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.width = canvas.canvas.width;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.height = canvas.canvas.height; // init default hold tool
 
     var defaultTool = {
       category: 'tool',
@@ -567,37 +559,6 @@ function () {
   }
 
   _createClass(Editor, null, [{
-    key: "checkMousePosition",
-    value: function checkMousePosition(e, canvas) {
-      var offsetX = 0;
-      var offsetY = 0;
-      var mousePositionX;
-      var mousePositionY;
-      var html = document.body.parentNode;
-      var upperCanvas = canvas.upperCanvas;
-
-      if (upperCanvas.offsetParent !== undefined) {
-        do {
-          offsetX += upperCanvas.offsetLeft;
-          offsetY += upperCanvas.offsetTop;
-        } while (upperCanvas = upperCanvas.offsetParent);
-      }
-
-      upperCanvas = canvas.upperCanvas;
-      var stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas).paddingLeft, 10) || 0;
-      var stylePaddingTop = parseInt(document.defaultView.getComputedStyle(upperCanvas).paddingTop, 10) || 0;
-      var styleBorderLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas).borderLeftWidth, 10) || 0;
-      var styleBorderTop = parseInt(document.defaultView.getComputedStyle(upperCanvas).borderTopWidth, 10) || 0;
-      offsetX += stylePaddingLeft + styleBorderLeft + html.offsetLeft;
-      offsetY += stylePaddingTop + styleBorderTop + html.offsetTop;
-      mousePositionX = e.pageX - offsetX;
-      mousePositionY = e.pageY - offsetY;
-      return {
-        x: mousePositionX,
-        y: mousePositionY
-      };
-    }
-  }, {
     key: "canvasUpdate",
     value: function canvasUpdate(canvas) {
       canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -664,24 +625,39 @@ function () {
 /*!***********************!*\
   !*** ./js/globals.js ***!
   \***********************/
-/*! exports provided: CANVAS_STATE, Undo, Redo */
+/*! exports provided: CANVAS_STATE, CANVAS_PROPERTIES, UNDO, REDO */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_STATE", function() { return CANVAS_STATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Undo", function() { return Undo; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Redo", function() { return Redo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_PROPERTIES", function() { return CANVAS_PROPERTIES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNDO", function() { return UNDO; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REDO", function() { return REDO; });
 var CANVAS_STATE = {
   dragging: false,
   activeTool: 'hold',
   valid: false,
   selection: [],
   dragoffx: 0,
-  dragoffy: 0
+  dragoffy: 0,
+  canvas: {
+    zoom: 1,
+    draggable: false,
+    width: 0,
+    height: 0,
+    viewPortX: 0,
+    viewPortY: 0
+  }
 };
-var Undo = [];
-var Redo = [];
+var CANVAS_PROPERTIES = {
+  document: {
+    width: 0,
+    height: 0
+  }
+};
+var UNDO = [];
+var REDO = [];
 
 /***/ }),
 
@@ -837,9 +813,9 @@ function () {
   }, {
     key: "recordUndo",
     value: function recordUndo() {
-      _globals__WEBPACK_IMPORTED_MODULE_0__["Undo"].length = 0;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["UNDO"].length = 0;
       _element__WEBPACK_IMPORTED_MODULE_1__["Elements"].forEach(function (element) {
-        _globals__WEBPACK_IMPORTED_MODULE_0__["Undo"].push(element);
+        _globals__WEBPACK_IMPORTED_MODULE_0__["UNDO"].push(element);
       });
     }
   }]);
