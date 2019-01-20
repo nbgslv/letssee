@@ -246,11 +246,11 @@ var map = {
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		1
+		2
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		1
+		2
 	],
 	"./settings": [
 		"./js/settings.js"
@@ -266,35 +266,35 @@ var map = {
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		2
+		3
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		2
+		3
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		3
+		4
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		3
+		4
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		4
+		5
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		4
+		5
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		5
+		1
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		5
+		1
 	]
 };
 function webpackAsyncContext(req) {
@@ -479,7 +479,7 @@ function () {
     var redoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](redoTool);
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(redoTool); // Zoom in
 
-    var ZoominTool = {
+    var zoominTool = {
       category: 'tool',
       name: 'zoominout',
       properties: {
@@ -494,10 +494,10 @@ function () {
         canvasZoomIn: 'click'
       }
     };
-    var ZoominToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](ZoominTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(ZoominTool); // Zoom out
+    var zoominToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](zoominTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(zoominTool); // Zoom out
 
-    var ZoomoutTool = {
+    var zoomoutTool = {
       category: 'tool',
       name: 'zoominout',
       properties: {
@@ -512,8 +512,28 @@ function () {
         canvasZoomOut: 'click'
       }
     };
-    var ZoomoutToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](ZoomoutTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(ZoomoutTool); // TODO change css by tool events
+    var zoomoutToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](zoomoutTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(zoomoutTool); // Drag Canvas
+
+    var dragTool = {
+      category: 'tool',
+      name: 'viewport',
+      properties: {
+        enable: true,
+        type: 'canvas-tool',
+        toolbar: 'second',
+        icon: '/assets/images/drag.png',
+        cursor: 'all-scroll',
+        active: false
+      },
+      events: {
+        mouseDown: 'mousedown',
+        drag: 'mousemove',
+        mouseUp: 'mouseup'
+      }
+    };
+    var dragToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](dragTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(dragTool); // TODO change css by tool events
     // build toolbars
 
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].forEach(function (tool) {
@@ -625,15 +645,21 @@ function () {
 /*!***********************!*\
   !*** ./js/globals.js ***!
   \***********************/
-/*! exports provided: CANVAS_STATE, CANVAS_PROPERTIES, UNDO, REDO */
+/*! exports provided: CANVAS_PROPERTIES, CANVAS_STATE, UNDO, REDO */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_STATE", function() { return CANVAS_STATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_PROPERTIES", function() { return CANVAS_PROPERTIES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_STATE", function() { return CANVAS_STATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNDO", function() { return UNDO; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REDO", function() { return REDO; });
+var CANVAS_PROPERTIES = {
+  document: {
+    width: 0,
+    height: 0
+  }
+};
 var CANVAS_STATE = {
   dragging: false,
   activeTool: 'hold',
@@ -644,16 +670,19 @@ var CANVAS_STATE = {
   canvas: {
     zoom: 1,
     draggable: false,
+    dragging: false,
     width: 0,
     height: 0,
-    viewPortX: 0,
-    viewPortY: 0
-  }
-};
-var CANVAS_PROPERTIES = {
-  document: {
-    width: 0,
-    height: 0
+    viewPort: {
+      topLeft: {
+        x: 0,
+        y: 0
+      },
+      bottomRight: {
+        x: CANVAS_PROPERTIES.document.width,
+        y: CANVAS_PROPERTIES.document.height
+      }
+    }
   }
 };
 var UNDO = [];

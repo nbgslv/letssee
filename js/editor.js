@@ -146,7 +146,7 @@ export default class Editor {
     Tools.push(redoTool);
 
     // Zoom in
-    const ZoominTool = {
+    const zoominTool = {
       category: 'tool',
       name: 'zoominout',
       properties: {
@@ -161,11 +161,11 @@ export default class Editor {
         canvasZoomIn: 'click',
       },
     };
-    const ZoominToolInstance = new Tool(ZoominTool);
-    Tools.push(ZoominTool);
+    const zoominToolInstance = new Tool(zoominTool);
+    Tools.push(zoominTool);
 
     // Zoom out
-    const ZoomoutTool = {
+    const zoomoutTool = {
       category: 'tool',
       name: 'zoominout',
       properties: {
@@ -180,8 +180,29 @@ export default class Editor {
         canvasZoomOut: 'click',
       },
     };
-    const ZoomoutToolInstance = new Tool(ZoomoutTool);
-    Tools.push(ZoomoutTool);
+    const zoomoutToolInstance = new Tool(zoomoutTool);
+    Tools.push(zoomoutTool);
+
+    // Drag Canvas
+    const dragTool = {
+      category: 'tool',
+      name: 'viewport',
+      properties: {
+        enable: true,
+        type: 'canvas-tool',
+        toolbar: 'second',
+        icon: '/assets/images/drag.png',
+        cursor: 'all-scroll',
+        active: false,
+      },
+      events: {
+        mouseDown: 'mousedown',
+        drag: 'mousemove',
+        mouseUp: 'mouseup',
+      },
+    };
+    const dragToolInstance = new Tool(dragTool);
+    Tools.push(dragTool);
 
 
     // TODO change css by tool events

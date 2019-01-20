@@ -24,15 +24,31 @@ export default class ZoomInOut {
       (canvas.canvas.height / 2 - (newZoom / CANVAS_STATE.canvas.zoom)
         * (canvas.canvas.height / 2)),
     );
-    console.log(canvas.canvas.width / 2 - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.width / 2));
+
     canvas.canvas.ctx.scale(scale, scale);
     canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
     Elements.forEach((element) => {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
 
+    CANVAS_STATE.canvas.viewPort.topLeft.x += (canvas.canvas.width / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.width / 2));
+    CANVAS_STATE.canvas.viewPort.topLeft.y += (canvas.canvas.height / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.height / 2));
+    CANVAS_STATE.canvas.viewPort.bottomRight.x += (canvas.canvas.width / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.width / 2));
+    CANVAS_STATE.canvas.viewPort.bottomRight.y += (canvas.canvas.height / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.height / 2));
     CANVAS_STATE.canvas.zoom = newZoom;
+    CANVAS_STATE.canvas.width *= scale;
+    CANVAS_STATE.canvas.height *= scale;
+
+    CANVAS_STATE.canvas.draggable = canvas.canvas.width > CANVAS_STATE.canvas.width
+      || canvas.canvas.height > CANVAS_STATE.canvas.height;
   }
 
   static canvasZoomOut(e, canvas) {
@@ -56,13 +72,30 @@ export default class ZoomInOut {
       (canvas.canvas.height / 2 - (newZoom / CANVAS_STATE.canvas.zoom)
         * (canvas.canvas.height / 2)),
     );
-    console.log(-canvas.canvas.width / 2 - (newZoom / CANVAS_STATE.canvas.zoom)
-      * (canvas.canvas.width / 2));
+
     canvas.canvas.ctx.scale(scale, scale);
     canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
     Elements.forEach((element) => {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
+
+    CANVAS_STATE.canvas.viewPort.topLeft.x -= (canvas.canvas.width / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.width / 2));
+    CANVAS_STATE.canvas.viewPort.topLeft.y -= (canvas.canvas.height / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.height / 2));
+    CANVAS_STATE.canvas.viewPort.bottomRight.x -= (canvas.canvas.width / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.width / 2));
+    CANVAS_STATE.canvas.viewPort.bottomRight.y -= (canvas.canvas.height / 2
+      - (newZoom / CANVAS_STATE.canvas.zoom)
+      * (canvas.canvas.height / 2));
     CANVAS_STATE.canvas.zoom = newZoom;
+    CANVAS_STATE.canvas.width *= scale;
+    CANVAS_STATE.canvas.height *= scale;
+
+    CANVAS_STATE.canvas.draggable = canvas.canvas.width > CANVAS_STATE.canvas.width
+      || canvas.canvas.height > CANVAS_STATE.canvas.height;
   }
 }
