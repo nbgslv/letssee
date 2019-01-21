@@ -13,7 +13,7 @@ export const CANVAS_STATE = {
   dragoffx: 0,
   dragoffy: 0,
   canvas: {
-    zoom: 1,
+    zoom: (1).toFixed(0),
     draggable: false,
     dragging: false,
     width: 0,
