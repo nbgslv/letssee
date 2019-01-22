@@ -1,3 +1,4 @@
+import { CANVAS_STATE } from './globals';
 import { Element, Elements } from './element';
 import Editor from './editor';
 
@@ -34,7 +35,12 @@ export default class Rectangle {
       this.started = false;
       const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
       Elements.push(rect);
-      Editor.canvasUpdate(canvas);
+      Editor.canvasUpdate(canvas, {
+        x: CANVAS_STATE.canvas.viewPort.topLeft.x,
+        y: CANVAS_STATE.canvas.viewPort.topLeft.y,
+        width: CANVAS_STATE.canvas.width,
+        height: CANVAS_STATE.canvas.height,
+      });
     }
   }
 }

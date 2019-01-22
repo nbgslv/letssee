@@ -246,11 +246,11 @@ var map = {
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		2
+		1
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		2
+		1
 	],
 	"./settings": [
 		"./js/settings.js"
@@ -266,35 +266,43 @@ var map = {
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		3
+		2
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		3
+		2
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		4
+		3
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		4
+		3
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		5
+		4
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		5
+		4
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		1
+		5
+	],
+	"./zoominout.backup": [
+		"./js/zoominout.backup.js",
+		6
+	],
+	"./zoominout.backup.js": [
+		"./js/zoominout.backup.js",
+		6
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		1
+		5
 	]
 };
 function webpackAsyncContext(req) {
@@ -420,6 +428,8 @@ function () {
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.height = canvas.canvas.height;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.width = canvas.canvas.width;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.height = canvas.canvas.height;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.x = canvas.canvas.width / 2;
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.y = canvas.canvas.height / 2;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height; // init default hold tool
 
@@ -582,8 +592,13 @@ function () {
 
   _createClass(Editor, null, [{
     key: "canvasUpdate",
-    value: function canvasUpdate(canvas) {
-      canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+    value: function canvasUpdate(canvas, _ref) {
+      var x = _ref.x,
+          y = _ref.y,
+          width = _ref.width,
+          height = _ref.height;
+      canvas.upperCanvas.ctx.clearRect(x, y, width, height);
+      canvas.canvas.ctx.clearRect(x, y, width, height);
       _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].forEach(function (element) {
         canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
       });
@@ -675,6 +690,10 @@ var CANVAS_STATE = {
     dragging: false,
     width: 0,
     height: 0,
+    center: {
+      x: 0,
+      y: 0
+    },
     viewPort: {
       topLeft: {
         x: 0,

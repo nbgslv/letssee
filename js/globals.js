@@ -18,6 +18,10 @@ export const CANVAS_STATE = {
     dragging: false,
     width: 0,
     height: 0,
+    center: {
+      x: 0,
+      y: 0,
+    },
     viewPort: {
       topLeft: {
         x: 0,

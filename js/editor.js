@@ -81,6 +81,8 @@ export default class Editor {
     CANVAS_PROPERTIES.document.height = canvas.canvas.height;
     CANVAS_STATE.canvas.width = canvas.canvas.width;
     CANVAS_STATE.canvas.height = canvas.canvas.height;
+    CANVAS_STATE.canvas.center.x = canvas.canvas.width / 2;
+    CANVAS_STATE.canvas.center.y = canvas.canvas.height / 2;
 
     CANVAS_STATE.canvas.viewPort.bottomRight.x = canvas.canvas.width;
     CANVAS_STATE.canvas.viewPort.bottomRight.y = canvas.canvas.height;
@@ -240,8 +242,14 @@ export default class Editor {
     this.canvas = canvas;
   }
 
-  static canvasUpdate(canvas) {
-    canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+  static canvasUpdate(canvas, {
+    x,
+    y,
+    width,
+    height,
+  }) {
+    canvas.upperCanvas.ctx.clearRect(x, y, width, height);
+    canvas.canvas.ctx.clearRect(x, y, width, height);
     Elements.forEach((element) => {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
