@@ -7,6 +7,7 @@ class Element {
     this.width = width;
     this.height = height;
     this.style = style;
+    this.layer = 1;
   }
 
   mouseInShape(mousePositionX, mousePositionY) {

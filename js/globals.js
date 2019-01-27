@@ -12,6 +12,7 @@ export const CANVAS_STATE = {
   selection: [],
   dragoffx: 0,
   dragoffy: 0,
+  layers: 0,
   canvas: {
     zoom: (1).toFixed(0),
     draggable: false,
