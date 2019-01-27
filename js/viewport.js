@@ -10,9 +10,10 @@ export default class Viewport {
 
   static drag(e, canvas) {
     if (CANVAS_STATE.canvas.dragging) {
-      let deltaX;
-      let deltaY;
+      let deltaX = e.movementX;
+      let deltaY = e.movementY;
 
+      /*
       if (
         CANVAS_STATE.canvas.viewPort.topLeft.x >= 0
         && (
@@ -61,7 +62,7 @@ export default class Viewport {
       } else {
         deltaY = e.movementY;
       }
-
+      */
       console.log(deltaX);
       console.log(deltaY);
 

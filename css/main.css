@@ -3,7 +3,7 @@
 }
 
 #rowB {
-    position: relative;
+    /* position: relative; */
 }
 
 .letse-maintoolbar{
@@ -18,7 +18,7 @@
 }
 
 #letse-canvas-container{
-    /* position: relative; */
+    position: relative;
     float: left;
 }
 
@@ -28,8 +28,8 @@
 }
 
 #letse-upper-canvas{
-    position: absolute;
-    top: 0px;
+    /* position: absolute; */
+    /* top: 0px; */
     left: 0px;
     border: 1px solid;
     /* visibility: hidden; */

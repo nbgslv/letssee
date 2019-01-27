@@ -24,8 +24,8 @@ export const CANVAS_STATE = {
     },
     viewPort: {
       topLeft: {
-        x: 0,
-        y: 0,
+        x: 0.1,
+        y: 0.1,
       },
       bottomRight: {
         x: CANVAS_PROPERTIES.document.width,
