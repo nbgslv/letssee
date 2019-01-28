@@ -28,8 +28,8 @@
 }
 
 #letse-upper-canvas{
-    /* position: absolute; */
-    /* top: 0px; */
+    position: absolute;
+    top: 0px;
     left: 0px;
     border: 1px solid;
     /* visibility: hidden; */

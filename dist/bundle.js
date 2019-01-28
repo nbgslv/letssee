@@ -250,6 +250,16 @@ var map = {
 		9,
 		0
 	],
+	"./layers": [
+		"./js/layers.js",
+		9,
+		2
+	],
+	"./layers.js": [
+		"./js/layers.js",
+		9,
+		2
+	],
 	"./letse.config": [
 		"./js/letse.config.js",
 		9
@@ -269,12 +279,12 @@ var map = {
 	"./rectangle": [
 		"./js/rectangle.js",
 		9,
-		2
+		3
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
 		9,
-		2
+		3
 	],
 	"./settings": [
 		"./js/settings.js",
@@ -295,37 +305,37 @@ var map = {
 	"./undoredo": [
 		"./js/undoredo.js",
 		9,
-		3
+		4
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
 		9,
-		3
+		4
 	],
 	"./utilities": [
 		"./js/utilities.js",
 		9,
-		4
+		5
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
 		9,
-		4
+		5
 	],
 	"./viewport": [
 		"./js/viewport.js",
 		9,
-		5
+		6
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
 		9,
-		5
+		6
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
 		9,
-		6
+		8
 	],
 	"./zoominout.backup": [
 		"./js/zoominout.backup.js",
@@ -340,7 +350,7 @@ var map = {
 	"./zoominout.js": [
 		"./js/zoominout.js",
 		9,
-		6
+		8
 	]
 };
 function webpackAsyncContext(req) {
@@ -680,6 +690,7 @@ function () {
     this.width = width;
     this.height = height;
     this.style = style;
+    this.layer = 1;
   }
 
   _createClass(Element, [{
@@ -722,6 +733,7 @@ var CANVAS_STATE = {
   selection: [],
   dragoffx: 0,
   dragoffy: 0,
+  layers: 0,
   canvas: {
     zoom: 1 .toFixed(0),
     draggable: false,
