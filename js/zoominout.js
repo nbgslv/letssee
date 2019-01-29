@@ -5,7 +5,6 @@ export default class ZoomInOut {
   static canvasZoomIn(e, canvas) {
     const zoomData = this.getZoomData('in');
 
-    canvas.upperCanvas.ctx.save();
     canvas.upperCanvas.ctx.scale(zoomData.zoomStep, zoomData.zoomStep);
     canvas.upperCanvas.ctx.translate(zoomData.translateX, zoomData.translateY);
     canvas.upperCanvas.ctx.clearRect(
@@ -19,16 +18,16 @@ export default class ZoomInOut {
     canvas.canvas.ctx.scale(zoomData.zoomStep, zoomData.zoomStep);
     canvas.canvas.ctx.translate(zoomData.translateX, zoomData.translateY);
     canvas.canvas.ctx.clearRect(
-      CANVAS_STATE.canvas.viewPort.topLeft.x + zoomData.translateX,
-      CANVAS_STATE.canvas.viewPort.topLeft.y + zoomData.translateY,
-      zoomData.docWidth,
-      zoomData.docHeight,
+      0,
+      0,
+      300,
+      300,
     );
     Elements.forEach((element) => {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
 
-    CANVAS_STATE.canvas.zoom = zoomData.scale;
+    CANVAS_STATE.canvas.zoom = zoomData.newZoom;
     CANVAS_STATE.canvas.width = zoomData.docWidth;
     CANVAS_STATE.canvas.height = zoomData.docHeight;
     CANVAS_STATE.canvas.center.x = zoomData.docWidth / 2;
@@ -52,6 +51,7 @@ export default class ZoomInOut {
     canvas.canvas.ctx.moveTo(0, 150);
     canvas.canvas.ctx.lineTo(300, 150);
     canvas.canvas.ctx.stroke();
+    canvas.upperCanvas.ctx.strokeRect(145, 145, 10, 10);
     CANVAS_STATE.canvas.draggable = canvas.canvas.width < CANVAS_STATE.canvas.width
       || canvas.canvas.height < CANVAS_STATE.canvas.height;
   }
@@ -60,17 +60,17 @@ export default class ZoomInOut {
     const zoomData = this.getZoomData('out');
 
     canvas.upperCanvas.ctx.scale(zoomData.zoomStep, zoomData.zoomStep);
-    canvas.upperCanvas.ctx.translate(-zoomData.translateX, -zoomData.translateY);
-    canvas.upperCanvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+    canvas.upperCanvas.ctx.translate(zoomData.translateX, zoomData.translateY);
+    /* canvas.upperCanvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height); */
 
     canvas.canvas.ctx.scale(zoomData.zoomStep, zoomData.zoomStep);
-    canvas.canvas.ctx.translate(-zoomData.translateX, -zoomData.translateY);
+    canvas.canvas.ctx.translate(zoomData.translateX, zoomData.translateY);
     canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
     Elements.forEach((element) => {
       canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
     });
 
-    CANVAS_STATE.canvas.zoom = zoomData.scale;
+    CANVAS_STATE.canvas.zoom = zoomData.newZoom;
     CANVAS_STATE.canvas.width = zoomData.docWidth;
     CANVAS_STATE.canvas.height = zoomData.docHeight;
     CANVAS_STATE.canvas.center.x = zoomData.docWidth / 2;
@@ -92,22 +92,25 @@ export default class ZoomInOut {
     canvas.canvas.ctx.strokeRect(0, 0, 300, 300);
     canvas.canvas.ctx.beginPath();
     canvas.canvas.ctx.moveTo(0, 150);
-    canvas.canvas.ctx.lineTo(300, 300);
+    canvas.canvas.ctx.lineTo(300, 150);
     canvas.canvas.ctx.stroke();
+    canvas.upperCanvas.ctx.strokeRect(145, 145, 10, 10);
     CANVAS_STATE.canvas.draggable = canvas.canvas.width < CANVAS_STATE.canvas.width
       || canvas.canvas.height < CANVAS_STATE.canvas.height;
   }
 
   static getZoomData(zoom) {
-    const zoomStep = zoom === 'in' ? 1.05 : 1 / 1.05;
-    const scale = CANVAS_STATE.canvas.zoom * zoomStep;
-    const docWidth = CANVAS_PROPERTIES.document.width / scale;
-    const docHeight = CANVAS_PROPERTIES.document.height / scale;
-    const translateX = docWidth / 2 - CANVAS_PROPERTIES.document.width / 2;
-    const translateY = docHeight / 2 - CANVAS_PROPERTIES.document.height / 2;
+    const zoomStep = zoom === 'in' ? 1.1 : 1 / 1.1;
+    const oldZoom = CANVAS_STATE.canvas.zoom;
+    const newZoom = oldZoom * zoomStep;
+    const zoomDifference = newZoom - oldZoom;
+    const docWidth = CANVAS_STATE.canvas.width * newZoom;
+    const docHeight = CANVAS_STATE.canvas.height * newZoom;
+    const translateX = (-(CANVAS_PROPERTIES.document.width / 2 * zoomDifference / newZoom));
+    const translateY = (-(CANVAS_PROPERTIES.document.height / 2 * zoomDifference / newZoom));
 
     console.log(zoomStep);
-    console.log(scale, 'check');
+    console.log(newZoom, 'check');
     console.log(docWidth);
     console.log(docHeight);
     console.log(translateX, 'check');
@@ -115,7 +118,7 @@ export default class ZoomInOut {
 
     return {
       zoomStep,
-      scale,
+      newZoom,
       docWidth,
       docHeight,
       translateX,

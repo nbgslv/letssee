@@ -206,151 +206,111 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./ch": [
-		"./js/ch.js",
-		7,
-		1
-	],
-	"./ch.js": [
-		"./js/ch.js",
-		7,
-		1
-	],
 	"./editor": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./editor.js": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./element": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./element.js": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./globals": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./globals.js": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./hold": [
 		"./js/hold.js",
-		9,
 		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		9,
 		0
 	],
 	"./layers": [
 		"./js/layers.js",
-		9,
-		2
+		1
 	],
 	"./layers.js": [
 		"./js/layers.js",
-		9,
-		2
+		1
 	],
 	"./letse.config": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./main": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./main.js": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		9,
-		3
+		2
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		9,
-		3
+		2
 	],
 	"./settings": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./settings.js": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./tools": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./tools.js": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		9,
-		4
+		3
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		9,
-		4
+		3
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		9,
-		5
+		4
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		9,
-		5
+		4
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		9,
-		6
+		5
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		9,
-		6
+		5
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		9,
-		8
+		7
 	],
 	"./zoominout.backup": [
 		"./js/zoominout.backup.js",
-		9,
-		7
+		6
 	],
 	"./zoominout.backup.js": [
 		"./js/zoominout.backup.js",
-		9,
-		7
+		6
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		9,
-		8
+		7
 	]
 };
 function webpackAsyncContext(req) {
@@ -362,9 +322,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__.t(id, ids[1])
+		return __webpack_require__(id);
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -479,7 +439,14 @@ function () {
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.x = canvas.canvas.width / 2;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.y = canvas.canvas.height / 2;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height; // init default hold tool
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height;
+    var elementCenter = {
+      x: 145,
+      y: 145,
+      width: 10,
+      height: 10
+    };
+    _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].push(elementCenter); // init default hold tool
 
     var defaultTool = {
       category: 'tool',
@@ -734,6 +701,12 @@ var CANVAS_STATE = {
   dragoffx: 0,
   dragoffy: 0,
   layers: 0,
+  xleftview: 0,
+  ytopview: 0,
+  widthViewOriginal: 1.0,
+  heightViewOriginal: 1.0,
+  widthView: 1.0,
+  heightView: 1.0,
   canvas: {
     zoom: 1 .toFixed(0),
     draggable: false,
