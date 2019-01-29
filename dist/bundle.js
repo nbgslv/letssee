@@ -439,14 +439,7 @@ function () {
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.x = canvas.canvas.width / 2;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.y = canvas.canvas.height / 2;
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height;
-    var elementCenter = {
-      x: 145,
-      y: 145,
-      width: 10,
-      height: 10
-    };
-    _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].push(elementCenter); // init default hold tool
+    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height; // init default hold tool
 
     var defaultTool = {
       category: 'tool',
@@ -691,6 +684,11 @@ var CANVAS_PROPERTIES = {
   document: {
     width: 0,
     height: 0
+  },
+  zoom: {
+    zoomStep: 1.1,
+    maxZoom: 2,
+    minZoom: 0.5
   }
 };
 var CANVAS_STATE = {
@@ -701,14 +699,8 @@ var CANVAS_STATE = {
   dragoffx: 0,
   dragoffy: 0,
   layers: 0,
-  xleftview: 0,
-  ytopview: 0,
-  widthViewOriginal: 1.0,
-  heightViewOriginal: 1.0,
-  widthView: 1.0,
-  heightView: 1.0,
   canvas: {
-    zoom: 1 .toFixed(0),
+    zoom: 1,
     draggable: false,
     dragging: false,
     width: 0,

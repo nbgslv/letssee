@@ -3,6 +3,11 @@ export const CANVAS_PROPERTIES = {
     width: 0,
     height: 0,
   },
+  zoom: {
+    zoomStep: 1.1,
+    maxZoom: 2,
+    minZoom: 0.5,
+  },
 };
 
 export const CANVAS_STATE = {
@@ -13,14 +18,8 @@ export const CANVAS_STATE = {
   dragoffx: 0,
   dragoffy: 0,
   layers: 0,
-  xleftview: 0,
-  ytopview: 0,
-  widthViewOriginal: 1.0,
-  heightViewOriginal: 1.0,
-  widthView: 1.0,
-  heightView: 1.0,
   canvas: {
-    zoom: (1).toFixed(0),
+    zoom: 1,
     draggable: false,
     dragging: false,
     width: 0,

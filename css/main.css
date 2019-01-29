@@ -23,7 +23,7 @@
 }
 
 #letse-canvas{
-    /* border: 1px solid rgb(0, 0, 0); */
+    border: 1px solid rgb(0, 0, 0);
     top: 1px;
     left: 1px;
     /* visibility: hidden; */
@@ -33,7 +33,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    /* border: 1px solid; */
+    border: 1px solid;
     /* visibility: hidden; */
 }
 
