@@ -1,5 +1,6 @@
-import { Elements } from './element';
 import { CANVAS_PROPERTIES, CANVAS_STATE } from './globals';
+import Editor from './editor';
+import Utilities from './utilities';
 
 export default class ZoomInOut {
   static canvasZoomIn(e, canvas) {
@@ -12,47 +13,78 @@ export default class ZoomInOut {
 
   static setZoom(zoom, canvas) {
     let zoomStep;
-    let newZoom;
     if (zoom === 1) {
       zoomStep = CANVAS_PROPERTIES.zoom.zoomStep;
-      newZoom = Math.min(CANVAS_STATE.canvas.zoom * zoomStep, CANVAS_PROPERTIES.zoom.maxZoom);
-    } else {
+    } else if (zoom === 0) {
       zoomStep = 1 / CANVAS_PROPERTIES.zoom.zoomStep;
-      newZoom = Math.max(CANVAS_STATE.canvas.zoom * zoomStep, CANVAS_PROPERTIES.zoom.minZoom);
+    }
+    const newZoom = CANVAS_STATE.canvas.zoom * zoomStep;
+    if (newZoom > CANVAS_PROPERTIES.zoom.maxZoom || newZoom < CANVAS_PROPERTIES.zoom.minZoom) {
+      return;
     }
     const zoomDifference = newZoom - CANVAS_STATE.canvas.zoom;
-    const docWidth = CANVAS_STATE.canvas.width * newZoom;
-    const docHeight = CANVAS_STATE.canvas.height * newZoom;
-    const translateX = (-(CANVAS_PROPERTIES.document.width / 2 * zoomDifference / newZoom));
-    const translateY = (-(CANVAS_PROPERTIES.document.height / 2 * zoomDifference / newZoom));
+    console.log(newZoom);
+    const docWidth = CANVAS_STATE.canvas.width * zoomStep;
+    const docHeight = CANVAS_STATE.canvas.height * zoomStep;
+    let zoomSteps = Utilities.getBaseLog(
+      CANVAS_PROPERTIES.zoom.zoomStep,
+      CANVAS_STATE.canvas.zoom,
+    );
+    zoomSteps = zoomSteps === 0 ? 1 : zoomSteps;
+    const canvasCenterX = CANVAS_PROPERTIES.document.width / 2;
+    const canvasCenterY = CANVAS_PROPERTIES.document.height / 2;
+    let stepToCenterX = 0;
+    let stepToCenterY = 0;
+    if (canvasCenterX !== CANVAS_STATE.canvas.center.x) {
+      stepToCenterX = (CANVAS_STATE.canvas.center.x - canvasCenterX) / zoomSteps;
+      CANVAS_STATE.canvas.center.x -= stepToCenterX;
+    }
+    if (canvasCenterY !== CANVAS_STATE.canvas.center.y) {
+      stepToCenterY = (CANVAS_STATE.canvas.center.y - canvasCenterY) / zoomSteps;
+      CANVAS_STATE.canvas.center.y -= stepToCenterY;
+    }
+
+    const translateX = (
+      -(
+        CANVAS_PROPERTIES.document.width / 2 * zoomDifference / newZoom - stepToCenterX
+      )
+    );
+    const translateY = (
+      -(
+        CANVAS_PROPERTIES.document.height / 2 * zoomDifference / newZoom - stepToCenterY
+      )
+    );
+    const canvasClearParam = {
+      x: 0,
+      y: 0,
+      width: CANVAS_PROPERTIES.document.width,
+      height: CANVAS_PROPERTIES.document.height,
+    };
 
     canvas.upperCanvas.ctx.scale(zoomStep, zoomStep);
     canvas.upperCanvas.ctx.translate(translateX, translateY);
-    canvas.upperCanvas.ctx.clearRect(
-      0,
-      0,
-      CANVAS_PROPERTIES.document.width,
-      CANVAS_PROPERTIES.document.height,
-    );
+    Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
 
     canvas.canvas.ctx.scale(zoomStep, zoomStep);
     canvas.canvas.ctx.translate(translateX, translateY);
-    canvas.canvas.ctx.clearRect(
-      0,
-      0,
-      CANVAS_PROPERTIES.document.width,
-      CANVAS_PROPERTIES.document.height,
-    );
-    Elements.forEach((element) => {
-      canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
-    });
+    Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
 
     CANVAS_STATE.canvas.zoom = newZoom;
+    if (zoom === 1) {
+      CANVAS_STATE.canvas.viewPort.topLeft.x -= (docWidth - CANVAS_STATE.canvas.width) / 2;
+      CANVAS_STATE.canvas.viewPort.topLeft.y -= (docHeight - CANVAS_STATE.canvas.height) / 2;
+      CANVAS_STATE.canvas.viewPort.bottomRight.x += (docWidth - CANVAS_STATE.canvas.width) / 2;
+      CANVAS_STATE.canvas.viewPort.bottomRight.y += (docHeight - CANVAS_STATE.canvas.height) / 2;
+    } else if (zoom === 0) {
+      CANVAS_STATE.canvas.viewPort.topLeft.x += (docWidth - CANVAS_STATE.canvas.width) / 2;
+      CANVAS_STATE.canvas.viewPort.topLeft.y += (docHeight - CANVAS_STATE.canvas.height) / 2;
+      CANVAS_STATE.canvas.viewPort.bottomRight.x -= (docWidth - CANVAS_STATE.canvas.width) / 2;
+      CANVAS_STATE.canvas.viewPort.bottomRight.y -= (docHeight - CANVAS_STATE.canvas.height) / 2;
+    }
     CANVAS_STATE.canvas.width = docWidth;
     CANVAS_STATE.canvas.height = docHeight;
 
-    CANVAS_STATE.canvas.draggable = canvas.canvas.width < CANVAS_STATE.canvas.width
-      || canvas.canvas.height < CANVAS_STATE.canvas.height;
+    CANVAS_STATE.canvas.draggable = canvas.canvas.width < Math.round(CANVAS_STATE.canvas.width)
+      || canvas.canvas.height < Math.round(CANVAS_STATE.canvas.height);
   }
 }
-// TODO set zoom min and max

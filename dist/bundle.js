@@ -206,111 +206,151 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./ch": [
+		"./js/ch.js",
+		7,
+		2
+	],
+	"./ch.js": [
+		"./js/ch.js",
+		7,
+		2
+	],
 	"./editor": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./editor.js": [
-		"./js/editor.js"
+		"./js/editor.js",
+		9
 	],
 	"./element": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./element.js": [
-		"./js/element.js"
+		"./js/element.js",
+		9
 	],
 	"./globals": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./globals.js": [
-		"./js/globals.js"
+		"./js/globals.js",
+		9
 	],
 	"./hold": [
 		"./js/hold.js",
+		9,
 		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
+		9,
 		0
 	],
 	"./layers": [
 		"./js/layers.js",
-		1
+		9,
+		3
 	],
 	"./layers.js": [
 		"./js/layers.js",
-		1
+		9,
+		3
 	],
 	"./letse.config": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js"
+		"./js/letse.config.js",
+		9
 	],
 	"./main": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./main.js": [
-		"./js/main.js"
+		"./js/main.js",
+		9
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		2
+		9,
+		4
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		2
+		9,
+		4
 	],
 	"./settings": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./settings.js": [
-		"./js/settings.js"
+		"./js/settings.js",
+		9
 	],
 	"./tools": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./tools.js": [
-		"./js/tools.js"
+		"./js/tools.js",
+		9
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		3
+		9,
+		5
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		3
+		9,
+		5
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		4
+		9,
+		6
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		4
+		9,
+		6
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		5
+		9,
+		7
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		5
+		9,
+		7
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		7
+		9,
+		1
 	],
 	"./zoominout.backup": [
 		"./js/zoominout.backup.js",
-		6
+		9,
+		8
 	],
 	"./zoominout.backup.js": [
 		"./js/zoominout.backup.js",
-		6
+		9,
+		8
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		7
+		9,
+		1
 	]
 };
 function webpackAsyncContext(req) {
@@ -322,9 +362,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__(id);
+		return __webpack_require__.t(id, ids[1])
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -600,16 +640,18 @@ function () {
 
   _createClass(Editor, null, [{
     key: "canvasUpdate",
-    value: function canvasUpdate(canvas, _ref) {
+    value: function canvasUpdate(canvas, draw, _ref) {
       var x = _ref.x,
           y = _ref.y,
           width = _ref.width,
           height = _ref.height;
-      canvas.upperCanvas.ctx.clearRect(x, y, width, height);
-      canvas.canvas.ctx.clearRect(x, y, width, height);
-      _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].forEach(function (element) {
-        canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
-      });
+      canvas.ctx.clearRect(x, y, width, height);
+
+      if (draw) {
+        _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].forEach(function (element) {
+          canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+        });
+      }
     }
   }]);
 

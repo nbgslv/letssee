@@ -157,6 +157,11 @@ function () {
         y: mousePositionY
       };
     }
+  }, {
+    key: "getBaseLog",
+    value: function getBaseLog(x, y) {
+      return Math.log(y) / Math.log(x);
+    }
   }]);
 
   return Utilities;

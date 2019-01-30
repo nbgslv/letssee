@@ -242,16 +242,18 @@ export default class Editor {
     this.canvas = canvas;
   }
 
-  static canvasUpdate(canvas, {
+  static canvasUpdate(canvas, draw, {
     x,
     y,
     width,
     height,
   }) {
-    canvas.upperCanvas.ctx.clearRect(x, y, width, height);
-    canvas.canvas.ctx.clearRect(x, y, width, height);
-    Elements.forEach((element) => {
-      canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
-    });
+    canvas.ctx.clearRect(x, y, width, height);
+    if (draw) {
+      Elements.forEach((element) => {
+        canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+      });
+    }
+
   }
 }

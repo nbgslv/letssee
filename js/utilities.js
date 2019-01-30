@@ -32,4 +32,8 @@ export default class Utilities {
     mousePositionY = e.pageY - offsetY;
     return { x: mousePositionX, y: mousePositionY };
   }
+
+  static getBaseLog(x, y) {
+    return Math.log(y) / Math.log(x);
+  }
 }

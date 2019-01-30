@@ -35,12 +35,14 @@ export default class Rectangle {
       this.started = false;
       const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
       Elements.push(rect);
-      Editor.canvasUpdate(canvas, {
+      const canvasClearParam = {
         x: CANVAS_STATE.canvas.viewPort.topLeft.x,
         y: CANVAS_STATE.canvas.viewPort.topLeft.y,
         width: CANVAS_STATE.canvas.width,
         height: CANVAS_STATE.canvas.height,
-      });
+      };
+      Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
+      Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
   }
 }

@@ -13,7 +13,6 @@ export default class Viewport {
       let deltaX = e.movementX;
       let deltaY = e.movementY;
 
-      /*
       if (
         CANVAS_STATE.canvas.viewPort.topLeft.x >= 0
         && (
@@ -62,7 +61,7 @@ export default class Viewport {
       } else {
         deltaY = e.movementY;
       }
-      */
+
       console.log(deltaX);
       console.log(deltaY);
 
@@ -79,6 +78,8 @@ export default class Viewport {
       CANVAS_STATE.canvas.viewPort.topLeft.y += deltaY;
       CANVAS_STATE.canvas.viewPort.bottomRight.x += deltaX;
       CANVAS_STATE.canvas.viewPort.bottomRight.y += deltaY;
+      CANVAS_STATE.canvas.center.x -= deltaX;
+      CANVAS_STATE.canvas.center.y -= deltaY;
 
       console.log(CANVAS_STATE.canvas.viewPort.topLeft.x);
       console.log(CANVAS_STATE.canvas.viewPort.bottomRight.x);
