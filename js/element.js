@@ -1,7 +1,10 @@
 const Elements = [];
 
 class Element {
-  constructor(x, y, width, height, style) {
+  constructor(type, x, y, width, height, style) {
+    this.type = type;
+    // TODO elements file
+    // TODO figure out how to implement different types of elements
     this.x = x;
     this.y = y;
     this.width = width;

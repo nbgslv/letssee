@@ -209,6 +209,28 @@ export default class Editor {
     const dragToolInstance = new Tool(dragTool);
     Tools.push(dragTool);
 
+    // Shapes Tools
+    // Line Tool
+    const lineTool = {
+      category: 'tool',
+      name: 'line',
+      properties: {
+        enable: true,
+        type: 'canvas-tool',
+        toolbar: 'main',
+        icon: '/assets/images/line.png',
+        cursor: 'crosshair',
+        active: false,
+      },
+      events: {
+        mouseDown: 'mousedown',
+        mouseMove: 'mousemove',
+        mouseUp: 'mouseup',
+      },
+    };
+    const lineToolInstance = new Tool(lineTool);
+    Tools.push(lineTool);
+
 
     // TODO change css by tool events
     // build toolbars

@@ -206,150 +206,110 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./ch": [
-		"./js/ch.js",
-		7,
-		2
-	],
-	"./ch.js": [
-		"./js/ch.js",
-		7,
-		2
-	],
 	"./editor": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./editor.js": [
-		"./js/editor.js",
-		9
+		"./js/editor.js"
 	],
 	"./element": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./element.js": [
-		"./js/element.js",
-		9
+		"./js/element.js"
 	],
 	"./globals": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./globals.js": [
-		"./js/globals.js",
-		9
+		"./js/globals.js"
 	],
 	"./hold": [
 		"./js/hold.js",
-		9,
 		0
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		9,
 		0
 	],
 	"./layers": [
 		"./js/layers.js",
-		9,
 		3
 	],
 	"./layers.js": [
 		"./js/layers.js",
-		9,
 		3
 	],
 	"./letse.config": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
 	],
 	"./letse.config.js": [
-		"./js/letse.config.js",
-		9
+		"./js/letse.config.js"
+	],
+	"./line": [
+		"./js/line.js",
+		4
+	],
+	"./line.js": [
+		"./js/line.js",
+		4
 	],
 	"./main": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./main.js": [
-		"./js/main.js",
-		9
+		"./js/main.js"
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		9,
-		4
+		5
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		9,
-		4
+		5
 	],
 	"./settings": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./settings.js": [
-		"./js/settings.js",
-		9
+		"./js/settings.js"
 	],
 	"./tools": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./tools.js": [
-		"./js/tools.js",
-		9
+		"./js/tools.js"
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		9,
-		5
+		6
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		9,
-		5
+		6
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		9,
-		6
+		7
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		9,
-		6
+		7
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		9,
-		7
+		8
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		9,
-		7
+		8
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		9,
 		1
-	],
-	"./zoominout.backup": [
-		"./js/zoominout.backup.js",
-		9,
-		8
-	],
-	"./zoominout.backup.js": [
-		"./js/zoominout.backup.js",
-		9,
-		8
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		9,
 		1
 	]
 };
@@ -362,9 +322,9 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
-		return __webpack_require__.t(id, ids[1])
+		return __webpack_require__(id);
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -593,7 +553,28 @@ function () {
       }
     };
     var dragToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](dragTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(dragTool); // TODO change css by tool events
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(dragTool); // Shapes Tools
+    // Line Tool
+
+    var lineTool = {
+      category: 'tool',
+      name: 'line',
+      properties: {
+        enable: true,
+        type: 'canvas-tool',
+        toolbar: 'main',
+        icon: '/assets/images/line.png',
+        cursor: 'crosshair',
+        active: false
+      },
+      events: {
+        mouseDown: 'mousedown',
+        mouseMove: 'mousemove',
+        mouseUp: 'mouseup'
+      }
+    };
+    var lineToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](lineTool);
+    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(lineTool); // TODO change css by tool events
     // build toolbars
 
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].forEach(function (tool) {
@@ -684,8 +665,11 @@ var Elements = [];
 var Element =
 /*#__PURE__*/
 function () {
-  function Element(x, y, width, height, style) {
+  function Element(type, x, y, width, height, style) {
     _classCallCheck(this, Element);
+
+    this.type = type; // TODO elements file
+    // TODO figure out how to implement different types of elements
 
     this.x = x;
     this.y = y;

@@ -7,8 +7,6 @@ const mouse = {
   y: 0,
   startX: 0,
   startY: 0,
-  width: 0,
-  height: 0,
 };
 
 const canvasClearParam = {
@@ -18,7 +16,7 @@ const canvasClearParam = {
   height: CANVAS_STATE.canvas.height,
 };
 
-export default class Rectangle {
+export default class Line {
   static mouseDown(e) {
     this.started = true;
     mouse.startX = e.clientX;
@@ -27,12 +25,12 @@ export default class Rectangle {
 
   static mouseMove(e, canvas) {
     if (this.started) {
-      mouse.x = Math.min(e.screenX, mouse.startX);
-      mouse.y = Math.min(e.screenY, mouse.startY);
-      mouse.width = Math.abs(e.screenX - mouse.startX);
-      mouse.height = Math.abs(e.screenY - mouse.startY);
+      mouse.x = e.screenX;
+      mouse.y = e.screenY;
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
-      canvas.upperCanvas.ctx.strokeRect(mouse.x, mouse.y, mouse.width, mouse.height);
+      canvas.upperCanvas.ctx.moveTo(mouse.startX, mouse.startY);
+      canvas.upperCanvas.ctx.lineTo(mouse.x, mouse.y);
+      canvas.upperCanvas.ctx.stroke();
     }
   }
 
@@ -40,8 +38,8 @@ export default class Rectangle {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
-      Elements.push(rect);
+      const line = new Element(mouse.x, mouse.y, mouse.x - mouse.startX, mouse.y - mouse.startY);
+      Elements.push(line);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
