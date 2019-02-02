@@ -16,7 +16,7 @@ const canvasClearParam = {
   height: CANVAS_STATE.canvas.height,
 };
 
-export default class Line {
+export default class Line extends Element {
   static mouseDown(e) {
     this.started = true;
     mouse.startX = e.clientX;
@@ -43,5 +43,10 @@ export default class Line {
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
+  }
+
+  static Redo(e, canvas, tool, element) {
+    canvas.canvas.ctx.moveTo(element.startX, element.startY);
+    canvas.canvas.ctx.lineTo(element.x, element.y);
   }
 }

@@ -36,14 +36,18 @@ export default class Rectangle {
     }
   }
 
-  static mouseUp(e, canvas) {
+  static mouseUp(e, canvas, tool) {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height);
+      const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height, tool);
       Elements.push(rect);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
+  }
+
+  static Redo(e, canvas, tool, element) {
+    canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
   }
 }

@@ -106,7 +106,7 @@ export default class Editor {
       },
     };
 
-    const defaultToolInstance = new Tool(defaultTool);
+    const defaultToolInstance = new Tool(defaultTool.name, defaultTool.properties, defaultTool.events);
     Tools.push(defaultTool);
     CANVAS_STATE.activeTool = defaultTool;
 

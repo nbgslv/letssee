@@ -14,6 +14,7 @@ export const plugins = [
       mouseDown: 'mousedown',
       mouseMove: 'mousemove',
       mouseUp: 'mouseup',
+      Redo: 'redo',
     },
   },
 ];

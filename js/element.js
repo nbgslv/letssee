@@ -1,14 +1,16 @@
+import { Tool } from './tools.js'
+
 const Elements = [];
 
-class Element {
-  constructor(type, x, y, width, height, style) {
-    this.type = type;
+class Element extends Tool {
+  constructor(x, y, width, height, tool, style) {
     // TODO elements file
     // TODO figure out how to implement different types of elements
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.tool = tool;
     this.style = style;
     this.layer = 1;
   }

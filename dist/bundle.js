@@ -458,7 +458,7 @@ function () {
         mouseUp: 'mouseup'
       }
     };
-    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](defaultTool);
+    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](defaultTool.name, defaultTool.properties, defaultTool.events);
     _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(defaultTool);
     _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // built-in tools
     // Undo
@@ -654,29 +654,46 @@ function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Elements", function() { return Elements; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Element", function() { return Element; });
+/* harmony import */ var _tools_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tools.js */ "./js/tools.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
 var Elements = [];
 
 var Element =
 /*#__PURE__*/
-function () {
-  function Element(type, x, y, width, height, style) {
+function (_Tool) {
+  _inherits(Element, _Tool);
+
+  function Element(x, y, width, height, tool, style) {
+    var _this;
+
     _classCallCheck(this, Element);
 
-    this.type = type; // TODO elements file
+    // TODO elements file
     // TODO figure out how to implement different types of elements
-
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.style = style;
-    this.layer = 1;
+    _this.x = x;
+    _this.y = y;
+    _this.width = width;
+    _this.height = height;
+    _this.tool = tool;
+    _this.style = style;
+    _this.layer = 1;
+    return _possibleConstructorReturn(_this);
   }
 
   _createClass(Element, [{
@@ -687,7 +704,7 @@ function () {
   }]);
 
   return Element;
-}();
+}(_tools_js__WEBPACK_IMPORTED_MODULE_0__["Tool"]);
 
 
 
@@ -776,7 +793,8 @@ var plugins = [{
   events: {
     mouseDown: 'mousedown',
     mouseMove: 'mousemove',
-    mouseUp: 'mouseup'
+    mouseUp: 'mouseup',
+    Redo: 'redo'
   }
 }]; // TODO validity check for plugin structure
 
@@ -879,24 +897,23 @@ var Tools = [];
 var Tool =
 /*#__PURE__*/
 function () {
-  function Tool(tool) {
+  function Tool(name, properties, events) {
     _classCallCheck(this, Tool);
 
-    this.name = tool.name;
+    this.name = name;
     this.category = 'tool';
-    this.active = false;
-    this.properties = tool.properties;
-    this.events = tool.events;
-    this.enable = tool.enable;
+    this.properties = properties;
+    this.events = events;
   }
 
   _createClass(Tool, null, [{
     key: "eventHandler",
     value: function eventHandler(e, tool, canvas) {
+      var element = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       __webpack_require__("./js lazy recursive ^\\.\\/.*$")("./" + tool.name).then(function (toolModule) {
         Object.keys(tool.events).forEach(function (event) {
           if (tool.events[event] === e.type) {
-            var toolEventFunction = toolModule.default[event](e, canvas);
+            var toolEventFunction = toolModule.default[event](e, canvas, tool, element);
           }
         });
       });

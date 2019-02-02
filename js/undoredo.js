@@ -19,8 +19,9 @@ export default class Undoredo {
 
   static canvasRedo(e, canvas) {
     const element = REDO.shift();
+    const redoEvent = new CustomEvent('redo');
     if (element !== undefined) {
-      canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+      Tool.eventHandler(redoEvent, element.tool, canvas, element);
       Elements.push(element);
     }
     Tool.recordUndo();
