@@ -132,7 +132,7 @@ export default class Editor {
     canvas.ctx.clearRect(x, y, width, height);
     if (draw) {
       ELEMENTS.forEach((element) => {
-        canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+        element.draw(canvas);
       });
     }
   }

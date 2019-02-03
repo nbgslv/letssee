@@ -214,11 +214,11 @@ var map = {
 	],
 	"./elements": [
 		"./js/elements.js",
-		2
+		4
 	],
 	"./elements.js": [
 		"./js/elements.js",
-		2
+		4
 	],
 	"./globals": [
 		"./js/globals.js"
@@ -228,19 +228,19 @@ var map = {
 	],
 	"./hold": [
 		"./js/hold.js",
-		0
+		2
 	],
 	"./hold.js": [
 		"./js/hold.js",
-		0
+		2
 	],
 	"./layers": [
 		"./js/layers.js",
-		3
+		5
 	],
 	"./layers.js": [
 		"./js/layers.js",
-		3
+		5
 	],
 	"./letse.config": [
 		"./js/letse.config.js"
@@ -256,11 +256,11 @@ var map = {
 	],
 	"./line": [
 		"./js/line.js",
-		4
+		0
 	],
 	"./line.js": [
 		"./js/line.js",
-		4
+		0
 	],
 	"./main": [
 		"./js/main.js"
@@ -270,11 +270,11 @@ var map = {
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		5
+		1
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		5
+		1
 	],
 	"./settings": [
 		"./js/settings.js"
@@ -314,11 +314,11 @@ var map = {
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
-		1
+		3
 	],
 	"./zoominout.js": [
 		"./js/zoominout.js",
-		1
+		3
 	]
 };
 function webpackAsyncContext(req) {
@@ -511,7 +511,7 @@ function () {
 
       if (draw) {
         _globals__WEBPACK_IMPORTED_MODULE_0__["ELEMENTS"].forEach(function (element) {
-          canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+          element.draw(canvas);
         });
       }
     }

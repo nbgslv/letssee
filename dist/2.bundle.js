@@ -1,69 +1,169 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ "./js/elements.js":
-/*!************************!*\
-  !*** ./js/elements.js ***!
-  \************************/
+/***/ "./js/hold.js":
+/*!********************!*\
+  !*** ./js/hold.js ***!
+  \********************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Element; });
-/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Hold; });
+/* harmony import */ var _editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./editor */ "./js/editor.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ "./js/utilities.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
 
-var Element =
+var selection;
+
+var Hold =
 /*#__PURE__*/
-function (_Tool) {
-  _inherits(Element, _Tool);
-
-  function Element(name, properties, events, element, style) {
-    var _this;
-
-    var layer = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
-
-    _classCallCheck(this, Element);
-
-    // TODO elements file
-    // TODO figure out how to implement different types of elements
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Element).call(this, name, properties, events));
-    _this.x = element.x;
-    _this.y = element.y;
-    _this.width = element.width;
-    _this.height = element.height;
-    _this.style = style;
-    _this.layer = layer;
-    return _this;
+function () {
+  function Hold() {
+    _classCallCheck(this, Hold);
   }
 
-  _createClass(Element, [{
-    key: "mouseInShape",
-    value: function mouseInShape(mousePositionX, mousePositionY) {
-      return this.x <= mousePositionX && this.x + this.width >= mousePositionX && this.y <= mousePositionY && this.y + this.height >= mousePositionY;
+  _createClass(Hold, null, [{
+    key: "mouseDown",
+    value: function mouseDown(e, canvas) {
+      var _this = this;
+
+      var mousePosition = _utilities__WEBPACK_IMPORTED_MODULE_2__["default"].checkMousePosition(e, canvas);
+      var mouse = {
+        positionX: mousePosition.x,
+        positionY: mousePosition.y
+      };
+      _globals__WEBPACK_IMPORTED_MODULE_1__["ELEMENTS"].forEach(function (element) {
+        if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
+          // let selection = this.selection;
+          _this.dragoffx = mouse.positionX - element.x;
+          _this.dragoffy = mouse.positionY - element.y;
+          _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].dragging = true;
+          _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].selection = element;
+          selection = _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].selection;
+          Hold.draw(canvas); //return;
+        }
+        /*
+        if (CANVAS_STATE.selection) {
+         CANVAS_STATE.selection = null;
+         selection = null;
+         Hold.draw(canvas);
+        } */
+
+      });
+    }
+  }, {
+    key: "mouseMove",
+    value: function mouseMove(e, canvas) {
+      if (_globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].dragging) {
+        var mousePosition = _utilities__WEBPACK_IMPORTED_MODULE_2__["default"].checkMousePosition(e, canvas);
+        selection.x = mousePosition.x - this.dragoffx;
+        selection.y = mousePosition.y - this.dragoffy;
+        Hold.draw(canvas);
+      }
+    }
+  }, {
+    key: "mouseUp",
+    value: function mouseUp(e, canvas) {
+      _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].dragging = false;
+    }
+  }, {
+    key: "draw",
+    value: function draw(canvas) {
+      canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+      canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
+      _globals__WEBPACK_IMPORTED_MODULE_1__["ELEMENTS"].forEach(function (element) {
+        if (!(element.x > canvas.upperCanvas.width || element.y > canvas.upperCanvas.height || element.x + element.width < 0 || element.y + element.height < 0)) {
+          canvas.upperCanvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+        }
+
+        if (selection !== null) {
+          canvas.upperCanvas.ctx.strokeRect(selection.x, selection.y, selection.width, selection.height);
+        }
+
+        _editor__WEBPACK_IMPORTED_MODULE_0__["default"].canvasUpdate(canvas);
+      });
     }
   }]);
 
-  return Element;
-}(_tools__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  return Hold;
+}();
+
+
+
+/***/ }),
+
+/***/ "./js/utilities.js":
+/*!*************************!*\
+  !*** ./js/utilities.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Utilities; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Utilities =
+/*#__PURE__*/
+function () {
+  function Utilities() {
+    _classCallCheck(this, Utilities);
+  }
+
+  _createClass(Utilities, null, [{
+    key: "checkMousePosition",
+    value: function checkMousePosition(e, canvas) {
+      var offsetX = 0;
+      var offsetY = 0;
+      var mousePositionX;
+      var mousePositionY;
+      var html = document.body.parentNode;
+      var upperCanvas = canvas.upperCanvas;
+
+      if (upperCanvas.offsetParent !== undefined) {
+        do {
+          offsetX += upperCanvas.offsetLeft;
+          offsetY += upperCanvas.offsetTop;
+        } while (upperCanvas = upperCanvas.offsetParent);
+      }
+
+      upperCanvas = canvas.upperCanvas;
+      var stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas).paddingLeft, 10) || 0;
+      var stylePaddingTop = parseInt(document.defaultView.getComputedStyle(upperCanvas).paddingTop, 10) || 0;
+      var styleBorderLeft = parseInt(document.defaultView.getComputedStyle(upperCanvas).borderLeftWidth, 10) || 0;
+      var styleBorderTop = parseInt(document.defaultView.getComputedStyle(upperCanvas).borderTopWidth, 10) || 0;
+      offsetX += stylePaddingLeft + styleBorderLeft + html.offsetLeft;
+      offsetY += stylePaddingTop + styleBorderTop + html.offsetTop;
+      mousePositionX = e.pageX - offsetX;
+      mousePositionY = e.pageY - offsetY;
+      return {
+        x: mousePositionX,
+        y: mousePositionY
+      };
+    }
+  }, {
+    key: "getBaseLog",
+    value: function getBaseLog(x, y) {
+      return Math.log(y) / Math.log(x);
+    }
+  }]);
+
+  return Utilities;
+}();
 
 
 

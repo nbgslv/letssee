@@ -17,14 +17,16 @@ const canvasClearParam = {
 };
 
 export default class Line extends Element {
-  constructor(startX, startY, x, y, style) {
-    const element = {
-      startX,
-      startY,
-      x,
-      y,
+  constructor(name, properties, events, element, style) {
+    super(name, properties, events, element, style);
+    this.startX = element.startX;
+    this.startY = element.startY;
+    this.draw = function (canvas) {
+      canvas.ctx.beginPath();
+      canvas.ctx.moveTo(this.startX, this.startY);
+      canvas.ctx.lineTo(this.x, this.y);
+      canvas.ctx.stroke();
     };
-    super(element, style);
   }
 
   static mouseDown(e) {
@@ -37,7 +39,8 @@ export default class Line extends Element {
     if (this.started) {
       mouse.x = e.screenX;
       mouse.y = e.screenY;
-      Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
+      Editor.canvasUpdate(canvas.upperCanvas, true, canvasClearParam);
+      canvas.upperCanvas.ctx.beginPath();
       canvas.upperCanvas.ctx.moveTo(mouse.startX, mouse.startY);
       canvas.upperCanvas.ctx.lineTo(mouse.x, mouse.y);
       canvas.upperCanvas.ctx.stroke();
@@ -48,15 +51,24 @@ export default class Line extends Element {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      const line = new Element(tool.name, tool.properties, tool.events, mouse.x, mouse.y, mouse.x - mouse.startX, mouse.y - mouse.startY);
+      const element = {
+        startX: mouse.startX,
+        startY: mouse.startY,
+        x: mouse.x,
+        y: mouse.y,
+        width: mouse.x - mouse.startX,
+        height: mouse.y - mouse.startY,
+      };
+      const line = new Line(
+        tool.name,
+        tool.properties,
+        tool.events,
+        element,
+        null,
+      );
       ELEMENTS.push(line);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
-  }
-
-  static Redo(e, canvas, tool, element) {
-    canvas.canvas.ctx.moveTo(element.startX, element.startY);
-    canvas.canvas.ctx.lineTo(element.x, element.y);
   }
 }

@@ -19,6 +19,13 @@ const canvasClearParam = {
 };
 
 export default class Rectangle extends Element {
+  constructor(name, properties, events, element, style) {
+    super(name, properties, events, element, style);
+    this.draw = function (canvas) {
+      canvas.ctx.strokeRect(this.x, this.y, this.width, this.height);
+    };
+  }
+
   static mouseDown(e) {
     this.started = true;
     mouse.startX = e.clientX;
@@ -57,9 +64,5 @@ export default class Rectangle extends Element {
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
-  }
-
-  static Redo(e, canvas, tool, element) {
-    canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
   }
 }
