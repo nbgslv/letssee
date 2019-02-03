@@ -214,11 +214,11 @@ var map = {
 	],
 	"./elements": [
 		"./js/elements.js",
-		8
+		2
 	],
 	"./elements.js": [
 		"./js/elements.js",
-		8
+		2
 	],
 	"./globals": [
 		"./js/globals.js"
@@ -236,11 +236,11 @@ var map = {
 	],
 	"./layers": [
 		"./js/layers.js",
-		2
+		3
 	],
 	"./layers.js": [
 		"./js/layers.js",
-		2
+		3
 	],
 	"./letse.config": [
 		"./js/letse.config.js"
@@ -256,11 +256,11 @@ var map = {
 	],
 	"./line": [
 		"./js/line.js",
-		3
+		4
 	],
 	"./line.js": [
 		"./js/line.js",
-		3
+		4
 	],
 	"./main": [
 		"./js/main.js"
@@ -270,11 +270,11 @@ var map = {
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		4
+		5
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		4
+		5
 	],
 	"./settings": [
 		"./js/settings.js"
@@ -290,27 +290,27 @@ var map = {
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		5
+		6
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		5
+		6
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		6
+		7
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		6
+		7
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		7
+		8
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		7
+		8
 	],
 	"./zoominout": [
 		"./js/zoominout.js",

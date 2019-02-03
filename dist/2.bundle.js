@@ -1,44 +1,69 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ "./js/layers.js":
-/*!**********************!*\
-  !*** ./js/layers.js ***!
-  \**********************/
+/***/ "./js/elements.js":
+/*!************************!*\
+  !*** ./js/elements.js ***!
+  \************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Layers; });
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Element; });
+/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
-var Layers =
+
+var Element =
 /*#__PURE__*/
-function () {
-  function Layers() {
-    _classCallCheck(this, Layers);
+function (_Tool) {
+  _inherits(Element, _Tool);
+
+  function Element(name, properties, events, element, style) {
+    var _this;
+
+    var layer = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
+
+    _classCallCheck(this, Element);
+
+    // TODO elements file
+    // TODO figure out how to implement different types of elements
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Element).call(this, name, properties, events));
+    _this.x = element.x;
+    _this.y = element.y;
+    _this.width = element.width;
+    _this.height = element.height;
+    _this.style = style;
+    _this.layer = layer;
+    return _this;
   }
 
-  _createClass(Layers, null, [{
-    key: "addLayer",
-    value: function addLayer(element) {
-      element.layer += _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].layers;
-      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].layers++;
+  _createClass(Element, [{
+    key: "mouseInShape",
+    value: function mouseInShape(mousePositionX, mousePositionY) {
+      return this.x <= mousePositionX && this.x + this.width >= mousePositionX && this.y <= mousePositionY && this.y + this.height >= mousePositionY;
     }
-  }, {
-    key: "layerBack",
-    value: function layerBack(e, canvas) {}
   }]);
 
-  return Layers;
-}();
+  return Element;
+}(_tools__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
