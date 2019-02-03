@@ -1,5 +1,5 @@
-import { CANVAS_STATE } from './globals';
-import { Element, Elements } from './element';
+import { CANVAS_STATE, ELEMENTS } from './globals';
+import Element from './elements';
 import Editor from './editor';
 
 const mouse = {
@@ -17,6 +17,16 @@ const canvasClearParam = {
 };
 
 export default class Line extends Element {
+  constructor(startX, startY, x, y, style) {
+    const element = {
+      startX,
+      startY,
+      x,
+      y,
+    };
+    super(element, style);
+  }
+
   static mouseDown(e) {
     this.started = true;
     mouse.startX = e.clientX;
@@ -34,12 +44,12 @@ export default class Line extends Element {
     }
   }
 
-  static mouseUp(e, canvas) {
+  static mouseUp(e, canvas, tool) {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      const line = new Element(mouse.x, mouse.y, mouse.x - mouse.startX, mouse.y - mouse.startY);
-      Elements.push(line);
+      const line = new Element(tool.name, tool.properties, tool.events, mouse.x, mouse.y, mouse.x - mouse.startX, mouse.y - mouse.startY);
+      ELEMENTS.push(line);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }

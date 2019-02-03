@@ -1,6 +1,5 @@
-import { Elements } from './element';
 import Editor from './editor';
-import { CANVAS_STATE } from './globals';
+import { CANVAS_STATE, ELEMENTS } from './globals';
 import Utilities from './utilities';
 
 let selection;
@@ -12,7 +11,7 @@ export default class Hold {
       positionX: mousePosition.x,
       positionY: mousePosition.y,
     };
-    Elements.forEach((element) => {
+    ELEMENTS.forEach((element) => {
       if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
         // let selection = this.selection;
         this.dragoffx = mouse.positionX - element.x;
@@ -47,7 +46,7 @@ export default class Hold {
   static draw(canvas) {
     canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
     canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
-    Elements.forEach((element) => {
+    ELEMENTS.forEach((element) => {
       if (!(element.x > canvas.upperCanvas.width || element.y > canvas.upperCanvas.height
         || element.x + element.width < 0 || element.y + element.height < 0)) {
         canvas.upperCanvas.ctx.strokeRect(element.x, element.y, element.width, element.height);

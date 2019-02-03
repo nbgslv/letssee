@@ -1,5 +1,4 @@
-import { CANVAS_STATE } from './globals';
-import { Elements } from './element';
+import { CANVAS_STATE, ELEMENTS } from './globals';
 
 export default class Viewport {
   static mouseDown() {
@@ -67,7 +66,7 @@ export default class Viewport {
 
       canvas.canvas.ctx.translate(deltaX, deltaY);
       canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
-      Elements.forEach((element) => {
+      ELEMENTS.forEach((element) => {
         canvas.canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
       });
 

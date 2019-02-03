@@ -1,6 +1,5 @@
-import { UNDO, REDO } from './globals';
-import { Elements } from './element';
-import { Tool } from './tools';
+import { UNDO, REDO, ELEMENTS } from './globals';
+import Tool from './tools';
 
 export default class Undoredo {
   static canvasUndo(e, canvas) {
@@ -11,9 +10,9 @@ export default class Undoredo {
     }
     REDO.unshift(UNDO[UNDO.length - 1]);
     UNDO.pop();
-    Elements.length = 0;
+    ELEMENTS.length = 0;
     UNDO.forEach((element) => {
-      Elements.push(element);
+      ELEMENTS.push(element);
     });
   }
 
@@ -22,7 +21,7 @@ export default class Undoredo {
     const redoEvent = new CustomEvent('redo');
     if (element !== undefined) {
       Tool.eventHandler(redoEvent, element.tool, canvas, element);
-      Elements.push(element);
+      ELEMENTS.push(element);
     }
     Tool.recordUndo();
   }

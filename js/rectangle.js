@@ -1,5 +1,5 @@
-import { CANVAS_STATE } from './globals';
-import { Element, Elements } from './element';
+import { CANVAS_STATE, ELEMENTS } from './globals';
+import Element from './elements';
 import Editor from './editor';
 
 const mouse = {
@@ -18,7 +18,7 @@ const canvasClearParam = {
   height: CANVAS_STATE.canvas.height,
 };
 
-export default class Rectangle {
+export default class Rectangle extends Element {
   static mouseDown(e) {
     this.started = true;
     mouse.startX = e.clientX;
@@ -40,8 +40,20 @@ export default class Rectangle {
     if (this.started) {
       this.mouseMove(e, canvas);
       this.started = false;
-      const rect = new Element(mouse.x, mouse.y, mouse.width, mouse.height, tool);
-      Elements.push(rect);
+      const element = {
+        x: mouse.x,
+        y: mouse.y,
+        width: mouse.width,
+        height: mouse.height,
+      };
+      const rect = new Rectangle(
+        tool.name,
+        tool.properties,
+        tool.events,
+        element,
+        null,
+      );
+      ELEMENTS.push(rect);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }

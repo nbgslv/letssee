@@ -1,6 +1,5 @@
-import { Elements } from './element';
-import { CANVAS_PROPERTIES, CANVAS_STATE } from './globals';
-import { Tool, Tools } from './tools';
+import { CANVAS_PROPERTIES, CANVAS_STATE, ELEMENTS, TOOLS } from './globals';
+import Tool from './tools';
 
 export default class Editor {
   constructor(containerID, height, width, options = {}) {
@@ -8,7 +7,9 @@ export default class Editor {
     this.height = height;
     this.width = width;
     this.options = options;
+  }
 
+  initCanvas() {
     /*
     * The canvas is built into the specified container(<div>).
     * Each element is nested inside a <div> container, following the structure:
@@ -70,12 +71,13 @@ export default class Editor {
     canvas.upperCanvas = document.createElement('canvas');
     canvas.canvasContainer.appendChild(canvas.upperCanvas);
     canvas.upperCanvas.setAttribute('height', this.height);
-    canvas.upperCanvas.height = height;
+    canvas.upperCanvas.height = this.height;
     canvas.upperCanvas.setAttribute('width', this.width);
-    canvas.upperCanvas.width = width;
+    canvas.upperCanvas.width = this.width;
     canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
     canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d');
 
+    // Setting up globals
     // TODO put it as part of canvas options deconstruction
     CANVAS_PROPERTIES.document.width = canvas.canvas.width;
     CANVAS_PROPERTIES.document.height = canvas.canvas.height;
@@ -87,154 +89,13 @@ export default class Editor {
     CANVAS_STATE.canvas.viewPort.bottomRight.x = canvas.canvas.width;
     CANVAS_STATE.canvas.viewPort.bottomRight.y = canvas.canvas.height;
 
-    // init default hold tool
-    const defaultTool = {
-      category: 'tool',
-      name: 'hold',
-      properties: {
-        enable: true,
-        type: 'canvas-tool',
-        toolbar: 'main',
-        icon: '/assets/images/hand.png',
-        cursor: 'grab',
-        active: false,
-      },
-      events: {
-        mouseDown: 'mousedown',
-        mouseMove: 'mousemove',
-        mouseUp: 'mouseup',
-      },
-    };
+    this.canvas = canvas;
+  }
 
-    const defaultToolInstance = new Tool(defaultTool.name, defaultTool.properties, defaultTool.events);
-    Tools.push(defaultTool);
-    CANVAS_STATE.activeTool = defaultTool;
-
-    // built-in tools
-    // Undo
-    const undoTool = {
-      category: 'tool',
-      name: 'undoredo',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/reply.png',
-        cursor: 'default',
-        active: false,
-      },
-      events: {
-        canvasUndo: 'click',
-      },
-    };
-
-    const undoToolInstance = new Tool(undoTool);
-    Tools.push(undoTool);
-
-    // Redo
-    const redoTool = {
-      category: 'tool',
-      name: 'undoredo',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/redo.png',
-        cursor: 'default',
-        active: false,
-      },
-      events: {
-        canvasRedo: 'click',
-      },
-    };
-    const redoToolInstance = new Tool(redoTool);
-    Tools.push(redoTool);
-
-    // Zoom in
-    const zoominTool = {
-      category: 'tool',
-      name: 'zoominout',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/zoom.png',
-        cursor: 'default',
-        active: false,
-      },
-      events: {
-        canvasZoomIn: 'click',
-      },
-    };
-    const zoominToolInstance = new Tool(zoominTool);
-    Tools.push(zoominTool);
-
-    // Zoom out
-    const zoomoutTool = {
-      category: 'tool',
-      name: 'zoominout',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/zoom-out.png',
-        cursor: 'default',
-        active: false,
-      },
-      events: {
-        canvasZoomOut: 'click',
-      },
-    };
-    const zoomoutToolInstance = new Tool(zoomoutTool);
-    Tools.push(zoomoutTool);
-
-    // Drag Canvas
-    const dragTool = {
-      category: 'tool',
-      name: 'viewport',
-      properties: {
-        enable: true,
-        type: 'canvas-tool',
-        toolbar: 'second',
-        icon: '/assets/images/drag.png',
-        cursor: 'all-scroll',
-        active: false,
-      },
-      events: {
-        mouseDown: 'mousedown',
-        drag: 'mousemove',
-        mouseUp: 'mouseup',
-      },
-    };
-    const dragToolInstance = new Tool(dragTool);
-    Tools.push(dragTool);
-
-    // Shapes Tools
-    // Line Tool
-    const lineTool = {
-      category: 'tool',
-      name: 'line',
-      properties: {
-        enable: true,
-        type: 'canvas-tool',
-        toolbar: 'main',
-        icon: '/assets/images/line.png',
-        cursor: 'crosshair',
-        active: false,
-      },
-      events: {
-        mouseDown: 'mousedown',
-        mouseMove: 'mousemove',
-        mouseUp: 'mouseup',
-      },
-    };
-    const lineToolInstance = new Tool(lineTool);
-    Tools.push(lineTool);
-
-
+  initToolBars() {
     // TODO change css by tool events
     // build toolbars
-    Tools.forEach((tool) => {
+    TOOLS.forEach((tool) => {
       const div = document.createElement('div');
       div.style.backgroundImage = `url("${tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
@@ -242,26 +103,24 @@ export default class Editor {
       if (tool.properties.type === 'canvas-tool') {
         div.addEventListener('click', () => { CANVAS_STATE.activeTool = tool; });
       } else if (tool.properties.type === 'own-click') {
-        div.addEventListener('click', (e) => { Tool.eventHandler(e, tool, canvas); });
+        div.addEventListener('click', (e) => { Tool.eventHandler(e, tool, this.canvas); });
       }
       if (tool.properties.toolbar === 'main') {
-        canvas.mainToolbar.appendChild(div);
+        this.canvas.mainToolbar.appendChild(div);
       } else if (tool.properties.toolbar === 'second') {
-        canvas.secondToolbar.appendChild(div);
+        this.canvas.secondToolbar.appendChild(div);
       }
     });
     // canvas event listeners for default tool
-    const toolEventHandler = (function (e) {
+    const toolEventHandler = function (canvas, e) {
       const promise = new Promise((resolve) => {
         Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas);
         resolve(Tool.recordUndo());
       });
-    });
-    canvas.upperCanvas.addEventListener('mousedown', e => toolEventHandler(e));
-    canvas.upperCanvas.addEventListener('mousemove', e => toolEventHandler(e));
-    canvas.upperCanvas.addEventListener('mouseup', e => toolEventHandler(e));
-
-    this.canvas = canvas;
+    };
+    this.canvas.upperCanvas.addEventListener('mousedown', e => toolEventHandler(this.canvas, e));
+    this.canvas.upperCanvas.addEventListener('mousemove', e => toolEventHandler(this.canvas, e));
+    this.canvas.upperCanvas.addEventListener('mouseup', e => toolEventHandler(this.canvas, e));
   }
 
   static canvasUpdate(canvas, draw, {
@@ -272,10 +131,9 @@ export default class Editor {
   }) {
     canvas.ctx.clearRect(x, y, width, height);
     if (draw) {
-      Elements.forEach((element) => {
+      ELEMENTS.forEach((element) => {
         canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
       });
     }
-
   }
 }

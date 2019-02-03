@@ -212,11 +212,13 @@ var map = {
 	"./editor.js": [
 		"./js/editor.js"
 	],
-	"./element": [
-		"./js/element.js"
+	"./elements": [
+		"./js/elements.js",
+		8
 	],
-	"./element.js": [
-		"./js/element.js"
+	"./elements.js": [
+		"./js/elements.js",
+		8
 	],
 	"./globals": [
 		"./js/globals.js"
@@ -234,11 +236,11 @@ var map = {
 	],
 	"./layers": [
 		"./js/layers.js",
-		3
+		2
 	],
 	"./layers.js": [
 		"./js/layers.js",
-		3
+		2
 	],
 	"./letse.config": [
 		"./js/letse.config.js"
@@ -246,13 +248,19 @@ var map = {
 	"./letse.config.js": [
 		"./js/letse.config.js"
 	],
+	"./letse.default.tools.config": [
+		"./js/letse.default.tools.config.js"
+	],
+	"./letse.default.tools.config.js": [
+		"./js/letse.default.tools.config.js"
+	],
 	"./line": [
 		"./js/line.js",
-		4
+		3
 	],
 	"./line.js": [
 		"./js/line.js",
-		4
+		3
 	],
 	"./main": [
 		"./js/main.js"
@@ -262,11 +270,11 @@ var map = {
 	],
 	"./rectangle": [
 		"./js/rectangle.js",
-		5
+		4
 	],
 	"./rectangle.js": [
 		"./js/rectangle.js",
-		5
+		4
 	],
 	"./settings": [
 		"./js/settings.js"
@@ -282,27 +290,27 @@ var map = {
 	],
 	"./undoredo": [
 		"./js/undoredo.js",
-		6
+		5
 	],
 	"./undoredo.js": [
 		"./js/undoredo.js",
-		6
+		5
 	],
 	"./utilities": [
 		"./js/utilities.js",
-		7
+		6
 	],
 	"./utilities.js": [
 		"./js/utilities.js",
-		7
+		6
 	],
 	"./viewport": [
 		"./js/viewport.js",
-		8
+		7
 	],
 	"./viewport.js": [
 		"./js/viewport.js",
-		8
+		7
 	],
 	"./zoominout": [
 		"./js/zoominout.js",
@@ -345,15 +353,13 @@ module.exports = webpackAsyncContext;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Editor; });
-/* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./element */ "./js/element.js");
-/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
-/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 
 
 
@@ -370,256 +376,131 @@ function () {
     this.height = height;
     this.width = width;
     this.options = options;
-    /*
-    * The canvas is built into the specified container(<div>).
-    * Each element is nested inside a <div> container, following the structure:
-    *
-    * Editor-container(containerID)
-    * |------- row container(rowA)
-    * |   |--- main tool bar
-    * |------- row container(rowB)
-    *     |--- canvas container
-    *     | |- canvas
-    *     |--- second tool bar
-    *     TODO update canvas structure
-    */
-    // Canvas initiation
-
-    var canvas = {};
-    canvas.container = document.getElementById(this.editorContainerID);
-    canvas.canvas = document.createElement('canvas'); // rowA and rowB creation
-
-    canvas.rowA = document.createElement('div');
-    canvas.rowA.setAttribute('class', 'row');
-    canvas.rowA.setAttribute('id', 'rowA');
-    canvas.rowB = document.createElement('div');
-    canvas.rowB.setAttribute('class', 'row');
-    canvas.rowB.setAttribute('id', 'rowB'); // nesting rowA and rowB inside containerID
-
-    canvas.container.appendChild(canvas.rowA);
-    canvas.container.appendChild(canvas.rowB); // main tool bar creation
-
-    canvas.mainToolbar = document.createElement('div');
-    canvas.mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
-    canvas.mainToolbar.setAttribute('class', 'letse-maintoolbar');
-    canvas.mainToolbar.style.width = "".concat(this.width + 50, "px"); // TODO check if attribute contains px/is text
-
-    canvas.rowA.appendChild(canvas.mainToolbar); // canvas container and canvas creation
-
-    canvas.canvasContainer = document.createElement('div');
-    canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
-    canvas.rowB.appendChild(canvas.canvasContainer);
-    canvas.canvas.setAttribute('height', this.height);
-    canvas.canvas.height = this.height;
-    canvas.canvas.setAttribute('width', this.width);
-    canvas.canvas.width = this.width;
-    canvas.canvas.setAttribute('id', 'letse-canvas');
-    canvas.canvas.ctx = canvas.canvas.getContext('2d');
-    canvas.canvasContainer.appendChild(canvas.canvas); // second tool bar creation
-
-    canvas.secondToolbar = document.createElement('div');
-    canvas.secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
-    canvas.secondToolbar.setAttribute('class', 'letse-secondtoolbar');
-    canvas.secondToolbar.style.height = "".concat(this.height, "px");
-    canvas.rowB.appendChild(canvas.secondToolbar); // upper canvas
-
-    canvas.upperCanvas = document.createElement('canvas');
-    canvas.canvasContainer.appendChild(canvas.upperCanvas);
-    canvas.upperCanvas.setAttribute('height', this.height);
-    canvas.upperCanvas.height = height;
-    canvas.upperCanvas.setAttribute('width', this.width);
-    canvas.upperCanvas.width = width;
-    canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
-    canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d'); // TODO put it as part of canvas options deconstruction
-
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.width = canvas.canvas.width;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_PROPERTIES"].document.height = canvas.canvas.height;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.width = canvas.canvas.width;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.height = canvas.canvas.height;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.x = canvas.canvas.width / 2;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.center.y = canvas.canvas.height / 2;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height; // init default hold tool
-
-    var defaultTool = {
-      category: 'tool',
-      name: 'hold',
-      properties: {
-        enable: true,
-        type: 'canvas-tool',
-        toolbar: 'main',
-        icon: '/assets/images/hand.png',
-        cursor: 'grab',
-        active: false
-      },
-      events: {
-        mouseDown: 'mousedown',
-        mouseMove: 'mousemove',
-        mouseUp: 'mouseup'
-      }
-    };
-    var defaultToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](defaultTool.name, defaultTool.properties, defaultTool.events);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(defaultTool);
-    _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = defaultTool; // built-in tools
-    // Undo
-
-    var undoTool = {
-      category: 'tool',
-      name: 'undoredo',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/reply.png',
-        cursor: 'default',
-        active: false
-      },
-      events: {
-        canvasUndo: 'click'
-      }
-    };
-    var undoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](undoTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(undoTool); // Redo
-
-    var redoTool = {
-      category: 'tool',
-      name: 'undoredo',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/redo.png',
-        cursor: 'default',
-        active: false
-      },
-      events: {
-        canvasRedo: 'click'
-      }
-    };
-    var redoToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](redoTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(redoTool); // Zoom in
-
-    var zoominTool = {
-      category: 'tool',
-      name: 'zoominout',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/zoom.png',
-        cursor: 'default',
-        active: false
-      },
-      events: {
-        canvasZoomIn: 'click'
-      }
-    };
-    var zoominToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](zoominTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(zoominTool); // Zoom out
-
-    var zoomoutTool = {
-      category: 'tool',
-      name: 'zoominout',
-      properties: {
-        enable: true,
-        type: 'own-click',
-        toolbar: 'second',
-        icon: '/assets/images/zoom-out.png',
-        cursor: 'default',
-        active: false
-      },
-      events: {
-        canvasZoomOut: 'click'
-      }
-    };
-    var zoomoutToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](zoomoutTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(zoomoutTool); // Drag Canvas
-
-    var dragTool = {
-      category: 'tool',
-      name: 'viewport',
-      properties: {
-        enable: true,
-        type: 'canvas-tool',
-        toolbar: 'second',
-        icon: '/assets/images/drag.png',
-        cursor: 'all-scroll',
-        active: false
-      },
-      events: {
-        mouseDown: 'mousedown',
-        drag: 'mousemove',
-        mouseUp: 'mouseup'
-      }
-    };
-    var dragToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](dragTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(dragTool); // Shapes Tools
-    // Line Tool
-
-    var lineTool = {
-      category: 'tool',
-      name: 'line',
-      properties: {
-        enable: true,
-        type: 'canvas-tool',
-        toolbar: 'main',
-        icon: '/assets/images/line.png',
-        cursor: 'crosshair',
-        active: false
-      },
-      events: {
-        mouseDown: 'mousedown',
-        mouseMove: 'mousemove',
-        mouseUp: 'mouseup'
-      }
-    };
-    var lineToolInstance = new _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"](lineTool);
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].push(lineTool); // TODO change css by tool events
-    // build toolbars
-
-    _tools__WEBPACK_IMPORTED_MODULE_2__["Tools"].forEach(function (tool) {
-      var div = document.createElement('div');
-      div.style.backgroundImage = "url(\"".concat(tool.properties.icon, "\")");
-      div.setAttribute('id', tool.name);
-      div.setAttribute('class', 'tool enable unactive');
-
-      if (tool.properties.type === 'canvas-tool') {
-        div.addEventListener('click', function () {
-          _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool = tool;
-        });
-      } else if (tool.properties.type === 'own-click') {
-        div.addEventListener('click', function (e) {
-          _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, tool, canvas);
-        });
-      }
-
-      if (tool.properties.toolbar === 'main') {
-        canvas.mainToolbar.appendChild(div);
-      } else if (tool.properties.toolbar === 'second') {
-        canvas.secondToolbar.appendChild(div);
-      }
-    }); // canvas event listeners for default tool
-
-    var toolEventHandler = function toolEventHandler(e) {
-      var promise = new Promise(function (resolve) {
-        _tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_1__["CANVAS_STATE"].activeTool, canvas);
-        resolve(_tools__WEBPACK_IMPORTED_MODULE_2__["Tool"].recordUndo());
-      });
-    };
-
-    canvas.upperCanvas.addEventListener('mousedown', function (e) {
-      return toolEventHandler(e);
-    });
-    canvas.upperCanvas.addEventListener('mousemove', function (e) {
-      return toolEventHandler(e);
-    });
-    canvas.upperCanvas.addEventListener('mouseup', function (e) {
-      return toolEventHandler(e);
-    });
-    this.canvas = canvas;
   }
 
-  _createClass(Editor, null, [{
+  _createClass(Editor, [{
+    key: "initCanvas",
+    value: function initCanvas() {
+      /*
+      * The canvas is built into the specified container(<div>).
+      * Each element is nested inside a <div> container, following the structure:
+      *
+      * Editor-container(containerID)
+      * |------- row container(rowA)
+      * |   |--- main tool bar
+      * |------- row container(rowB)
+      *     |--- canvas container
+      *     | |- canvas
+      *     |--- second tool bar
+      *     TODO update canvas structure
+      */
+      // Canvas initiation
+      var canvas = {};
+      canvas.container = document.getElementById(this.editorContainerID);
+      canvas.canvas = document.createElement('canvas'); // rowA and rowB creation
+
+      canvas.rowA = document.createElement('div');
+      canvas.rowA.setAttribute('class', 'row');
+      canvas.rowA.setAttribute('id', 'rowA');
+      canvas.rowB = document.createElement('div');
+      canvas.rowB.setAttribute('class', 'row');
+      canvas.rowB.setAttribute('id', 'rowB'); // nesting rowA and rowB inside containerID
+
+      canvas.container.appendChild(canvas.rowA);
+      canvas.container.appendChild(canvas.rowB); // main tool bar creation
+
+      canvas.mainToolbar = document.createElement('div');
+      canvas.mainToolbar.setAttribute('id', 'letse-canvas-maintoolbar-container');
+      canvas.mainToolbar.setAttribute('class', 'letse-maintoolbar');
+      canvas.mainToolbar.style.width = "".concat(this.width + 50, "px"); // TODO check if attribute contains px/is text
+
+      canvas.rowA.appendChild(canvas.mainToolbar); // canvas container and canvas creation
+
+      canvas.canvasContainer = document.createElement('div');
+      canvas.canvasContainer.setAttribute('id', 'letse-canvas-container');
+      canvas.rowB.appendChild(canvas.canvasContainer);
+      canvas.canvas.setAttribute('height', this.height);
+      canvas.canvas.height = this.height;
+      canvas.canvas.setAttribute('width', this.width);
+      canvas.canvas.width = this.width;
+      canvas.canvas.setAttribute('id', 'letse-canvas');
+      canvas.canvas.ctx = canvas.canvas.getContext('2d');
+      canvas.canvasContainer.appendChild(canvas.canvas); // second tool bar creation
+
+      canvas.secondToolbar = document.createElement('div');
+      canvas.secondToolbar.setAttribute('id', 'letse-canvas-secondtoolbar-container');
+      canvas.secondToolbar.setAttribute('class', 'letse-secondtoolbar');
+      canvas.secondToolbar.style.height = "".concat(this.height, "px");
+      canvas.rowB.appendChild(canvas.secondToolbar); // upper canvas
+
+      canvas.upperCanvas = document.createElement('canvas');
+      canvas.canvasContainer.appendChild(canvas.upperCanvas);
+      canvas.upperCanvas.setAttribute('height', this.height);
+      canvas.upperCanvas.height = this.height;
+      canvas.upperCanvas.setAttribute('width', this.width);
+      canvas.upperCanvas.width = this.width;
+      canvas.upperCanvas.setAttribute('id', 'letse-upper-canvas');
+      canvas.upperCanvas.ctx = canvas.upperCanvas.getContext('2d'); // Setting up globals
+      // TODO put it as part of canvas options deconstruction
+
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_PROPERTIES"].document.width = canvas.canvas.width;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_PROPERTIES"].document.height = canvas.canvas.height;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].canvas.width = canvas.canvas.width;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].canvas.height = canvas.canvas.height;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].canvas.center.x = canvas.canvas.width / 2;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].canvas.center.y = canvas.canvas.height / 2;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].canvas.viewPort.bottomRight.x = canvas.canvas.width;
+      _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].canvas.viewPort.bottomRight.y = canvas.canvas.height;
+      this.canvas = canvas;
+    }
+  }, {
+    key: "initToolBars",
+    value: function initToolBars() {
+      var _this = this;
+
+      // TODO change css by tool events
+      // build toolbars
+      _globals__WEBPACK_IMPORTED_MODULE_0__["TOOLS"].forEach(function (tool) {
+        var div = document.createElement('div');
+        div.style.backgroundImage = "url(\"".concat(tool.properties.icon, "\")");
+        div.setAttribute('id', tool.name);
+        div.setAttribute('class', 'tool enable unactive');
+
+        if (tool.properties.type === 'canvas-tool') {
+          div.addEventListener('click', function () {
+            _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].activeTool = tool;
+          });
+        } else if (tool.properties.type === 'own-click') {
+          div.addEventListener('click', function (e) {
+            _tools__WEBPACK_IMPORTED_MODULE_1__["default"].eventHandler(e, tool, _this.canvas);
+          });
+        }
+
+        if (tool.properties.toolbar === 'main') {
+          _this.canvas.mainToolbar.appendChild(div);
+        } else if (tool.properties.toolbar === 'second') {
+          _this.canvas.secondToolbar.appendChild(div);
+        }
+      }); // canvas event listeners for default tool
+
+      var toolEventHandler = function toolEventHandler(canvas, e) {
+        var promise = new Promise(function (resolve) {
+          _tools__WEBPACK_IMPORTED_MODULE_1__["default"].eventHandler(e, _globals__WEBPACK_IMPORTED_MODULE_0__["CANVAS_STATE"].activeTool, canvas);
+          resolve(_tools__WEBPACK_IMPORTED_MODULE_1__["default"].recordUndo());
+        });
+      };
+
+      this.canvas.upperCanvas.addEventListener('mousedown', function (e) {
+        return toolEventHandler(_this.canvas, e);
+      });
+      this.canvas.upperCanvas.addEventListener('mousemove', function (e) {
+        return toolEventHandler(_this.canvas, e);
+      });
+      this.canvas.upperCanvas.addEventListener('mouseup', function (e) {
+        return toolEventHandler(_this.canvas, e);
+      });
+    }
+  }], [{
     key: "canvasUpdate",
     value: function canvasUpdate(canvas, draw, _ref) {
       var x = _ref.x,
@@ -629,7 +510,7 @@ function () {
       canvas.ctx.clearRect(x, y, width, height);
 
       if (draw) {
-        _element__WEBPACK_IMPORTED_MODULE_0__["Elements"].forEach(function (element) {
+        _globals__WEBPACK_IMPORTED_MODULE_0__["ELEMENTS"].forEach(function (element) {
           canvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
         });
       }
@@ -643,84 +524,19 @@ function () {
 
 /***/ }),
 
-/***/ "./js/element.js":
-/*!***********************!*\
-  !*** ./js/element.js ***!
-  \***********************/
-/*! exports provided: Elements, Element */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Elements", function() { return Elements; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Element", function() { return Element; });
-/* harmony import */ var _tools_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tools.js */ "./js/tools.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-var Elements = [];
-
-var Element =
-/*#__PURE__*/
-function (_Tool) {
-  _inherits(Element, _Tool);
-
-  function Element(x, y, width, height, tool, style) {
-    var _this;
-
-    _classCallCheck(this, Element);
-
-    // TODO elements file
-    // TODO figure out how to implement different types of elements
-    _this.x = x;
-    _this.y = y;
-    _this.width = width;
-    _this.height = height;
-    _this.tool = tool;
-    _this.style = style;
-    _this.layer = 1;
-    return _possibleConstructorReturn(_this);
-  }
-
-  _createClass(Element, [{
-    key: "mouseInShape",
-    value: function mouseInShape(mousePositionX, mousePositionY) {
-      return this.x <= mousePositionX && this.x + this.width >= mousePositionX && this.y <= mousePositionY && this.y + this.height >= mousePositionY;
-    }
-  }]);
-
-  return Element;
-}(_tools_js__WEBPACK_IMPORTED_MODULE_0__["Tool"]);
-
-
-
-/***/ }),
-
 /***/ "./js/globals.js":
 /*!***********************!*\
   !*** ./js/globals.js ***!
   \***********************/
-/*! exports provided: CANVAS_PROPERTIES, CANVAS_STATE, UNDO, REDO */
+/*! exports provided: CANVAS_PROPERTIES, CANVAS_STATE, ELEMENTS, TOOLS, UNDO, REDO */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_PROPERTIES", function() { return CANVAS_PROPERTIES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CANVAS_STATE", function() { return CANVAS_STATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ELEMENTS", function() { return ELEMENTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TOOLS", function() { return TOOLS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNDO", function() { return UNDO; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REDO", function() { return REDO; });
 var CANVAS_PROPERTIES = {
@@ -764,6 +580,8 @@ var CANVAS_STATE = {
     }
   }
 };
+var ELEMENTS = [];
+var TOOLS = [];
 var UNDO = [];
 var REDO = [];
 
@@ -800,6 +618,124 @@ var plugins = [{
 
 /***/ }),
 
+/***/ "./js/letse.default.tools.config.js":
+/*!******************************************!*\
+  !*** ./js/letse.default.tools.config.js ***!
+  \******************************************/
+/*! exports provided: defaultTools */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTools", function() { return defaultTools; });
+var defaultTools = [{
+  category: 'tool',
+  name: 'hold',
+  properties: {
+    enable: true,
+    type: 'canvas-tool',
+    toolbar: 'main',
+    icon: '/assets/images/hand.png',
+    cursor: 'grab',
+    active: false
+  },
+  events: {
+    mouseDown: 'mousedown',
+    mouseMove: 'mousemove',
+    mouseUp: 'mouseup'
+  }
+}, {
+  category: 'tool',
+  name: 'undoredo',
+  properties: {
+    enable: true,
+    type: 'own-click',
+    toolbar: 'second',
+    icon: '/assets/images/reply.png',
+    cursor: 'default',
+    active: false
+  },
+  events: {
+    canvasUndo: 'click'
+  }
+}, {
+  category: 'tool',
+  name: 'undoredo',
+  properties: {
+    enable: true,
+    type: 'own-click',
+    toolbar: 'second',
+    icon: '/assets/images/redo.png',
+    cursor: 'default',
+    active: false
+  },
+  events: {
+    canvasRedo: 'click'
+  }
+}, {
+  category: 'tool',
+  name: 'zoominout',
+  properties: {
+    enable: true,
+    type: 'own-click',
+    toolbar: 'second',
+    icon: '/assets/images/zoom.png',
+    cursor: 'default',
+    active: false
+  },
+  events: {
+    canvasZoomIn: 'click'
+  }
+}, {
+  category: 'tool',
+  name: 'zoominout',
+  properties: {
+    enable: true,
+    type: 'own-click',
+    toolbar: 'second',
+    icon: '/assets/images/zoom-out.png',
+    cursor: 'default',
+    active: false
+  },
+  events: {
+    canvasZoomOut: 'click'
+  }
+}, {
+  category: 'tool',
+  name: 'viewport',
+  properties: {
+    enable: true,
+    type: 'canvas-tool',
+    toolbar: 'second',
+    icon: '/assets/images/drag.png',
+    cursor: 'all-scroll',
+    active: false
+  },
+  events: {
+    mouseDown: 'mousedown',
+    drag: 'mousemove',
+    mouseUp: 'mouseup'
+  }
+}, {
+  category: 'tool',
+  name: 'line',
+  properties: {
+    enable: true,
+    type: 'canvas-tool',
+    toolbar: 'main',
+    icon: '/assets/images/line.png',
+    cursor: 'crosshair',
+    active: false
+  },
+  events: {
+    mouseDown: 'mousedown',
+    mouseMove: 'mousemove',
+    mouseUp: 'mouseup'
+  }
+}];
+
+/***/ }),
+
 /***/ "./js/main.js":
 /*!********************!*\
   !*** ./js/main.js ***!
@@ -811,7 +747,12 @@ var plugins = [{
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./settings */ "./js/settings.js");
 /* harmony import */ var _editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./editor */ "./js/editor.js");
-/* harmony import */ var _letse_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letse.config */ "./js/letse.config.js");
+/* harmony import */ var _letse_default_tools_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letse.default.tools.config */ "./js/letse.default.tools.config.js");
+/* harmony import */ var _letse_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letse.config */ "./js/letse.config.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+
+
+
 
 
 
@@ -821,9 +762,14 @@ try {
   console.log('Config file doesn\'t exists');
 }
 
+var settings = new _settings__WEBPACK_IMPORTED_MODULE_0__["default"](_letse_config__WEBPACK_IMPORTED_MODULE_3__["plugins"], _letse_default_tools_config__WEBPACK_IMPORTED_MODULE_2__["defaultTools"]);
+_globals__WEBPACK_IMPORTED_MODULE_4__["CANVAS_STATE"].activeTool = settings.createPlugins(); // will return the first tool
+// in letse.default.tools.config as
+// the default active tool
 
-_settings__WEBPACK_IMPORTED_MODULE_0__["default"].getPlugins(_letse_config__WEBPACK_IMPORTED_MODULE_2__["plugins"]);
 var editor = new _editor__WEBPACK_IMPORTED_MODULE_1__["default"]('letse-canvas-container', 300, 300, null);
+editor.initCanvas();
+editor.initToolBars();
 
 /***/ }),
 
@@ -837,7 +783,8 @@ var editor = new _editor__WEBPACK_IMPORTED_MODULE_1__["default"]('letse-canvas-c
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Settings; });
-/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
+/* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
+/* harmony import */ var _tools__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tools */ "./js/tools.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -846,22 +793,30 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var Settings =
 /*#__PURE__*/
 function () {
-  function Settings() {
+  function Settings(plugins, defaultTools) {
     _classCallCheck(this, Settings);
+
+    this.timeStamp = new Date();
+    console.log("[Settings created: ".concat(this.timeStamp, "]"));
+    this.plugins = plugins;
+    this.defaultTools = defaultTools;
   }
 
-  _createClass(Settings, null, [{
-    key: "getPlugins",
-    value: function getPlugins(plugins) {
+  _createClass(Settings, [{
+    key: "createPlugins",
+    value: function createPlugins() {
+      var plugins = this.defaultTools.concat(this.plugins);
       plugins.forEach(function (plugin) {
         if (plugin.category === 'tool') {
-          var tool = new _tools__WEBPACK_IMPORTED_MODULE_0__["Tool"](plugin);
-          _tools__WEBPACK_IMPORTED_MODULE_0__["Tools"].push(tool);
+          var tool = new _tools__WEBPACK_IMPORTED_MODULE_1__["default"](plugin.name, plugin.properties, plugin.events);
+          _globals__WEBPACK_IMPORTED_MODULE_0__["TOOLS"].push(tool);
         }
       });
+      return plugins[0];
     }
   }]);
 
@@ -876,15 +831,13 @@ function () {
 /*!*********************!*\
   !*** ./js/tools.js ***!
   \*********************/
-/*! exports provided: Tools, Tool */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Tools", function() { return Tools; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Tool", function() { return Tool; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Tool; });
 /* harmony import */ var _globals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globals */ "./js/globals.js");
-/* harmony import */ var _element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./element */ "./js/element.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -893,7 +846,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-var Tools = [];
 var Tool =
 /*#__PURE__*/
 function () {
@@ -922,7 +874,7 @@ function () {
     key: "recordUndo",
     value: function recordUndo() {
       _globals__WEBPACK_IMPORTED_MODULE_0__["UNDO"].length = 0;
-      _element__WEBPACK_IMPORTED_MODULE_1__["Elements"].forEach(function (element) {
+      _globals__WEBPACK_IMPORTED_MODULE_0__["ELEMENTS"].forEach(function (element) {
         _globals__WEBPACK_IMPORTED_MODULE_0__["UNDO"].push(element);
       });
     }
@@ -930,6 +882,8 @@ function () {
 
   return Tool;
 }();
+
+
 
 /***/ })
 

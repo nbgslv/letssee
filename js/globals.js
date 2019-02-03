@@ -41,6 +41,10 @@ export const CANVAS_STATE = {
   },
 };
 
+export const ELEMENTS = [];
+
+export const TOOLS = [];
+
 export const UNDO = [];
 
 export const REDO = [];

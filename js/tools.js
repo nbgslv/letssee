@@ -1,9 +1,6 @@
-import { UNDO } from './globals';
-import { Elements } from './element';
+import { ELEMENTS, UNDO } from './globals';
 
-export const Tools = [];
-
-export class Tool {
+export default class Tool {
   constructor(name, properties, events) {
     this.name = name;
     this.category = 'tool';
@@ -13,7 +10,6 @@ export class Tool {
 
   static eventHandler(e, tool, canvas, element = null) {
     import('./' + tool.name).then((toolModule) => {
-
       Object.keys(tool.events).forEach((event) => {
         if (tool.events[event] === e.type) {
           const toolEventFunction = toolModule.default[event](e, canvas, tool, element);
@@ -24,7 +20,7 @@ export class Tool {
 
   static recordUndo() {
     UNDO.length = 0;
-    Elements.forEach((element) => {
+    ELEMENTS.forEach((element) => {
       UNDO.push(element);
     });
   }

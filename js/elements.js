@@ -1,18 +1,16 @@
-import { Tool } from './tools.js'
+import Tool from './tools'
 
-const Elements = [];
-
-class Element extends Tool {
-  constructor(x, y, width, height, tool, style) {
+export default class Element extends Tool {
+  constructor(name, properties, events, element, style, layer = 1) {
     // TODO elements file
     // TODO figure out how to implement different types of elements
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.tool = tool;
+    super(name, properties, events);
+    this.x = element.x;
+    this.y = element.y;
+    this.width = element.width;
+    this.height = element.height;
     this.style = style;
-    this.layer = 1;
+    this.layer = layer;
   }
 
   mouseInShape(mousePositionX, mousePositionY) {
@@ -20,5 +18,3 @@ class Element extends Tool {
       && (this.y <= mousePositionY) && (this.y + this.height >= mousePositionY);
   }
 }
-
-export { Elements, Element };
