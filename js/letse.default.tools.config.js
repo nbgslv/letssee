@@ -110,4 +110,21 @@ export const defaultTools = [
       mouseUp: 'mouseup',
     },
   },
+  {
+    category: 'tool',
+    name: 'circle',
+    properties: {
+      enable: true,
+      type: 'canvas-tool',
+      toolbar: 'main',
+      icon: '/assets/images/ellipse.png',
+      cursor: 'crosshair',
+      active: false,
+    },
+    events: {
+      mouseDown: 'mousedown',
+      mouseMove: 'mousemove',
+      mouseUp: 'mouseup',
+    },
+  },
 ];
