@@ -127,4 +127,38 @@ export const defaultTools = [
       mouseUp: 'mouseup',
     },
   },
+  {
+    category: 'tool',
+    name: 'triangle',
+    properties: {
+      enable: true,
+      type: 'canvas-tool',
+      toolbar: 'main',
+      icon: '/assets/images/triangle.png',
+      cursor: 'crosshair',
+      active: false,
+    },
+    events: {
+      mouseDown: 'mousedown',
+      mouseMove: 'mousemove',
+      mouseUp: 'mouseup',
+    },
+  },
+  {
+    category: 'tool',
+    name: 'curvedrectangle',
+    properties: {
+      enable: true,
+      type: 'canvas-tool',
+      toolbar: 'main',
+      icon: '/assets/images/minus.png',
+      cursor: 'crosshair',
+      active: false,
+    },
+    events: {
+      mouseDown: 'mousedown',
+      mouseMove: 'mousemove',
+      mouseUp: 'mouseup',
+    },
+  },
 ];
