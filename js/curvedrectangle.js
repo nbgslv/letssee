@@ -33,7 +33,113 @@ export default class CurvedRectangle extends Element {
     this.curveX = element.curveX;
     this.curveY = element.curveY;
     this.draw = function (canvas) {
-      canvas.ctx.strokeRect(this.x, this.y, this.width, this.height);
+      this.width = Math.abs(this.x - this.startX);
+      this.height = Math.abs(this.y - this.startY);
+      this.curveX = this.width <= this.curveXY * 2 ? Math.abs(this.width) / 2 : this.curveXY;
+      this.curveY = this.height <= this.curveXY * 2 ? Math.abs(this.height) / 2 : this.curveXY;
+      canvas.ctx.beginPath();
+      if (this.x > this.startX && this.y > this.startY) {
+        canvas.ctx.moveTo(this.startX + this.curveX, this.startY);
+        canvas.ctx.lineTo(this.x - this.curveX, this.startY);
+        canvas.ctx.quadraticCurveTo(
+          this.x,
+          this.startY,
+          this.x,
+          this.startY + this.curveY,
+        );
+        canvas.ctx.lineTo(this.x, this.y - this.curveY);
+        canvas.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
+        canvas.ctx.lineTo(this.startX + this.curveX, this.y);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.y,
+          this.startX,
+          this.y - this.curveY,
+        );
+        canvas.ctx.lineTo(this.startX, this.startY + this.curveY);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.startY,
+          this.startX + this.curveX,
+          this.startY,
+        );
+      } else if (this.x < this.startX && this.y < this.startY) {
+        canvas.ctx.moveTo(this.startX - this.curveX, this.startY);
+        canvas.ctx.lineTo(this.x + this.curveX, this.startY);
+        canvas.ctx.quadraticCurveTo(
+          this.x,
+          this.startY,
+          this.x,
+          this.startY - this.curveY,
+        );
+        canvas.ctx.lineTo(this.x, this.y + this.curveY);
+        canvas.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
+        canvas.ctx.lineTo(this.startX - this.curveX, this.y);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.y,
+          this.startX,
+          this.y + this.curveY,
+        );
+        canvas.ctx.lineTo(this.startX, this.startY - this.curveY);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.startY,
+          this.startX - this.curveX,
+          this.startY,
+        );
+      } else if (this.x < this.startX && this.y > this.startY) {
+        canvas.ctx.moveTo(this.startX - this.curveX, this.startY);
+        canvas.ctx.lineTo(this.x + this.curveX, this.startY);
+        canvas.ctx.quadraticCurveTo(
+          this.x,
+          this.startY,
+          this.x,
+          this.startY + this.curveY,
+        );
+        canvas.ctx.lineTo(this.x, this.y - this.curveY);
+        canvas.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
+        canvas.ctx.lineTo(this.startX - this.curveX, this.y);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.y,
+          this.startX,
+          this.y - this.curveY,
+        );
+        canvas.ctx.lineTo(this.startX, this.startY + this.curveY);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.startY,
+          this.startX - this.curveX,
+          this.startY,
+        );
+      } else if (this.x > this.startX && this.y < this.startY) {
+        canvas.ctx.moveTo(this.startX + this.curveX, this.startY);
+        canvas.ctx.lineTo(this.x - this.curveX, this.startY);
+        canvas.ctx.quadraticCurveTo(
+          this.x,
+          this.startY,
+          this.x,
+          this.startY - this.curveY,
+        );
+        canvas.ctx.lineTo(this.x, this.y + this.curveY);
+        canvas.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
+        canvas.ctx.lineTo(this.startX + this.curveX, this.y);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.y,
+          this.startX,
+          this.y + this.curveY,
+        );
+        canvas.ctx.lineTo(this.startX, this.startY - this.curveY);
+        canvas.ctx.quadraticCurveTo(
+          this.startX,
+          this.startY,
+          this.startX + this.curveX,
+          this.startY,
+        );
+      }
+      canvas.ctx.stroke();
     };
   }
 
@@ -173,16 +279,18 @@ export default class CurvedRectangle extends Element {
         curveX: mouse.curveX,
         curveY: mouse.curveY,
       };
-      const rect = new CurvedRectangle(
+      const curvedRect = new CurvedRectangle(
         tool.name,
         tool.properties,
         tool.events,
         element,
         null,
       );
-      ELEMENTS.push(rect);
+      ELEMENTS.push(curvedRect);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
   }
 }
+
+// TODO make code less complicate + use this.draw instead of repeating draw functions each module

@@ -161,4 +161,21 @@ export const defaultTools = [
       mouseUp: 'mouseup',
     },
   },
+  {
+    category: 'tool',
+    name: 'text',
+    properties: {
+      enable: true,
+      type: 'canvas-tool',
+      toolbar: 'main',
+      icon: '/assets/images/font.png',
+      cursor: 'crosshair',
+      active: false,
+    },
+    events: {
+      mouseDown: 'mousedown',
+    },
+  },
 ];
+
+// TODO add variable of tool ordering

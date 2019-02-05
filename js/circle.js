@@ -73,14 +73,14 @@ export default class Ellipse extends Element {
         width: mouse.x - mouse.startX,
         height: mouse.y - mouse.startY,
       };
-      const line = new Ellipse(
+      const ellipse = new Ellipse(
         tool.name,
         tool.properties,
         tool.events,
         element,
         null,
       );
-      ELEMENTS.push(line);
+      ELEMENTS.push(ellipse);
       Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
       Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
     }
