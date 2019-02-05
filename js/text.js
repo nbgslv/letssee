@@ -36,26 +36,31 @@ export default class Text extends Element {
   }
 
   static addInput(x, y, canvas, tool) {
-    const input = document.createElement('input');
-    const inputId = Math.random();
-    input.setAttribute('class', 'canvas-text-input');
-    input.setAttribute('id', `${inputId}`);
-    input.setAttribute('type', 'text');
-    input.setAttribute('placeholder', 'Add your text here');
-    input.style.position = 'absolute';
-    input.style.left = `${x}px`;
-    input.style.top = `${y}px`;
-    input.addEventListener('focus', () => {
+    const input = {};
+    input.container = document.createElement('div');
+    input.element.inputId = Math.random();
+    input.container.setAttribute('class', 'canvas-text-input-container');
+    input.container.setAttribute('id', input.element.inputId);
+    canvas.canvasContainer.appendChild(input.container);
+    input.element = document.createElement('input');
+    input.element.setAttribute('class', 'canvas-text-input');
+    input.element.setAttribute('id', `${input.element.inputId}`);
+    input.element.setAttribute('type', 'text');
+    input.element.setAttribute('placeholder', 'Add your text here');
+    input.element.style.position = 'absolute';
+    input.element.style.left = `${x}px`;
+    input.element.style.top = `${y}px`;
+    input.element.addEventListener('focus', () => {
       this.edit = true;
     });
-    input.addEventListener('blur', () => {
+    input.element.addEventListener('blur', () => {
       input.style.visibility = 'hidden';
 
       const element = {
         x: mouse.x,
         y: mouse.y,
         text: input.value,
-        inputId,
+        inputId: input.element.inputId,
       };
       const text = new Text(
         tool.name,

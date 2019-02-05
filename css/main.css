@@ -45,3 +45,9 @@
     height: 50px;
     cursor: pointer;
 }
+
+.canvas-text-input{
+    width: 100px;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+}
