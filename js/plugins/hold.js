@@ -1,6 +1,6 @@
-import Editor from './editor';
-import { CANVAS_STATE, ELEMENTS } from './globals';
-import Utilities from './utilities';
+import Editor from '../editor';
+import { CANVAS_STATE, ELEMENTS } from '../globals';
+import Utilities from '../utilities';
 
 let selection;
 

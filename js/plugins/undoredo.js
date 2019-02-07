@@ -1,5 +1,5 @@
-import { UNDO, REDO, ELEMENTS } from './globals';
-import Tool from './tools';
+import { UNDO, REDO, ELEMENTS } from '../globals';
+import Tool from '../tools';
 
 export default class Undoredo {
   static canvasUndo(e, canvas) {

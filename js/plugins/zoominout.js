@@ -1,6 +1,6 @@
-import { CANVAS_PROPERTIES, CANVAS_STATE } from './globals';
-import Editor from './editor';
-import Utilities from './utilities';
+import { CANVAS_PROPERTIES, CANVAS_STATE } from '../globals';
+import Editor from '../editor';
+import Utilities from '../utilities';
 
 export default class ZoomInOut {
   static canvasZoomIn(e, canvas) {

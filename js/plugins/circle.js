@@ -1,6 +1,6 @@
-import { CANVAS_STATE, ELEMENTS } from './globals';
-import Element from './elements';
-import Editor from './editor';
+import { CANVAS_STATE, ELEMENTS } from '../globals';
+import Element from '../elements';
+import Editor from '../editor';
 
 const mouse = {
   x: 0,

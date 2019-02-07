@@ -10,7 +10,8 @@ try {
   console.log('Config file doesn\'t exists');
 }
 const settings = new Settings(plugins, defaultTools);
-CANVAS_STATE.activeTool = settings.createPlugins(); // will return the first tool
+CANVAS_STATE.activeTool = settings.createPlugins();
+// will return the first tool
 // in letse.default.tools.config as
 // the default active tool
 

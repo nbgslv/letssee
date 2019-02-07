@@ -1,4 +1,4 @@
-import { CANVAS_STATE, ELEMENTS } from './globals';
+import { CANVAS_STATE, ELEMENTS } from '../globals';
 
 export default class Viewport {
   static mouseDown() {

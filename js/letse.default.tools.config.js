@@ -176,6 +176,36 @@ export const defaultTools = [
       mouseDown: 'mousedown',
     },
   },
+  {
+    category: 'tool',
+    name: 'layers',
+    properties: {
+      enable: true,
+      type: 'own-click',
+      toolbar: 'second',
+      icon: '/assets/images/forward.png',
+      cursor: 'default',
+      active: false,
+    },
+    events: {
+      elementForward: 'click',
+    },
+  },
+  {
+    category: 'tool',
+    name: 'layers',
+    properties: {
+      enable: true,
+      type: 'own-click',
+      toolbar: 'second',
+      icon: '/assets/images/backward.png',
+      cursor: 'default',
+      active: false,
+    },
+    events: {
+      elementBackward: 'click',
+    },
+  },
 ];
 
 // TODO add variable of tool ordering

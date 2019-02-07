@@ -1,5 +1,6 @@
 import { CANVAS_PROPERTIES, CANVAS_STATE, ELEMENTS, TOOLS } from './globals';
 import Tool from './tools';
+import Layers from './plugins/layers';
 
 export default class Editor {
   constructor(containerID, height, width, options = {}) {
@@ -7,6 +8,7 @@ export default class Editor {
     this.height = height;
     this.width = width;
     this.options = options;
+    this.elements = [];
   }
 
   initCanvas() {
@@ -79,15 +81,12 @@ export default class Editor {
 
     // Setting up globals
     // TODO put it as part of canvas options deconstruction
-    CANVAS_PROPERTIES.document.width = canvas.canvas.width;
-    CANVAS_PROPERTIES.document.height = canvas.canvas.height;
-    CANVAS_STATE.canvas.width = canvas.canvas.width;
-    CANVAS_STATE.canvas.height = canvas.canvas.height;
-    CANVAS_STATE.canvas.center.x = canvas.canvas.width / 2;
-    CANVAS_STATE.canvas.center.y = canvas.canvas.height / 2;
-
-    CANVAS_STATE.canvas.viewPort.bottomRight.x = canvas.canvas.width;
-    CANVAS_STATE.canvas.viewPort.bottomRight.y = canvas.canvas.height;
+    canvas.document.width = canvas.canvas.width;
+    canvas.document.height = canvas.canvas.height;
+    canvas.center.x = canvas.canvas.width / 2;
+    canvas.center.y = canvas.canvas.height / 2;
+    canvas.viewPort.bottomRight.x = canvas.canvas.width;
+    canvas.viewPort.bottomRight.y = canvas.canvas.height;
 
     this.canvas = canvas;
   }
@@ -123,16 +122,24 @@ export default class Editor {
     this.canvas.upperCanvas.addEventListener('mouseup', e => toolEventHandler(this.canvas, e));
   }
 
-  static canvasUpdate(canvas, draw, {
+  insertElement(...elements) {
+    elements.forEach((element) => {
+      this.elements.push(element);
+    });
+  }
+
+  canvasUpdate(draw, {
     x,
     y,
     width,
     height,
   }) {
-    canvas.ctx.clearRect(x, y, width, height);
+    this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
+    this.canvas.canvas.ctx.clearRect(x, y, width, height);
     if (draw) {
-      ELEMENTS.forEach((element) => {
-        element.draw(canvas);
+      Layers.sortByLayers();
+      this.elements.forEach((element) => {
+        element.draw();
       });
     }
   }
