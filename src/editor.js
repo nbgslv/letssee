@@ -1,14 +1,17 @@
-import { CANVAS_PROPERTIES, CANVAS_STATE, ELEMENTS, TOOLS } from './globals';
-import Tool from './tools';
 import Layers from './plugins/layers';
 
 export default class Editor {
-  constructor(containerID, height, width, options = {}) {
+  constructor(containerID, height, width, options = {}, tools) {
     this.editorContainerID = containerID;
     this.height = height;
     this.width = width;
     this.options = options;
     this.elements = [];
+    this.tools = tools;
+    this.activeTool = undefined;
+    this.undo = [];
+    this.redo = [];
+    this.layers = 1;
   }
 
   initCanvas() {
@@ -94,45 +97,51 @@ export default class Editor {
   initToolBars() {
     // TODO change css by tool events
     // build toolbars
-    TOOLS.forEach((tool) => {
+    this.activeTool = this.tools[0];
+    this.tools.forEach((tool) => {
       const div = document.createElement('div');
       div.style.backgroundImage = `url("${tool.properties.icon}")`;
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
-      if (tool.properties.type === 'canvas-tool') {
-        div.addEventListener('click', () => { CANVAS_STATE.activeTool = tool; });
-      } else if (tool.properties.type === 'own-click') {
-        div.addEventListener('click', (e) => { Tool.eventHandler(e, tool, this.canvas); });
-      }
+      div.addEventListener('click', (e) => {
+        const lastTool = this.activeTool;
+        this.activeTool = tool;
+        if (tool.properties.type === 'canvas-tool') {
+          const promise = new Promise((resolve) => {
+            this.activeTool.toolEventHandler(e);
+            resolve(this.activeTool.recordUndo());
+          });
+        } else if (tool.properties.type === 'own-click') {
+          const promise = new Promise((resolve) => {
+            this.activeTool.toolEventHandler(e);
+            resolve(() => {
+              this.activeTool.recordUndo();
+              this.activeTool = lastTool;
+            });
+          });
+        }
+      });
       if (tool.properties.toolbar === 'main') {
         this.canvas.mainToolbar.appendChild(div);
       } else if (tool.properties.toolbar === 'second') {
         this.canvas.secondToolbar.appendChild(div);
       }
+      if (tool.canvas === undefined) {
+        tool.editor = this;
+      }
     });
     // canvas event listeners for default tool
-    const toolEventHandler = function (canvas, e) {
-      const promise = new Promise((resolve) => {
-        Tool.eventHandler(e, CANVAS_STATE.activeTool, canvas);
-        resolve(Tool.recordUndo());
-      });
-    };
-    this.canvas.upperCanvas.addEventListener('mousedown', e => toolEventHandler(this.canvas, e));
-    this.canvas.upperCanvas.addEventListener('mousemove', e => toolEventHandler(this.canvas, e));
-    this.canvas.upperCanvas.addEventListener('mouseup', e => toolEventHandler(this.canvas, e));
-  }
 
-  insertElement(...elements) {
-    elements.forEach((element) => {
-      this.elements.push(element);
-    });
+    this.canvas.upperCanvas.addEventListener('mousedown', e => this.toolEventTrigger(e));
+    this.canvas.upperCanvas.addEventListener('mousemove', e => this.toolEventTrigger(e));
+    this.canvas.upperCanvas.addEventListener('mouseup', e => this.toolEventTrigger(e));
   }
 
   canvasUpdate(draw, {
-    x,
-    y,
-    width,
-    height,
+    x = 0,
+    y = 0,
+    width = this.canvas.canvas.width,
+    height = this.canvas.canvas.height,
   }) {
     this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
     this.canvas.canvas.ctx.clearRect(x, y, width, height);

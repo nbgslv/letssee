@@ -1,4 +1,3 @@
-import { TOOLS } from './globals';
 import Tool from './tools';
 
 export default class Settings {
@@ -9,14 +8,15 @@ export default class Settings {
     this.defaultTools = defaultTools;
   }
 
-  createPlugins() {
-    const plugins = this.defaultTools.concat(this.plugins);
+  createTools() {
+    const plugins = [...this.defaultTools, ...this.plugins];
+    const tools = [];
     plugins.forEach((plugin) => {
       if (plugin.category === 'tool') {
         const tool = new Tool(plugin.name, plugin.properties, plugin.events);
-        TOOLS.push(tool);
+        tools.push(tool);
       }
     });
-    return plugins[0];
+    return tools;
   }
 }

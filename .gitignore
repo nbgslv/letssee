@@ -71,7 +71,7 @@ build/Release
 # dotenv environment variables file
 .env
 
-# next.js build output
+# next.src build output
 .next
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
@@ -157,6 +157,6 @@ cmake-build-*/
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
-/js/ch.js
+/src/ch.js
 /dist/
 /.idea/
