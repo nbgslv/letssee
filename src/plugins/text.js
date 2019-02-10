@@ -11,23 +11,16 @@ const mouse = {
   height: 0,
 };
 
-const canvasClearParam = {
-  x: CANVAS_STATE.canvas.viewPort.topLeft.x,
-  y: CANVAS_STATE.canvas.viewPort.topLeft.y,
-  width: CANVAS_STATE.canvas.width,
-  height: CANVAS_STATE.canvas.height,
-};
-
 export default class Text extends Element {
-  constructor(name, properties, events, element, style) {
-    super(name, properties, events, element, style);
+  constructor(name, properties, events, editor, element, style) {
+    super(name, properties, events, editor, element, style);
     this.text = element.text;
     this.font = element.font;
     this.size = element.size;
     this.inputId = element.inputId;
-    this.draw = function (canvas) {
-      canvas.ctx.font = `${this.size}px ${this.font}`;
-      canvas.ctx.fillText(this.text, this.x, this.y);
+    this.draw = function () {
+      this.editor.canvas.canvas.ctx.font = `${this.size}px ${this.font}`;
+      this.editor.canvas.canvas.ctx.fillText(this.text, this.x, this.y);
     };
   }
 

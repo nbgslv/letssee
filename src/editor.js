@@ -137,12 +137,13 @@ export default class Editor {
     this.canvas.upperCanvas.addEventListener('mouseup', e => this.toolEventTrigger(e));
   }
 
-  canvasUpdate(draw, {
+  canvasUpdate(
+    draw,
     x = 0,
     y = 0,
     width = this.canvas.canvas.width,
     height = this.canvas.canvas.height,
-  }) {
+  ) {
     this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
     this.canvas.canvas.ctx.clearRect(x, y, width, height);
     if (draw) {

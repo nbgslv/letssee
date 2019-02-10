@@ -1,6 +1,4 @@
-import { CANVAS_STATE, ELEMENTS } from '../globals';
 import Element from '../elements';
-import Editor from '../editor';
 
 const mouse = {
   x: 0,
@@ -11,19 +9,9 @@ const mouse = {
   height: 0,
 };
 
-const canvasClearParam = {
-  x: CANVAS_STATE.canvas.viewPort.topLeft.x,
-  y: CANVAS_STATE.canvas.viewPort.topLeft.y,
-  width: CANVAS_STATE.canvas.width,
-  height: CANVAS_STATE.canvas.height,
-};
-
 export default class Rectangle extends Element {
-  constructor(name, properties, events, element, style) {
-    super(name, properties, events, element, style);
-    this.draw = function (canvas) {
-      canvas.ctx.strokeRect(this.x, this.y, this.width, this.height);
-    };
+  draw() {
+    this.editor.canvas.canvas.ctx.strokeRect(this.x, this.y, this.width, this.height);
   }
 
   static mouseDown(e) {
@@ -32,37 +20,48 @@ export default class Rectangle extends Element {
     mouse.startY = e.clientY;
   }
 
-  static mouseMove(e, canvas) {
+  static mouseMove(e) {
+    let element;
     if (this.started) {
-      mouse.x = Math.min(e.screenX, mouse.startX);
-      mouse.y = Math.min(e.screenY, mouse.startY);
-      mouse.width = Math.abs(e.screenX - mouse.startX);
-      mouse.height = Math.abs(e.screenY - mouse.startY);
-      Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
-      canvas.upperCanvas.ctx.strokeRect(mouse.x, mouse.y, mouse.width, mouse.height);
+      element = this.createElement(e);
+      element.draw();
+      element.editor.canvasUpdate(false);
+    }
+
+    return element;
+  }
+
+  static mouseUp(e) {
+    if (this.started) {
+      const element = this.mouseMove(e);
+      element.editor.elements.push(element);
+      element.editor.canvasUpdate(false);
+      element.editor.canvasUpdate(true);
+      this.started = false;
     }
   }
 
-  static mouseUp(e, canvas, tool) {
-    if (this.started) {
-      this.mouseMove(e, canvas);
-      this.started = false;
-      const element = {
-        x: mouse.x,
-        y: mouse.y,
-        width: mouse.width,
-        height: mouse.height,
-      };
-      const rect = new Rectangle(
-        tool.name,
-        tool.properties,
-        tool.events,
-        element,
-        null,
-      );
-      ELEMENTS.push(rect);
-      Editor.canvasUpdate(canvas.upperCanvas, false, canvasClearParam);
-      Editor.canvasUpdate(canvas.canvas, true, canvasClearParam);
-    }
+  static createElement(e) {
+    mouse.x = Math.min(e.screenX, mouse.startX);
+    mouse.y = Math.min(e.screenY, mouse.startY);
+    mouse.width = Math.abs(e.screenX - mouse.startX);
+    mouse.height = Math.abs(e.screenY - mouse.startY);
+    const element = {
+      x: mouse.x,
+      y: mouse.y,
+      width: mouse.width,
+      height: mouse.height,
+    };
+    const rectangle = new Rectangle(
+      this.name,
+      this.properties,
+      this.events,
+      this.editor,
+      element,
+      null,
+    );
+    rectangle.draw();
+
+    return rectangle;
   }
 }
