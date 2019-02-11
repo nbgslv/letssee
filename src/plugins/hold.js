@@ -15,6 +15,8 @@ export default class Hold extends Element {
     this.resizerHeight = 5;
     this.resizers = [];
     this.selection = element.selection;
+    this.element = null;
+    this.dragging = false;
   }
 
   drawResizers() {
@@ -71,6 +73,20 @@ export default class Hold extends Element {
         this.resizers.push(box);
         this.editor.elements.push(box);
       });
+      const stroke = new Hold(
+        this.name,
+        this.properties,
+        this.events,
+        this.editor,
+        {
+          x: select.x - 2.5,
+          y: select.y - 2.5,
+          width: select.width,
+          height: select.height,
+        },
+        null,
+      );
+      stroke.draw();
     });
   }
 
@@ -79,18 +95,29 @@ export default class Hold extends Element {
     this.editor.canvas.upperCanvas.ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 
+  resize(element, mouse, e = null) {
+    this.resizers.forEach((resizer) => {
+      if (resizer.mouseInElement(mouse.positionX, mouse.positionY)) {
+        mouse.deltaX = e.deltaX;
+        mouse.deltaY = e.deltaY;
+        element.element.width += mouse.deltaX;
+        element.element.height += mouse.deltaY;
+        element.draw();
+      }
+    });
+  }
+
   static mouseDown(e) {
     const mouse = {
       positionX: e.clientX,
       positionY: e.clientY,
     };
-    this.editor.elements.forEach((element) => {
-      if (element.mouseInShape(mouse.positionX, mouse.positionY)) {
+    for (let i = 0; i < this.editor.elements.length; i += 1) {
+      const element = this.editor.elements[i];
+      if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
         if (element.name === 'hold') {
-          this.resize(element);
+          element.resize(element, mouse, e);
         } else {
-          this.dragoffx = mouse.positionX - element.x;
-          this.dragoffy = mouse.positionY - element.y;
           const holder = new Hold(
             this.name,
             this.properties,
@@ -103,39 +130,32 @@ export default class Hold extends Element {
           holder.drawResizers();
         }
       }
-    });
-  }
-
-  static mouseMove(e, canvas) {
-    if (this.dragging) {
-      const mousePosition = Utilities.checkMousePosition(e, canvas);
-      selection.x = mousePosition.x - this.dragoffx;
-      selection.y = mousePosition.y - this.dragoffy;
-      Hold.draw(canvas);
     }
   }
 
-  static mouseUp(e, canvas) {
-    CANVAS_STATE.dragging = false;
-  }
-
-  static draw(canvas) {
-    canvas.canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
-    canvas.upperCanvas.ctx.clearRect(0, 0, canvas.upperCanvas.width, canvas.upperCanvas.height);
-    ELEMENTS.forEach((element) => {
-      if (!(element.x > canvas.upperCanvas.width || element.y > canvas.upperCanvas.height
-        || element.x + element.width < 0 || element.y + element.height < 0)) {
-        canvas.upperCanvas.ctx.strokeRect(element.x, element.y, element.width, element.height);
+  static mouseMove(e) {
+    const mouse = {
+      positionX: e.clientX,
+      positionY: e.clientY,
+    };
+    for (let i = 0; i < this.editor.elements.length; i += 1) {
+      const element = this.editor.elements[i];
+      if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
+        if (element.name === 'hold') {
+          element.resize(element, mouse, e);
+        } else {
+          const holder = new Hold(
+            this.name,
+            this.properties,
+            this.events,
+            this.editor,
+            element,
+            null,
+          );
+          this.selection.push(element);
+          holder.drawResizers();
+        }
       }
-      if (selection !== null) {
-        canvas.upperCanvas.ctx.strokeRect(
-          selection.x,
-          selection.y,
-          selection.width,
-          selection.height,
-        );
-      }
-      Editor.canvasUpdate(canvas);
-    });
+    }
   }
 }

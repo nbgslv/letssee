@@ -6,7 +6,7 @@ export const plugins = [
       enable: true,
       type: 'canvas-tool',
       toolbar: 'main',
-      icon: '/assets/images/sweep.png',
+      icon: '/assets/images/icons/sweep.png',
       cursor: 'crosshair',
       active: false,
     },

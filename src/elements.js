@@ -20,7 +20,7 @@ export default class Element extends Tool {
     this.canvas.layers += 1;
   }
 
-  mouseInShape(mousePositionX, mousePositionY) {
+  mouseInElement(mousePositionX, mousePositionY) {
     return (this.x <= mousePositionX) && (this.x + this.width >= mousePositionX)
       && (this.y <= mousePositionY) && (this.y + this.height >= mousePositionY);
   }
