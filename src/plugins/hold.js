@@ -107,12 +107,12 @@ export default class Hold extends Element {
     });
   }
 
-  static mouseDown(e) {
+  static mouseDown(e, tool) {
     const mouse = {
       positionX: e.clientX,
       positionY: e.clientY,
     };
-    for (let i = 0; i < this.editor.elements.length; i += 1) {
+    for (let i = 0; i < tool.editor.elements.length; i += 1) {
       const element = this.editor.elements[i];
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
         if (element.name === 'hold') {
@@ -133,13 +133,13 @@ export default class Hold extends Element {
     }
   }
 
-  static mouseMove(e) {
+  static mouseMove(e, tool) {
     const mouse = {
       positionX: e.clientX,
       positionY: e.clientY,
     };
-    for (let i = 0; i < this.editor.elements.length; i += 1) {
-      const element = this.editor.elements[i];
+    for (let i = 0; i < tool.editor.elements.length; i += 1) {
+      const element = tool.editor.elements[i];
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
         if (element.name === 'hold') {
           element.resize(element, mouse, e);

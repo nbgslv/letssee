@@ -18,9 +18,9 @@ export default class Tool {
   }
 
   recordUndo() {
-    this.canvas.undo.length = 0;
-    this.canvas.elements.forEach((element) => {
-      this.canvas.undo.push(element);
+    this.editor.undo.length = 0;
+    this.editor.elements.forEach((element) => {
+      this.editor.undo.push(element);
     });
   }
 }

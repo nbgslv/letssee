@@ -6,7 +6,7 @@ export const defaultTools = [
       enable: true,
       type: 'canvas-tool',
       toolbar: 'main',
-      icon: '/assets/images/icons/hand.png',
+      icon: 'assets/images/icons/hand.png',
       cursor: 'grab',
       active: false,
     },

@@ -84,10 +84,14 @@ export default class Editor {
 
     // Setting up globals
     // TODO put it as part of canvas options deconstruction
+    canvas.document = {};
     canvas.document.width = canvas.canvas.width;
     canvas.document.height = canvas.canvas.height;
+    canvas.center = {};
     canvas.center.x = canvas.canvas.width / 2;
     canvas.center.y = canvas.canvas.height / 2;
+    canvas.viewPort = {};
+    canvas.viewPort.bottomRight = {};
     canvas.viewPort.bottomRight.x = canvas.canvas.width;
     canvas.viewPort.bottomRight.y = canvas.canvas.height;
 
@@ -132,20 +136,34 @@ export default class Editor {
     });
     // canvas event listeners for default tool
 
-    this.canvas.upperCanvas.addEventListener('mousedown', e => this.toolEventTrigger(e));
-    this.canvas.upperCanvas.addEventListener('mousemove', e => this.toolEventTrigger(e));
-    this.canvas.upperCanvas.addEventListener('mouseup', e => this.toolEventTrigger(e));
+    this.canvas.upperCanvas.addEventListener('mousedown', e => this.activeTool.toolEventHandler(e));
+    this.canvas.upperCanvas.addEventListener('mousemove', e => this.activeTool.toolEventHandler(e));
+    this.canvas.upperCanvas.addEventListener('mouseup', e => this.activeTool.toolEventHandler(e));
   }
 
   canvasUpdate(
+    canvas,
     draw,
     x = 0,
     y = 0,
     width = this.canvas.canvas.width,
     height = this.canvas.canvas.height,
   ) {
-    this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
-    this.canvas.canvas.ctx.clearRect(x, y, width, height);
+    switch (canvas) {
+      case 0:
+        this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
+        break;
+      case 1:
+        this.canvas.canvas.ctx.clearRect(x, y, width, height);
+        break;
+      case 2:
+        this.canvas.canvas.ctx.clearRect(x, y, width, height);
+        this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
+        break;
+      default:
+        console.log('canvas parameter is not set properly. Try 0, 1, 2');
+        return;
+    }
     if (draw) {
       Layers.sortByLayers();
       this.elements.forEach((element) => {

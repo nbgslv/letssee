@@ -8,9 +8,11 @@ const mouse = {
   startX: 0,
   startY: 0,
   curveXY: 25,
-  curveX: this.curveXY,
-  curveY: this.curveXY,
+  curveX: 25,
+  curveY: 25,
 };
+
+// TODO find better way to define curveXY 25
 
 export default class CurvedRectangle extends Element {
   constructor(name, properties, events, editor, element, style) {
@@ -22,114 +24,115 @@ export default class CurvedRectangle extends Element {
     this.curveY = element.curveY;
   }
 
-  draw() {
+  draw(canvas = true) {
     this.width = Math.abs(this.x - this.startX);
     this.height = Math.abs(this.y - this.startY);
     this.curveX = this.width <= this.curveXY * 2 ? Math.abs(this.width) / 2 : this.curveXY;
     this.curveY = this.height <= this.curveXY * 2 ? Math.abs(this.height) / 2 : this.curveXY;
-    this.canvas.canvas.ctx.beginPath();
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    editor.ctx.beginPath();
     if (this.x > this.startX && this.y > this.startY) {
-      this.canvas.canvas.ctx.moveTo(this.startX + this.curveX, this.startY);
-      this.canvas.canvas.ctx.lineTo(this.x - this.curveX, this.startY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.moveTo(this.startX + this.curveX, this.startY);
+      editor.ctx.lineTo(this.x - this.curveX, this.startY);
+      editor.ctx.quadraticCurveTo(
         this.x,
         this.startY,
         this.x,
         this.startY + this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.x, this.y - this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
-      this.canvas.canvas.ctx.lineTo(this.startX + this.curveX, this.y);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.x, this.y - this.curveY);
+      editor.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
+      editor.ctx.lineTo(this.startX + this.curveX, this.y);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.y,
         this.startX,
         this.y - this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.startX, this.startY + this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.startX, this.startY + this.curveY);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.startY,
         this.startX + this.curveX,
         this.startY,
       );
     } else if (this.x < this.startX && this.y < this.startY) {
-      this.canvas.canvas.ctx.moveTo(this.startX - this.curveX, this.startY);
-      this.canvas.canvas.ctx.lineTo(this.x + this.curveX, this.startY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.moveTo(this.startX - this.curveX, this.startY);
+      editor.ctx.lineTo(this.x + this.curveX, this.startY);
+      editor.ctx.quadraticCurveTo(
         this.x,
         this.startY,
         this.x,
         this.startY - this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.x, this.y + this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
-      this.canvas.canvas.ctx.lineTo(this.startX - this.curveX, this.y);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.x, this.y + this.curveY);
+      editor.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
+      editor.ctx.lineTo(this.startX - this.curveX, this.y);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.y,
         this.startX,
         this.y + this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.startX, this.startY - this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.startX, this.startY - this.curveY);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.startY,
         this.startX - this.curveX,
         this.startY,
       );
     } else if (this.x < this.startX && this.y > this.startY) {
-      this.canvas.canvas.ctx.moveTo(this.startX - this.curveX, this.startY);
-      this.canvas.canvas.ctx.lineTo(this.x + this.curveX, this.startY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.moveTo(this.startX - this.curveX, this.startY);
+      editor.ctx.lineTo(this.x + this.curveX, this.startY);
+      editor.ctx.quadraticCurveTo(
         this.x,
         this.startY,
         this.x,
         this.startY + this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.x, this.y - this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
-      this.canvas.canvas.ctx.lineTo(this.startX - this.curveX, this.y);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.x, this.y - this.curveY);
+      editor.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
+      editor.ctx.lineTo(this.startX - this.curveX, this.y);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.y,
         this.startX,
         this.y - this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.startX, this.startY + this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.startX, this.startY + this.curveY);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.startY,
         this.startX - this.curveX,
         this.startY,
       );
     } else if (this.x > this.startX && this.y < this.startY) {
-      this.canvas.canvas.ctx.moveTo(this.startX + this.curveX, this.startY);
-      this.canvas.canvas.ctx.lineTo(this.x - this.curveX, this.startY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.moveTo(this.startX + this.curveX, this.startY);
+      editor.ctx.lineTo(this.x - this.curveX, this.startY);
+      editor.ctx.quadraticCurveTo(
         this.x,
         this.startY,
         this.x,
         this.startY - this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.x, this.y + this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
-      this.canvas.canvas.ctx.lineTo(this.startX + this.curveX, this.y);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.x, this.y + this.curveY);
+      editor.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
+      editor.ctx.lineTo(this.startX + this.curveX, this.y);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.y,
         this.startX,
         this.y + this.curveY,
       );
-      this.canvas.canvas.ctx.lineTo(this.startX, this.startY - this.curveY);
-      this.canvas.canvas.ctx.quadraticCurveTo(
+      editor.ctx.lineTo(this.startX, this.startY - this.curveY);
+      editor.ctx.quadraticCurveTo(
         this.startX,
         this.startY,
         this.startX + this.curveX,
         this.startY,
       );
     }
-    this.canvas.canvas.ctx.stroke();
+    editor.ctx.stroke();
   }
 
   drawResizeFrame() {
@@ -154,19 +157,20 @@ export default class CurvedRectangle extends Element {
     mouse.startY = e.clientY;
   }
 
-  static mouseMove(e) {
+  static mouseMove(e, tool) {
     let element;
     if (this.started) {
-      element = this.createElement(e);
-      element.draw();
-      element.editor.canvasUpdate(false);
+      element = this.createElement(e, tool);
+      element.editor.canvasUpdate(0, false);
+      element.draw(false);
     }
     return element;
   }
 
-  static mouseUp(e) {
+  static mouseUp(e, tool) {
     if (this.started) {
-      const element = this.mouseMove(e);
+      const element = this.mouseMove(e, tool);
+      element.draw(true);
       element.editor.elements.push(element);
       element.editor.canvasUpdate(false);
       element.editor.canvasUpdate(true);
@@ -174,7 +178,7 @@ export default class CurvedRectangle extends Element {
     }
   }
 
-  static createElement(e) {
+  static createElement(e, tool) {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
     mouse.width = Math.abs(mouse.x - mouse.startX);
@@ -193,14 +197,13 @@ export default class CurvedRectangle extends Element {
       curveY: mouse.curveY,
     };
     const curvedRect = new CurvedRectangle(
-      this.name,
-      this.properties,
-      this.events,
-      this.editor,
+      tool.name,
+      tool.properties,
+      tool.events,
+      tool.editor,
       element,
       null,
     );
-    curvedRect.draw();
 
     return curvedRect;
   }
