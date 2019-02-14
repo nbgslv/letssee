@@ -1,98 +1,105 @@
-import Editor from '../editor';
-import { CANVAS_STATE, ELEMENTS } from '../globals';
-import Utilities from '../utilities';
+import Element from '../elements';
 
 let selection;
 
 export default class Hold extends Element {
-  constructor(name, properties, events, editor, element, style) {
+  constructor(name, properties, events, editor, element = null, style) {
     super(name, properties, events, editor, element, style);
-    this.x = element.x;
-    this.y = element.y;
-    this.width = element.width;
-    this.height = element.height;
-    this.resizerWidth = 5;
-    this.resizerHeight = 5;
+    this.resizerWidth = 10;
+    this.resizerHeight = 10;
     this.resizers = [];
-    this.selection = element.selection;
-    this.element = null;
+    this.element = element;
     this.dragging = false;
   }
 
-  drawResizers() {
-    this.selection.forEach((select) => {
-      const resizer = [];
-      resizer.a = {
-        x: select.x - 2.5,
-        y: select.y - 2.5,
+  drawResizers(element, tool) {
+    const resizerWidth = 10;
+    const resizerHeight = 10;
+    const strokeDistX = 10;
+    const strokeDistY = 10;
+    const resizers = [];
+    let resizer;
+    resizer = {
+      x: element.x - strokeDistX - resizerWidth / 2,
+      y: element.y - strokeDistY - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x + element.width / 2 - resizerWidth / 2,
+      y: element.y - strokeDistY - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x + element.width + strokeDistX - resizerWidth / 2,
+      y: element.y - strokeDistY - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x + element.width + strokeDistX - resizerWidth / 2,
+      y: element.y + element.height / 2 - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x + element.width + strokeDistX - resizerWidth / 2,
+      y: element.y + element.height + strokeDistY - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x + element.width / 2 - resizerWidth / 2,
+      y: element.y + element.height + strokeDistY - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x - strokeDistX - resizerWidth / 2,
+      y: element.y + element.height + strokeDistY - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizer = {
+      x: element.x - strokeDistX - resizerWidth / 2,
+      y: element.y + element.height / 2 - resizerHeight / 2,
+    };
+    resizers.push(resizer);
+    resizers.forEach((resize) => {
+      const dimensions = {
+        x: resize.x,
+        y: resize.y,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
       };
-      resizer.b = {
-        x: select.x + select.width / 2 - 2.5,
-        y: select.y,
-      };
-      resizer.c = {
-        x: select.x + select.width - 2.5,
-        y: select.y + select.height - 2.5,
-      };
-      resizer.d = {
-        x: select.x + select.width,
-        y: select.y + select.height / 2 - 2.5,
-      };
-      resizer.e = {
-        x: select.x + select.width,
-        y: select.y + select.height - 2.5,
-      };
-      resizer.f = {
-        x: select.x + select.width / 2 - 2.5,
-        y: select.y + select.height,
-      };
-      resizer.g = {
-        x: select.x,
-        y: select.y + select.height - 2.5,
-      };
-      resizer.h = {
-        x: select.x,
-        y: select.y + select.height / 2 - 2.5,
-      };
-      resizer.forEach((resize) => {
-        const dimensions = {
-          x: resize.x,
-          y: resize.y,
-          width: this.resizerWidth,
-          height: this.resizerHeight,
-        };
-        const box = new Hold(
-          this.name,
-          this.properties,
-          this.events,
-          this.editor,
-          dimensions,
-          null,
-        );
-        box.draw();
-        this.resizers.push(box);
-        this.editor.elements.push(box);
-      });
-      const stroke = new Hold(
-        this.name,
-        this.properties,
-        this.events,
-        this.editor,
-        {
-          x: select.x - 2.5,
-          y: select.y - 2.5,
-          width: select.width,
-          height: select.height,
-        },
+      const box = new Hold(
+        tool.name,
+        tool.properties,
+        tool.events,
+        tool.editor,
+        dimensions,
         null,
       );
-      stroke.draw();
+      box.editor.canvasUpdate(2, true);
+      box.draw();
+      this.resizers.push(box);
+      this.editor.elements.push(box);
     });
+    const stroke = new Hold(
+      tool.name,
+      tool.properties,
+      tool.events,
+      tool.editor,
+      {
+        x: element.x - strokeDistX,
+        y: element.y - strokeDistY,
+        width: element.width + strokeDistX * 2,
+        height: element.height + strokeDistY * 2,
+      },
+      null,
+    );
+    stroke.editor.canvasUpdate(2, true);
+    stroke.editor.canvas.canvas.ctx.strokeRect(stroke.x, stroke.y, stroke.width, stroke.height);
   }
 
-  draw() {
-    this.editor.canvas.upperCanvas.ctx.beginPath();
-    this.editor.canvas.upperCanvas.ctx.fillRect(this.x, this.y, this.width, this.height);
+  draw(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.canvas.upperCanvas;
+    editor.ctx.beginPath();
+    editor.ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 
   resize(element, mouse, e = null) {
@@ -113,21 +120,22 @@ export default class Hold extends Element {
       positionY: e.clientY,
     };
     for (let i = 0; i < tool.editor.elements.length; i += 1) {
-      const element = this.editor.elements[i];
+      const element = tool.editor.elements[i];
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
         if (element.name === 'hold') {
           element.resize(element, mouse, e);
-        } else {
+        } else if (!element.select) {
           const holder = new Hold(
-            this.name,
-            this.properties,
-            this.events,
-            this.editor,
+            tool.name,
+            tool.properties,
+            tool.events,
+            tool.editor,
             element,
             null,
           );
-          this.selection.push(element);
-          holder.drawResizers();
+          holder.editor.selection.push(element);
+          holder.drawResizers(element, tool);
+          element.select = true;
         }
       }
     }
@@ -138,24 +146,5 @@ export default class Hold extends Element {
       positionX: e.clientX,
       positionY: e.clientY,
     };
-    for (let i = 0; i < tool.editor.elements.length; i += 1) {
-      const element = tool.editor.elements[i];
-      if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
-        if (element.name === 'hold') {
-          element.resize(element, mouse, e);
-        } else {
-          const holder = new Hold(
-            this.name,
-            this.properties,
-            this.events,
-            this.editor,
-            element,
-            null,
-          );
-          this.selection.push(element);
-          holder.drawResizers();
-        }
-      }
-    }
   }
 }

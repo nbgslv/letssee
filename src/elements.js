@@ -10,6 +10,7 @@ export default class Element extends Tool {
     this.width = element.width;
     this.height = element.height;
     this.style = style;
+    this.select = false;
     this.layer = layer;
     this.addLayer();
   }

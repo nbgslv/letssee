@@ -12,6 +12,7 @@ export default class Editor {
     this.undo = [];
     this.redo = [];
     this.layers = 1;
+    this.selection = [];
   }
 
   initCanvas() {
