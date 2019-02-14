@@ -10,8 +10,9 @@ const mouse = {
 };
 
 export default class Rectangle extends Element {
-  draw() {
-    this.editor.canvas.canvas.ctx.strokeRect(this.x, this.y, this.width, this.height);
+  draw(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    editor.ctx.strokeRect(this.x, this.y, this.width, this.height);
   }
 
   static mouseDown(e) {
@@ -20,28 +21,26 @@ export default class Rectangle extends Element {
     mouse.startY = e.clientY;
   }
 
-  static mouseMove(e) {
+  static mouseMove(e, tool) {
     let element;
     if (this.started) {
-      element = this.createElement(e);
-      element.draw();
-      element.editor.canvasUpdate(false);
+      element = this.createElement(e, tool);
+      element.editor.canvasUpdate(0, false);
+      element.draw(false);
     }
-
     return element;
   }
 
-  static mouseUp(e) {
+  static mouseUp(e, tool) {
     if (this.started) {
-      const element = this.mouseMove(e);
+      const element = this.mouseMove(e, tool);
       element.editor.elements.push(element);
-      element.editor.canvasUpdate(false);
-      element.editor.canvasUpdate(true);
+      element.editor.canvasUpdate(2, true);
       this.started = false;
     }
   }
 
-  static createElement(e) {
+  static createElement(e, tool) {
     mouse.x = Math.min(e.screenX, mouse.startX);
     mouse.y = Math.min(e.screenY, mouse.startY);
     mouse.width = Math.abs(e.screenX - mouse.startX);
@@ -53,15 +52,13 @@ export default class Rectangle extends Element {
       height: mouse.height,
     };
     const rectangle = new Rectangle(
-      this.name,
-      this.properties,
-      this.events,
-      this.editor,
+      tool.name,
+      tool.properties,
+      tool.events,
+      tool.editor,
       element,
       null,
     );
-    rectangle.draw();
-
     return rectangle;
   }
 }

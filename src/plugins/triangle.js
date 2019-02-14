@@ -14,13 +14,14 @@ export default class Triangle extends Element {
     this.startY = element.startY;
   }
 
-  draw() {
-    this.editor.canvas.canvas.ctx.beginPath();
-    this.editor.canvas.canvas.ctx.moveTo(this.startX, this.startY);
-    this.editor.canvas.canvas.ctx.lineTo(this.startX - this.x + this.startX, this.y);
-    this.editor.canvas.canvas.ctx.lineTo(this.x, this.y);
-    this.editor.canvas.canvas.ctx.lineTo(this.startX, this.startY);
-    this.editor.canvas.canvas.ctx.stroke();
+  draw(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    editor.ctx.beginPath();
+    editor.ctx.moveTo(this.startX, this.startY);
+    editor.ctx.lineTo(this.startX - this.x + this.startX, this.y);
+    editor.ctx.lineTo(this.x, this.y);
+    editor.ctx.lineTo(this.startX, this.startY);
+    editor.ctx.stroke();
   }
 
   static mouseDown(e) {
@@ -29,28 +30,27 @@ export default class Triangle extends Element {
     mouse.startY = e.clientY;
   }
 
-  static mouseMove(e) {
+  static mouseMove(e, tool) {
     let element;
     if (this.started) {
-      element = this.createElement(e);
-      element.draw();
-      element.editor.canvasUpdate(true);
+      element = this.createElement(e, tool);
+      element.editor.canvasUpdate(0, false);
+      element.draw(false);
     }
 
     return element;
   }
 
-  static mouseUp(e) {
+  static mouseUp(e, tool) {
     if (this.started) {
-      const element = this.mouseMove(e);
+      const element = this.mouseMove(e, tool);
       element.editor.elements.push(element);
-      element.editor.canvasUpdate(false);
-      element.editor.canvasUpdate(true);
+      element.editor.canvasUpdate(0, true);
       this.started = false;
     }
   }
 
-  static createElement(e) {
+  static createElement(e, tool) {
     mouse.x = e.screenX;
     mouse.radiusX = Math.abs(mouse.x - mouse.startX) / 2;
     mouse.y = e.screenY;
@@ -64,10 +64,10 @@ export default class Triangle extends Element {
       height: mouse.y - mouse.startY,
     };
     const triangle = new Triangle(
-      this.name,
-      this.properties,
-      this.events,
-      this.editor,
+      tool.name,
+      tool.properties,
+      tool.events,
+      tool.editor,
       element,
       null,
     );

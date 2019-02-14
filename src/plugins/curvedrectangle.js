@@ -172,8 +172,7 @@ export default class CurvedRectangle extends Element {
       const element = this.mouseMove(e, tool);
       element.draw(true);
       element.editor.elements.push(element);
-      element.editor.canvasUpdate(false);
-      element.editor.canvasUpdate(true);
+      element.editor.canvasUpdate(2, true);
       this.started = false;
     }
   }
@@ -204,7 +203,6 @@ export default class CurvedRectangle extends Element {
       element,
       null,
     );
-
     return curvedRect;
   }
 }

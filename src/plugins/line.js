@@ -14,11 +14,12 @@ export default class Line extends Element {
     this.startY = element.startY;
   }
 
-  draw() {
-    this.editor.canvas.ctx.beginPath();
-    this.editor.canvas.ctx.moveTo(this.startX, this.startY);
-    this.editor.canvas.ctx.lineTo(this.x, this.y);
-    this.editor.canvas.ctx.stroke();
+  draw(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    editor.ctx.beginPath();
+    editor.ctx.moveTo(this.startX, this.startY);
+    editor.ctx.lineTo(this.x, this.y);
+    editor.ctx.stroke();
   }
 
   static mouseDown(e) {
@@ -27,28 +28,26 @@ export default class Line extends Element {
     mouse.startY = e.clientY;
   }
 
-  static mouseMove(e) {
+  static mouseMove(e, tool) {
     let element;
     if (this.started) {
-      element = this.createElement(e);
-      element.draw();
-      element.editor.canvasUpdate(true);
+      element = this.createElement(e, tool);
+      element.editor.canvasUpdate(0, false);
+      element.draw(false);
     }
-
     return element;
   }
 
-  static mouseUp(e) {
+  static mouseUp(e, tool) {
     if (this.started) {
-      const element = this.mouseMove(e);
+      const element = this.mouseMove(e, tool);
       element.editor.elements.push(element);
-      element.editor.canvasUpdate(false);
-      element.editor.canvasUpdate(true);
+      element.editor.canvasUpdate(2, true);
       this.started = false;
     }
   }
 
-  static createElement(e) {
+  static createElement(e, tool) {
     mouse.x = e.screenX;
     mouse.y = e.screenY;
     const element = {
@@ -60,14 +59,13 @@ export default class Line extends Element {
       height: mouse.y - mouse.startY,
     };
     const line = new Line(
-      this.name,
-      this.properties,
-      this.events,
-      this.editor,
+      tool.name,
+      tool.properties,
+      tool.events,
+      tool.editor,
       element,
       null,
     );
-
     return line;
   }
 }

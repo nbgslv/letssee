@@ -18,9 +18,10 @@ export default class Ellipse extends Element {
     this.radiusY = element.radiusY;
   }
 
-  draw() {
-    this.editor.canvas.canvas.ctx.beginPath();
-    this.editor.canvas.canvas.ctx.ellipse(
+  draw(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    editor.ctx.beginPath();
+    editor.ctx.ellipse(
       this.startX,
       this.startY,
       this.radiusX,
@@ -29,7 +30,7 @@ export default class Ellipse extends Element {
       0,
       2 * Math.PI,
     );
-    this.editor.canvas.canvas.ctx.stroke();
+    editor.ctx.stroke();
   }
 
   static mouseDown(e) {
@@ -38,28 +39,26 @@ export default class Ellipse extends Element {
     mouse.startY = e.clientY;
   }
 
-  static mouseMove(e) {
+  static mouseMove(e, tool) {
     let element;
     if (this.started) {
-      element = this.createElement(e);
-      element.draw();
-      element.editor.canvasUpdate(true);
+      element = this.createElement(e, tool);
+      element.editor.canvasUpdate(0, false);
+      element.draw(false);
     }
-
     return element;
   }
 
-  static mouseUp(e) {
+  static mouseUp(e, tool) {
     if (this.started) {
-      const element = this.mouseMove(e);
+      const element = this.mouseMove(e, tool);
       element.editor.elements.push(element);
-      element.editor.canvasUpdate(false);
-      element.editor.canvasUpdate(true);
+      element.editor.canvasUpdate(2, true);
       this.started = false;
     }
   }
 
-  static createElement(e) {
+  static createElement(e, tool) {
     mouse.x = e.screenX;
     mouse.radiusX = Math.abs(mouse.x - mouse.startX) / 2;
     mouse.y = e.screenY;
@@ -75,14 +74,13 @@ export default class Ellipse extends Element {
       height: mouse.y - mouse.startY,
     };
     const ellipse = new Ellipse(
-      this.name,
-      this.properties,
-      this.events,
-      this.editor,
+      tool.name,
+      tool.properties,
+      tool.events,
+      tool.editor,
       element,
       null,
     );
-
     return ellipse;
   }
 }

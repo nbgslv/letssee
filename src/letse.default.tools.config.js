@@ -95,6 +95,53 @@ export const defaultTools = [
   },
   {
     category: 'tool',
+    name: 'layers',
+    properties: {
+      enable: true,
+      type: 'own-click',
+      toolbar: 'second',
+      icon: '/assets/images/icons/forward.png',
+      cursor: 'default',
+      active: false,
+    },
+    events: {
+      elementForward: 'click',
+    },
+  },
+  {
+    category: 'tool',
+    name: 'layers',
+    properties: {
+      enable: true,
+      type: 'own-click',
+      toolbar: 'second',
+      icon: '/assets/images/icons/backward.png',
+      cursor: 'default',
+      active: false,
+    },
+    events: {
+      elementBackward: 'click',
+    },
+  },
+  {
+    category: 'tool',
+    name: 'rectangle',
+    properties: {
+      enable: true,
+      type: 'canvas-tool',
+      toolbar: 'main',
+      icon: '/assets/images/icons/rectangle.png',
+      cursor: 'crosshair',
+      active: false,
+    },
+    events: {
+      mouseDown: 'mousedown',
+      mouseMove: 'mousemove',
+      mouseUp: 'mouseup',
+    },
+  },
+  {
+    category: 'tool',
     name: 'line',
     properties: {
       enable: true,
@@ -174,36 +221,6 @@ export const defaultTools = [
     },
     events: {
       mouseDown: 'mousedown',
-    },
-  },
-  {
-    category: 'tool',
-    name: 'layers',
-    properties: {
-      enable: true,
-      type: 'own-click',
-      toolbar: 'second',
-      icon: '/assets/images/icons/forward.png',
-      cursor: 'default',
-      active: false,
-    },
-    events: {
-      elementForward: 'click',
-    },
-  },
-  {
-    category: 'tool',
-    name: 'layers',
-    properties: {
-      enable: true,
-      type: 'own-click',
-      toolbar: 'second',
-      icon: '/assets/images/icons/backward.png',
-      cursor: 'default',
-      active: false,
-    },
-    events: {
-      elementBackward: 'click',
     },
   },
 ];
