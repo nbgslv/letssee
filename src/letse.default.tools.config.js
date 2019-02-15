@@ -13,6 +13,7 @@ export const defaultTools = [
     events: {
       mouseDown: 'mousedown',
       mouseMove: 'mousemove',
+      mouseUp: 'mouseup',
     },
   },
   {

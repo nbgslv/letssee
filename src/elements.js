@@ -13,6 +13,7 @@ export default class Element extends Tool {
     this.select = false;
     this.layer = layer;
     this.addLayer();
+    this.holder = null;
   }
 
   addLayer() {
