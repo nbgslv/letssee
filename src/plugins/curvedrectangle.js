@@ -30,6 +30,10 @@ export default class CurvedRectangle extends Element {
     this.curveX = this.width <= this.curveXY * 2 ? Math.abs(this.width) / 2 : this.curveXY;
     this.curveY = this.height <= this.curveXY * 2 ? Math.abs(this.height) / 2 : this.curveXY;
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    let transformedStartX;
+    let transformedStartY;
+    let transformedX;
+    let transformedY;
     editor.ctx.beginPath();
     if (this.x > this.startX && this.y > this.startY) {
       editor.ctx.moveTo(this.startX + this.curveX, this.startY);
@@ -56,6 +60,10 @@ export default class CurvedRectangle extends Element {
         this.startX + this.curveX,
         this.startY,
       );
+      transformedStartX = this.startX;
+      transformedStartY = this.startY;
+      transformedX = this.x;
+      transformedY = this.y;
     } else if (this.x < this.startX && this.y < this.startY) {
       editor.ctx.moveTo(this.startX - this.curveX, this.startY);
       editor.ctx.lineTo(this.x + this.curveX, this.startY);
@@ -81,6 +89,10 @@ export default class CurvedRectangle extends Element {
         this.startX - this.curveX,
         this.startY,
       );
+      transformedStartX = this.x;
+      transformedStartY = this.y;
+      transformedX = this.startX;
+      transformedY = this.startY;
     } else if (this.x < this.startX && this.y > this.startY) {
       editor.ctx.moveTo(this.startX - this.curveX, this.startY);
       editor.ctx.lineTo(this.x + this.curveX, this.startY);
@@ -106,6 +118,10 @@ export default class CurvedRectangle extends Element {
         this.startX - this.curveX,
         this.startY,
       );
+      transformedStartX = this.x;
+      transformedStartY = this.startY;
+      transformedX = this.startX;
+      transformedY = this.y;
     } else if (this.x > this.startX && this.y < this.startY) {
       editor.ctx.moveTo(this.startX + this.curveX, this.startY);
       editor.ctx.lineTo(this.x - this.curveX, this.startY);
@@ -131,8 +147,18 @@ export default class CurvedRectangle extends Element {
         this.startX + this.curveX,
         this.startY,
       );
+      transformedStartX = this.startX;
+      transformedStartY = this.y;
+      transformedX = this.x;
+      transformedY = this.startY;
     }
     editor.ctx.stroke();
+    this.startX = transformedStartX;
+    this.startY = transformedStartY;
+    this.x = transformedX;
+    this.y = transformedY;
+    this.resizer.x = transformedStartX;
+    this.resizer.y = transformedStartY;
   }
 
   drawResizeFrame() {
@@ -194,6 +220,10 @@ export default class CurvedRectangle extends Element {
       curveXY: mouse.curveXY,
       curveX: mouse.curveX,
       curveY: mouse.curveY,
+      resizer: {
+        x: mouse.startX,
+        y: mouse.startY,
+      },
     };
     const curvedRect = new CurvedRectangle(
       tool.name,

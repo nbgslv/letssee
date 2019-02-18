@@ -119,6 +119,8 @@ export default class Hold extends Element {
   moveElement(mouse, e, tool) {
     this.element.startX += e.movementX;
     this.element.startY += e.movementY;
+    this.element.x += e.movementX;
+    this.element.y += e.movementY;
     this.element.resizer.x += e.movementX;
     this.element.resizer.y += e.movementY;
     this.element.draw(true);
@@ -197,10 +199,10 @@ export default class Hold extends Element {
           selected = true;
         }
       }
-      if (!selected) {
-        this.deselect(tool);
-      }
     });
+    if (!selected) {
+      this.deselect(tool);
+    }
   }
 
   static mouseMove(e, tool) {
