@@ -12,8 +12,8 @@ const mouse = {
 export default class Ellipse extends Element {
   constructor(name, properties, events, editor, element, style) {
     super(name, properties, events, editor, element, style);
-    this.startX = element.startX;
-    this.startY = element.startY;
+    this.endX = element.endX;
+    this.endY = element.endY;
     this.radiusX = element.radiusX;
     this.radiusY = element.radiusY;
   }
@@ -66,12 +66,18 @@ export default class Ellipse extends Element {
     const element = {
       startX: mouse.startX,
       startY: mouse.startY,
+      endX: mouse.x,
+      endY: mouse.y,
       radiusX: mouse.radiusX,
       radiusY: mouse.radiusY,
-      x: mouse.x,
-      y: mouse.y,
-      width: mouse.x - mouse.startX,
-      height: mouse.y - mouse.startY,
+      x: mouse.startX,
+      y: mouse.startY,
+      width: mouse.radiusX * 2,
+      height: mouse.radiusY * 2,
+      resizer: {
+        x: mouse.startX - mouse.radiusX,
+        y: mouse.startY - mouse.radiusY,
+      },
     };
     const ellipse = new Ellipse(
       tool.name,

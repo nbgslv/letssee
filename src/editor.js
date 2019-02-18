@@ -161,6 +161,8 @@ export default class Editor {
         this.canvas.canvas.ctx.clearRect(x, y, width, height);
         this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
         break;
+      case 3:
+        break;
       default:
         console.log('canvas parameter is not set properly. Try 0, 1, 2');
         return;

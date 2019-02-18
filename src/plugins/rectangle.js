@@ -12,7 +12,7 @@ const mouse = {
 export default class Rectangle extends Element {
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    editor.ctx.strokeRect(this.x, this.y, this.width, this.height);
+    editor.ctx.strokeRect(this.startX, this.startY, this.width, this.height);
   }
 
   static mouseDown(e) {
@@ -41,15 +41,19 @@ export default class Rectangle extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.x = Math.min(e.screenX, mouse.startX);
-    mouse.y = Math.min(e.screenY, mouse.startY);
     mouse.width = Math.abs(e.screenX - mouse.startX);
     mouse.height = Math.abs(e.screenY - mouse.startY);
     const element = {
+      startX: Math.min(e.screenX, mouse.startX),
+      startY: Math.min(e.screenY, mouse.startY),
       x: mouse.x,
       y: mouse.y,
       width: mouse.width,
       height: mouse.height,
+      resizer: {
+        x: Math.min(e.screenX, mouse.startX),
+        y: Math.min(e.screenY, mouse.startY),
+      },
     };
     const rectangle = new Rectangle(
       tool.name,

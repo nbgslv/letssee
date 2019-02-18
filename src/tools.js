@@ -8,6 +8,8 @@ export default class Tool {
   }
 
   toolEventHandler(e) {
+    e.preventDefault();
+    e.stopPropagation();
     import('./plugins/' + this.name).then((toolModule) => {
       Object.keys(this.events).forEach((event) => {
         if (this.events[event] === e.type) {

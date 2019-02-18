@@ -5,6 +5,9 @@ export default class Element extends Tool {
     // TODO elements file
     // TODO figure out how to implement different types of elements
     super(name, properties, events, editor);
+    this.id = Math.random();
+    this.startX = element.startX;
+    this.startY = element.startY;
     this.x = element.x;
     this.y = element.y;
     this.width = element.width;
@@ -14,6 +17,14 @@ export default class Element extends Tool {
     this.layer = layer;
     this.addLayer();
     this.holder = null;
+    if (element.resizer === undefined) {
+      this.resizer = null;
+    } else {
+      this.resizer = {
+        x: element.resizer.x,
+        y: element.resizer.y,
+      };
+    }
   }
 
   addLayer() {
@@ -22,7 +33,7 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    return (this.x <= mousePositionX) && (this.x + this.width >= mousePositionX)
-      && (this.y <= mousePositionY) && (this.y + this.height >= mousePositionY);
+    return (this.startX <= mousePositionX) && (this.startX + this.width >= mousePositionX)
+      && (this.startY <= mousePositionY) && (this.startY + this.height >= mousePositionY);
   }
 }
