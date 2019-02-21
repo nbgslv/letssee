@@ -10,8 +10,10 @@ const mouse = {
 export default class Triangle extends Element {
   constructor(name, properties, events, editor, element, style) {
     super(name, properties, events, editor, element, style);
-    this.startX = element.startX;
-    this.startY = element.startY;
+    this.resizer = {
+      x: element.startX > element.x ? element.x : element.x - element.width,
+      y: element.startY,
+    };
   }
 
   draw(canvas = true) {
@@ -60,8 +62,8 @@ export default class Triangle extends Element {
       startY: mouse.startY,
       x: mouse.x,
       y: mouse.y,
-      width: (mouse.x - mouse.startX) * 2,
-      height: mouse.y - mouse.startY,
+      width: Math.abs((mouse.x - mouse.startX) * 2),
+      height: Math.abs(mouse.y - mouse.startY),
     };
     const triangle = new Triangle(
       tool.name,
