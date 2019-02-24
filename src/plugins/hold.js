@@ -146,17 +146,39 @@ export default class Hold extends Element {
         elementer.holder = null;
       }
       tool.editor.selection = [];
+    } else if (Array.isArray(element)) {
+      for (let i = 0; i < element.length; i += 1) {
+        const elementer = element[i];
+        for (let j = elementer.editor.elements.length - 1; j >= 0; j -= 1) {
+          elementer.holder.resizers.forEach((resizer) => {
+            if (resizer.name === 'hold' && elementer.editor.elements[j].id === resizer.id) {
+              elementer.editor.elements.splice(j, 1);
+              j = elementer.editor.elements.length - 1;
+            }
+          });
+        }
+        elementer.editor.elements.forEach((elementerer) => {
+          for (let j = 0; j < elementerer.editor.selection.length; j += 1) {
+            const select = elementerer.editor.selection[j];
+            if (elementerer.id === select.id) {
+              elementerer.editor.selection.splice(j, 1);
+            }
+          }
+        });
+        elementer.holder.resizers = [];
+        elementer.holder = null;
+        elementer.select = false;
+      }
     } else {
       element.holder.select = false;
       for (let i = element.editor.elements.length; i >= 0; i -= 1) {
-        const elementer = element.editor.elements[i];
-        elementer.resizers.forEach((resizer) => {
-          if (elementer.name === 'hold' && elementer.id === resizer.id) {
+        element.resizers.forEach((resizer) => {
+          if (element.name === 'hold' && element.id === resizer.id) {
             element.editor.elements.splice(i, 1);
           }
         });
         element.editor.selection.forEach((select) => {
-          if (elementer.id === select.id) {
+          if (element.id === select.id) {
             element.editor.selection.splice(i, 1);
           }
         });
@@ -187,6 +209,11 @@ export default class Hold extends Element {
             element,
             null,
           );
+          if (!e.ctrlKey) {
+            if (holder.editor.selection.length > 0) {
+              this.deselect(tool, holder.editor.selection);
+            }
+          }
           holder.editor.selection.push(element);
           holder.editor.canvasUpdate(2, false);
           holder.drawResizers(element, tool);
