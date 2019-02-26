@@ -10,6 +10,7 @@ export default class Hold extends Element {
     this.resizers = [];
     this.element = element;
     this.dragging = false;
+    this.resizing = false;
     this.id = Math.random();
   }
 
@@ -104,6 +105,16 @@ export default class Hold extends Element {
     }
   }
 
+  select(element, tool) {
+    this.element = element;
+    this.element.selected = true;
+    this.editor.selection.push(element);
+    this.editor.canvasUpdate(2, false);
+    this.drawResizers(element, tool);
+    this.editor.canvasUpdate(3, true);
+    this.drawResizers(element, tool);
+  }
+
   resize(element, mouse, e = null) {
     this.resizers.forEach((resizer) => {
       if (resizer.mouseInElement(mouse.positionX, mouse.positionY)) {
@@ -117,76 +128,38 @@ export default class Hold extends Element {
   }
 
   moveElement(mouse, e, tool) {
-    this.element.startX += e.movementX;
-    this.element.startY += e.movementY;
-    this.element.x += e.movementX;
-    this.element.y += e.movementY;
-    this.element.resizer.x += e.movementX;
-    this.element.resizer.y += e.movementY;
-    this.element.draw(true);
-    for (let i = this.editor.elements.length - 1; i >= 0; i -= 1) {
-      const element = this.editor.elements[i];
-      this.resizers.forEach((resizer) => {
-        if (element.name === 'hold' && element.id === resizer.id) {
-          this.editor.elements.splice(i, 1);
+    this.editor.selection.forEach((element) => {
+      element.startX += e.movementX;
+      element.startY += e.movementY;
+      element.x += e.movementX;
+      element.y += e.movementY;
+      element.resizer.x += e.movementX;
+      element.resizer.y += e.movementY;
+      element.draw(true);
+      for (let i = this.editor.elements.length - 1; i >= 0; i -= 1) {
+        for (let j = 0; j < this.resizers.length; j += 1) {
+          const resizer = this.resizers[j];
+          console.log(`i: ${i}`);
+          console.log(`j: ${j}`);
+          if (this.editor.elements[i].name === 'hold' && this.editor.elements[i].id === resizer.id) {
+            this.editor.elements.splice(i, 1);
+          }
         }
-      });
-    }
-    this.editor.canvasUpdate(2, false);
-    this.drawResizers(this.element, tool);
-    this.editor.canvasUpdate(3, true);
+      }
+      this.editor.canvasUpdate(2, false);
+      this.drawResizers(this.element, tool);
+      this.editor.canvasUpdate(3, true);
+    });
   }
 
-  static deselect(tool, element = null) {
-    if (element === null) {
-      for (let i = tool.editor.elements.length - 1; i >= 0; i -= 1) {
-        const elementer = tool.editor.elements[i];
-        if (elementer.name === 'hold') tool.editor.elements.splice(i, 1);
-        elementer.select = false;
-        elementer.holder = null;
-      }
-      tool.editor.selection = [];
-    } else if (Array.isArray(element)) {
-      for (let i = 0; i < element.length; i += 1) {
-        const elementer = element[i];
-        for (let j = elementer.editor.elements.length - 1; j >= 0; j -= 1) {
-          elementer.holder.resizers.forEach((resizer) => {
-            if (resizer.name === 'hold' && elementer.editor.elements[j].id === resizer.id) {
-              elementer.editor.elements.splice(j, 1);
-              j = elementer.editor.elements.length - 1;
-            }
-          });
-        }
-        elementer.editor.elements.forEach((elementerer) => {
-          for (let j = 0; j < elementerer.editor.selection.length; j += 1) {
-            const select = elementerer.editor.selection[j];
-            if (elementerer.id === select.id) {
-              elementerer.editor.selection.splice(j, 1);
-            }
-          }
-        });
-        elementer.holder.resizers = [];
-        elementer.holder = null;
-        elementer.select = false;
-      }
-    } else {
-      element.holder.select = false;
-      for (let i = element.editor.elements.length; i >= 0; i -= 1) {
-        element.resizers.forEach((resizer) => {
-          if (element.name === 'hold' && element.id === resizer.id) {
-            element.editor.elements.splice(i, 1);
-          }
-        });
-        element.editor.selection.forEach((select) => {
-          if (element.id === select.id) {
-            element.editor.selection.splice(i, 1);
-          }
-        });
-      }
-      element.holder.resizers = [];
+  static deselectAll(tool) {
+    for (let i = tool.editor.elements.length - 1; i >= 0; i -= 1) {
+      const element = tool.editor.elements[i];
+      if (element.name === 'hold') tool.editor.elements.splice(i, 1);
+      element.selected = false;
       element.holder = null;
     }
-    tool.editor.canvasUpdate(2, true);
+    tool.editor.selection = [];
   }
 
   static mouseDown(e, tool) {
@@ -198,9 +171,17 @@ export default class Hold extends Element {
     tool.editor.elements.forEach((element) => {
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
         if (element.name === 'hold') {
-          element.resize(element, mouse, e);
+          element.holder.resizing = true;
           selected = true;
-        } else if (!element.select) {
+          return;
+        }
+        if (element.selected) {
+          element.holder.dragging = true;
+          selected = true;
+        } else {
+          if (!e.ctrlKey && element.editor.selection.length > 0) {
+            this.deselectAll(tool);
+          }
           const holder = new Hold(
             tool.name,
             tool.properties,
@@ -209,26 +190,15 @@ export default class Hold extends Element {
             element,
             null,
           );
-          if (!e.ctrlKey) {
-            if (holder.editor.selection.length > 0) {
-              this.deselect(tool, holder.editor.selection);
-            }
-          }
-          holder.editor.selection.push(element);
-          holder.editor.canvasUpdate(2, false);
-          holder.drawResizers(element, tool);
-          holder.editor.canvasUpdate(3, true);
           element.holder = holder;
-          element.select = true;
-          selected = true;
-        } else if (element.select) {
-          element.holder.dragging = true;
+          holder.select(element, tool);
           selected = true;
         }
       }
     });
     if (!selected) {
-      this.deselect(tool);
+      this.deselectAll(tool);
+      tool.editor.canvasUpdate(2, true);
     }
   }
 
@@ -252,8 +222,8 @@ export default class Hold extends Element {
     tool.editor.elements.forEach((element) => {
       if (element.holder !== null && element.holder.dragging) {
         element.holder.moveElement(mouse, e, tool);
-        element.holder.dragging = false;
       }
+      if (element.holder !== null) element.holder.dragging = false;
     });
   }
 }
