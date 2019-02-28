@@ -14,12 +14,13 @@ export default class Hold extends Element {
     this.id = Math.random();
   }
 
-  drawResizers(element, tool) {
+  drawResizers(tool) {
     const resizerWidth = 10;
     const resizerHeight = 10;
     const strokeDistX = 10;
     const strokeDistY = 10;
     const resizers = [];
+    const element = this.element;
     let resizer;
     resizer = {
       x: element.resizer.x - strokeDistX - resizerWidth / 2,
@@ -110,9 +111,38 @@ export default class Hold extends Element {
     this.element.selected = true;
     this.editor.selection.push(element);
     this.editor.canvasUpdate(2, false);
-    this.drawResizers(element, tool);
+    this.drawResizers(tool);
     this.editor.canvasUpdate(3, true);
-    this.drawResizers(element, tool);
+  }
+
+  deselect() {
+    for (let i = this.editor.elements.length - 1; i >= 0; i -= 1) {
+      let restart = false;
+      const element = this.editor.elements[i];
+      for (let j = 0; j < this.resizers.length; j += 1) {
+        const resizer = this.resizers[j];
+        if (element.name === 'hold' && element.id === resizer.id) {
+          this.editor.elements.splice(i, 1);
+          restart = true;
+        }
+      }
+      if (restart) i = this.editor.elements.length;
+    }
+    for (let i = 0; i < this.editor.selection.length; i += 1) {
+      const element = this.editor.selection[i];
+      if (this.element.id === element.id) {
+        this.editor.selection.splice(i, 1);
+        break;
+      }
+    }
+    this.editor.canvasUpdate(2, true);
+    this.resizers = [];
+    this.dragging = false;
+    this.resizing = false;
+    this.element.holder = null;
+    this.element.selected = false;
+    this.element = undefined;
+    this.id = undefined;
   }
 
   resize(element, mouse, e = null) {
@@ -136,30 +166,17 @@ export default class Hold extends Element {
       element.resizer.x += e.movementX;
       element.resizer.y += e.movementY;
       element.draw(true);
-      for (let i = this.editor.elements.length - 1; i >= 0; i -= 1) {
-        for (let j = 0; j < this.resizers.length; j += 1) {
-          const resizer = this.resizers[j];
-          console.log(`i: ${i}`);
-          console.log(`j: ${j}`);
-          if (this.editor.elements[i].name === 'hold' && this.editor.elements[i].id === resizer.id) {
-            this.editor.elements.splice(i, 1);
-          }
-        }
-      }
+      this.deselect();
       this.editor.canvasUpdate(2, false);
-      this.drawResizers(this.element, tool);
+      this.select(element, tool);
       this.editor.canvasUpdate(3, true);
     });
   }
 
   static deselectAll(tool) {
-    for (let i = tool.editor.elements.length - 1; i >= 0; i -= 1) {
-      const element = tool.editor.elements[i];
-      if (element.name === 'hold') tool.editor.elements.splice(i, 1);
-      element.selected = false;
-      element.holder = null;
-    }
-    tool.editor.selection = [];
+    tool.editor.selection.forEach((selected) => {
+      selected.holder.deselect();
+    });
   }
 
   static mouseDown(e, tool) {
@@ -170,19 +187,15 @@ export default class Hold extends Element {
     let selected = false;
     tool.editor.elements.forEach((element) => {
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
-        if (element.name === 'hold') {
-          element.holder.resizing = true;
-          selected = true;
-          return;
-        }
         if (element.selected) {
           element.holder.dragging = true;
           selected = true;
+        } else if (element.name === 'hold') {
+          element.holder.resizing = true;
+          selected = true;
         } else {
-          if (!e.ctrlKey && element.editor.selection.length > 0) {
-            this.deselectAll(tool);
-          }
-          const holder = new Hold(
+          if (!(e.ctrlKey) && element.editor.selection.length > 0) this.deselectAll(tool);
+          element.holder = new Hold(
             tool.name,
             tool.properties,
             tool.events,
@@ -190,8 +203,7 @@ export default class Hold extends Element {
             element,
             null,
           );
-          element.holder = holder;
-          holder.select(element, tool);
+          element.holder.select(element, tool);
           selected = true;
         }
       }
