@@ -113,6 +113,7 @@ export default class Hold extends Element {
     this.editor.canvasUpdate(2, false);
     this.drawResizers(tool);
     this.editor.canvasUpdate(3, true);
+    this.element.holder = this;
   }
 
   deselect() {
@@ -128,10 +129,10 @@ export default class Hold extends Element {
       }
       if (restart) i = this.editor.elements.length;
     }
-    for (let i = 0; i < this.editor.selection.length; i += 1) {
-      const element = this.editor.selection[i];
+    for (let k = 0; k < this.editor.selection.length; k += 1) {
+      const element = this.editor.selection[k];
       if (this.element.id === element.id) {
-        this.editor.selection.splice(i, 1);
+        this.editor.selection.splice(k, 1);
         break;
       }
     }
@@ -142,7 +143,6 @@ export default class Hold extends Element {
     this.element.holder = null;
     this.element.selected = false;
     this.element = undefined;
-    this.id = undefined;
   }
 
   resize(element, mouse, e = null) {
@@ -158,25 +158,28 @@ export default class Hold extends Element {
   }
 
   moveElement(mouse, e, tool) {
-    this.editor.selection.forEach((element) => {
+    const selection1 = [...tool.editor.selection];
+    for (let i = 0; i < selection1.length; i += 1) {
+      const element = selection1[i];
       element.startX += e.movementX;
       element.startY += e.movementY;
       element.x += e.movementX;
       element.y += e.movementY;
       element.resizer.x += e.movementX;
       element.resizer.y += e.movementY;
-      element.draw(true);
       this.deselect();
-      this.editor.canvasUpdate(2, false);
+      this.dragging = true;
       this.select(element, tool);
-      this.editor.canvasUpdate(3, true);
-    });
+      this.element.selected = true;
+    }
   }
 
   static deselectAll(tool) {
-    tool.editor.selection.forEach((selected) => {
+    for (let i = 0; i < tool.editor.selection.length; i += 1) {
+      const selected = tool.editor.selection[i];
       selected.holder.deselect();
-    });
+      i = -1;
+    }
   }
 
   static mouseDown(e, tool) {

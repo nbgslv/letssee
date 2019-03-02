@@ -168,7 +168,7 @@ export default class Editor {
         return;
     }
     if (draw) {
-      Layers.sortByLayers();
+      // Layers.sortByLayers();
       this.elements.forEach((element) => {
         element.draw();
       });
