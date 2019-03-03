@@ -109,11 +109,11 @@ export default class Hold extends Element {
   select(element, tool) {
     this.element = element;
     this.element.selected = true;
-    this.editor.selection.push(element);
     this.editor.canvasUpdate(2, false);
     this.drawResizers(tool);
     this.editor.canvasUpdate(3, true);
     this.element.holder = this;
+    this.editor.selection.push(element);
   }
 
   deselect() {
@@ -158,20 +158,13 @@ export default class Hold extends Element {
   }
 
   moveElement(mouse, e, tool) {
-    const selection1 = [...tool.editor.selection];
-    for (let i = 0; i < selection1.length; i += 1) {
-      const element = selection1[i];
-      element.startX += e.movementX;
-      element.startY += e.movementY;
-      element.x += e.movementX;
-      element.y += e.movementY;
-      element.resizer.x += e.movementX;
-      element.resizer.y += e.movementY;
-      this.deselect();
-      this.dragging = true;
-      this.select(element, tool);
-      this.element.selected = true;
-    }
+    this.element.startX += e.movementX;
+    this.element.startY += e.movementY;
+    this.element.x += e.movementX;
+    this.element.y += e.movementY;
+    this.element.resizer.x += e.movementX;
+    this.element.resizer.y += e.movementY;
+    this.editor.canvasUpdate(2, true);
   }
 
   static deselectAll(tool) {
@@ -191,7 +184,9 @@ export default class Hold extends Element {
     tool.editor.elements.forEach((element) => {
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
         if (element.selected) {
-          element.holder.dragging = true;
+          tool.editor.selection.forEach((select) => {
+            select.holder.dragging = true;
+          });
           selected = true;
         } else if (element.name === 'hold') {
           element.holder.resizing = true;
@@ -227,6 +222,22 @@ export default class Hold extends Element {
         element.holder.moveElement(mouse, e, tool);
       }
     });
+    tool.editor.selection.forEach((element) => {
+      if (element.holder !== null && element.holder.dragging) {
+        element.holder.deselect();
+        element.holder = new Hold(
+          tool.name,
+          tool.properties,
+          tool.events,
+          tool.editor,
+          element,
+          null,
+        );
+        element.holder.select(element, tool);
+        element.holder.dragging = true;
+        element.selected = true;
+      }
+    });
   }
 
   static mouseUp(e, tool) {
@@ -242,3 +253,7 @@ export default class Hold extends Element {
     });
   }
 }
+
+// TODO resolve stroke problem
+// TODO rotate
+// TODO hold line and hold text

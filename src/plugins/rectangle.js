@@ -15,10 +15,10 @@ export default class Rectangle extends Element {
     editor.ctx.strokeRect(this.startX, this.startY, this.width, this.height);
   }
 
-  static mouseDown(e) {
+  static mouseDown(e, tool) {
     this.started = true;
-    mouse.startX = e.clientX;
-    mouse.startY = e.clientY;
+    mouse.startX = e.pageX - tool.editor.offsetX;
+    mouse.startY = e.pageY - tool.editor.offsetY;
   }
 
   static mouseMove(e, tool) {
@@ -41,8 +41,8 @@ export default class Rectangle extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.width = Math.abs(e.screenX - mouse.startX);
-    mouse.height = Math.abs(e.screenY - mouse.startY);
+    mouse.width = Math.abs(e.pageX - mouse.startX);
+    mouse.height = Math.abs(e.pageY - mouse.startY);
     const element = {
       startX: Math.min(e.screenX, mouse.startX),
       startY: Math.min(e.screenY, mouse.startY),
@@ -55,7 +55,7 @@ export default class Rectangle extends Element {
         y: Math.min(e.screenY, mouse.startY),
       },
     };
-    const rectangle = new Rectangle(
+    return new Rectangle(
       tool.name,
       tool.properties,
       tool.events,
@@ -63,6 +63,5 @@ export default class Rectangle extends Element {
       element,
       null,
     );
-    return rectangle;
   }
 }

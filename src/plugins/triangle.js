@@ -26,10 +26,10 @@ export default class Triangle extends Element {
     editor.ctx.stroke();
   }
 
-  static mouseDown(e) {
+  static mouseDown(e, tool) {
     this.started = true;
-    mouse.startX = e.clientX;
-    mouse.startY = e.clientY;
+    mouse.startX = e.pageX - tool.editor.offsetX;
+    mouse.startY = e.pageY - tool.editor.offsetY;
   }
 
   static mouseMove(e, tool) {
@@ -53,10 +53,8 @@ export default class Triangle extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.x = e.screenX;
-    mouse.radiusX = Math.abs(mouse.x - mouse.startX) / 2;
-    mouse.y = e.screenY;
-    mouse.radiusY = Math.abs(mouse.y - mouse.startY) / 2;
+    mouse.x = e.pageX - tool.editor.offsetX;
+    mouse.y = e.pageY - tool.editor.offsetY;
     const element = {
       startX: mouse.startX,
       startY: mouse.startY,

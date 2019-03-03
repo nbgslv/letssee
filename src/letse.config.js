@@ -1,20 +1,17 @@
 export const plugins = [
   {
     category: 'tool',
-    name: 'rectangle',
+    name: 'clear',
     properties: {
       enable: true,
-      type: 'canvas-tool',
+      type: 'own-click',
       toolbar: 'main',
       icon: '/assets/images/icons/sweep.png',
       cursor: 'crosshair',
       active: false,
     },
     events: {
-      mouseDown: 'mousedown',
-      mouseMove: 'mousemove',
-      mouseUp: 'mouseup',
-      Redo: 'redo',
+      clear: 'click',
     },
   },
 ];

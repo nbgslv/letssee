@@ -1,5 +1,3 @@
-import Layers from './plugins/layers';
-
 export default class Editor {
   constructor(containerID, height, width, options = {}, tools) {
     this.editorContainerID = containerID;
@@ -140,6 +138,14 @@ export default class Editor {
     this.canvas.upperCanvas.addEventListener('mousedown', e => this.activeTool.toolEventHandler(e));
     this.canvas.upperCanvas.addEventListener('mousemove', e => this.activeTool.toolEventHandler(e));
     this.canvas.upperCanvas.addEventListener('mouseup', e => this.activeTool.toolEventHandler(e));
+  }
+
+  get offsetX() {
+    return this.canvas.canvas.offsetLeft;
+  }
+
+  get offsetY() {
+    return this.canvas.canvas.offsetTop;
   }
 
   canvasUpdate(
