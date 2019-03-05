@@ -28,8 +28,9 @@ export default class Triangle extends Element {
 
   static mouseDown(e, tool) {
     this.started = true;
-    mouse.startX = e.pageX - tool.editor.offsetX;
-    mouse.startY = e.pageY - tool.editor.offsetY;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.startX = relativeMousePosition.x;
+    mouse.startY = relativeMousePosition.y;
   }
 
   static mouseMove(e, tool) {
@@ -39,7 +40,6 @@ export default class Triangle extends Element {
       element.editor.canvasUpdate(0, false);
       element.draw(false);
     }
-
     return element;
   }
 
@@ -53,8 +53,9 @@ export default class Triangle extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.x = e.pageX - tool.editor.offsetX;
-    mouse.y = e.pageY - tool.editor.offsetY;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.x = relativeMousePosition.x;
+    mouse.y = relativeMousePosition.y;
     const element = {
       startX: mouse.startX,
       startY: mouse.startY,
@@ -63,7 +64,7 @@ export default class Triangle extends Element {
       width: Math.abs((mouse.x - mouse.startX) * 2),
       height: Math.abs(mouse.y - mouse.startY),
     };
-    const triangle = new Triangle(
+    return new Triangle(
       tool.name,
       tool.properties,
       tool.events,
@@ -71,7 +72,5 @@ export default class Triangle extends Element {
       element,
       null,
     );
-
-    return triangle;
   }
 }

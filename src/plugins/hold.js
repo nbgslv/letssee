@@ -64,10 +64,13 @@ export default class Hold extends Element {
     resizers.push(resizer);
     resizers.forEach((resize) => {
       const dimensions = {
-        x: resize.x,
-        y: resize.y,
+        startX: resize.x,
+        startY: resize.y,
+        x: resize.x + this.resizerWidth,
+        y: resize.y + this.resizerHeight,
         width: this.resizerWidth,
         height: this.resizerHeight,
+        element: this.element,
       };
       const box = new Hold(
         tool.name,
@@ -102,7 +105,7 @@ export default class Hold extends Element {
     if (stroke) {
       editor.ctx.strokeRect(this.x, this.y, this.width, this.height);
     } else {
-      editor.ctx.fillRect(this.x, this.y, this.width, this.height);
+      editor.ctx.fillRect(this.startX, this.startY, this.width, this.height);
     }
   }
 
@@ -145,19 +148,20 @@ export default class Hold extends Element {
     this.element = undefined;
   }
 
-  resize(element, mouse, e = null) {
-    this.resizers.forEach((resizer) => {
+  resize(mouse, e) {
+    this.element.element.holder.resizers.forEach((resizer) => {
       if (resizer.mouseInElement(mouse.positionX, mouse.positionY)) {
         mouse.deltaX = e.deltaX;
         mouse.deltaY = e.deltaY;
-        element.element.width += mouse.deltaX;
-        element.element.height += mouse.deltaY;
-        element.draw();
+        resizer.element.element.width += mouse.deltaX;
+        resizer.element.element.height += mouse.deltaY;
+        resizer.element.element.draw();
+        resizer.editor.canvasUpdate(2, true);
       }
     });
   }
 
-  moveElement(mouse, e, tool) {
+  moveElement(mouse, e) {
     this.element.startX += e.movementX;
     this.element.startY += e.movementY;
     this.element.x += e.movementX;
@@ -176,9 +180,10 @@ export default class Hold extends Element {
   }
 
   static mouseDown(e, tool) {
+    const relativeMousePosition = tool.relativeMousePosition(e);
     const mouse = {
-      positionX: e.clientX,
-      positionY: e.clientY,
+      positionX: relativeMousePosition.x,
+      positionY: relativeMousePosition.y,
     };
     let selected = false;
     tool.editor.elements.forEach((element) => {
@@ -189,7 +194,8 @@ export default class Hold extends Element {
           });
           selected = true;
         } else if (element.name === 'hold') {
-          element.holder.resizing = true;
+          element.resizing = true;
+          element.resize(mouse, e);
           selected = true;
         } else {
           if (!(e.ctrlKey) && element.editor.selection.length > 0) this.deselectAll(tool);
@@ -213,9 +219,10 @@ export default class Hold extends Element {
   }
 
   static mouseMove(e, tool) {
+    const relativeMousePosition = tool.relativeMousePosition(e);
     const mouse = {
-      positionX: e.clientX,
-      positionY: e.clientY,
+      positionX: relativeMousePosition.x,
+      positionY: relativeMousePosition.y,
     };
     tool.editor.selection.forEach((element) => {
       if (element.holder !== null && element.holder.dragging) {
@@ -241,9 +248,10 @@ export default class Hold extends Element {
   }
 
   static mouseUp(e, tool) {
+    const relativeMousePosition = tool.relativeMousePosition(e);
     const mouse = {
-      positionX: e.clientX,
-      positionY: e.clientY,
+      positionX: relativeMousePosition.x,
+      positionY: relativeMousePosition.y,
     };
     tool.editor.elements.forEach((element) => {
       if (element.holder !== null && element.holder.dragging) {

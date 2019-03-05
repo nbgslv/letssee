@@ -161,26 +161,11 @@ export default class CurvedRectangle extends Element {
     this.resizer.y = transformedStartY;
   }
 
-  drawResizeFrame() {
-    this.editor.canvas.upperCanvas.ctx.beginPath();
-    this.editor.canvas.upperCanvas.ctx.strokeRect(
-      this.x - 10,
-      this.y - 10,
-      this.width + 10,
-      this.height + 10,
-    );
-    this.editor.canvas.upperCanvas.ctx.fillRect(
-      this.x + this.width / 2 - 5,
-      this.y,
-      10,
-      10,
-    );
-  }
-
-  static mouseDown(e) {
+  static mouseDown(e, tool) {
+    const relativeMousePosition = tool.relativeMousePosition(e);
     this.started = true;
-    mouse.startX = e.clientX;
-    mouse.startY = e.clientY;
+    mouse.startX = relativeMousePosition.x;
+    mouse.startY = relativeMousePosition.y;
   }
 
   static mouseMove(e, tool) {
@@ -204,8 +189,9 @@ export default class CurvedRectangle extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.x = relativeMousePosition.x;
+    mouse.y = relativeMousePosition.y;
     mouse.width = Math.abs(mouse.x - mouse.startX);
     mouse.height = Math.abs(mouse.y - mouse.startY);
     mouse.curveX = mouse.width <= mouse.curveXY * 2 ? Math.abs(mouse.width) / 2 : mouse.curveXY;
@@ -225,7 +211,7 @@ export default class CurvedRectangle extends Element {
         y: mouse.startY,
       },
     };
-    const curvedRect = new CurvedRectangle(
+    return new CurvedRectangle(
       tool.name,
       tool.properties,
       tool.events,
@@ -233,7 +219,6 @@ export default class CurvedRectangle extends Element {
       element,
       null,
     );
-    return curvedRect;
   }
 }
 

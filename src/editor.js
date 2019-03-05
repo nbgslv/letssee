@@ -140,12 +140,8 @@ export default class Editor {
     this.canvas.upperCanvas.addEventListener('mouseup', e => this.activeTool.toolEventHandler(e));
   }
 
-  get offsetX() {
-    return this.canvas.canvas.offsetLeft;
-  }
-
-  get offsetY() {
-    return this.canvas.canvas.offsetTop;
+  get boundingRect() {
+    return this.canvas.canvas.getBoundingClientRect();
   }
 
   canvasUpdate(

@@ -25,4 +25,12 @@ export default class Tool {
       this.editor.undo.push(element);
     });
   }
+  
+  relativeMousePosition(e) {
+    const rect = this.editor.boundingRect;
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    }
+  }
 }

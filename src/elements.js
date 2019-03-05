@@ -33,7 +33,9 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    return (this.startX - 10 <= mousePositionX) && (this.startX + this.width + 10 >= mousePositionX)
-      && (this.startY - 10 <= mousePositionY) && (this.startY + this.height + 10 >= mousePositionY);
+    console.log(this.name + ': ' + ((this.startX <= mousePositionX) && (this.startX + this.width >= mousePositionX)
+        && (this.startY <= mousePositionY) && (this.startY + this.height >= mousePositionY)));
+    return (this.startX <= mousePositionX) && (this.startX + this.width >= mousePositionX)
+      && (this.startY  <= mousePositionY) && (this.startY + this.height >= mousePositionY);
   }
 }

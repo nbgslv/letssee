@@ -22,10 +22,11 @@ export default class Line extends Element {
     editor.ctx.stroke();
   }
 
-  static mouseDown(e) {
+  static mouseDown(e, tool) {
+    const relativeMousePosition = tool.relativeMousePosition(e);
     this.started = true;
-    mouse.startX = e.clientX;
-    mouse.startY = e.clientY;
+    mouse.startX = relativeMousePosition.x;
+    mouse.startY = relativeMousePosition.y;
   }
 
   static mouseMove(e, tool) {
@@ -48,17 +49,22 @@ export default class Line extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.x = e.screenX;
-    mouse.y = e.screenY;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.x = relativeMousePosition.x;
+    mouse.y = relativeMousePosition.y;
     const element = {
       startX: mouse.startX,
       startY: mouse.startY,
       x: mouse.x,
       y: mouse.y,
-      width: mouse.x - mouse.startX,
-      height: mouse.y - mouse.startY,
+      width: Math.abs(mouse.x - mouse.startX),
+      height: Math.abs(mouse.y - mouse.startY),
+      resizer: {
+        x: mouse.x,
+        y: mouse.y,
+      },
     };
-    const line = new Line(
+    return new Line(
       tool.name,
       tool.properties,
       tool.events,
@@ -66,6 +72,5 @@ export default class Line extends Element {
       element,
       null,
     );
-    return line;
   }
 }

@@ -17,8 +17,9 @@ export default class Rectangle extends Element {
 
   static mouseDown(e, tool) {
     this.started = true;
-    mouse.startX = e.pageX - tool.editor.offsetX;
-    mouse.startY = e.pageY - tool.editor.offsetY;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.startX = relativeMousePosition.x;
+    mouse.startY = relativeMousePosition.y;
   }
 
   static mouseMove(e, tool) {
@@ -41,8 +42,11 @@ export default class Rectangle extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.width = Math.abs(e.pageX - mouse.startX);
-    mouse.height = Math.abs(e.pageY - mouse.startY);
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.x = relativeMousePosition.x;
+    mouse.y = relativeMousePosition.y;
+    mouse.width = Math.abs(mouse.x - mouse.startX);
+    mouse.height = Math.abs(mouse.y - mouse.startY);
     const element = {
       startX: Math.min(e.screenX, mouse.startX),
       startY: Math.min(e.screenY, mouse.startY),

@@ -33,10 +33,11 @@ export default class Ellipse extends Element {
     editor.ctx.stroke();
   }
 
-  static mouseDown(e) {
+  static mouseDown(e, tool) {
     this.started = true;
-    mouse.startX = e.clientX;
-    mouse.startY = e.clientY;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.startX = relativeMousePosition.x;
+    mouse.startY = relativeMousePosition.y;
   }
 
   static mouseMove(e, tool) {
@@ -59,9 +60,10 @@ export default class Ellipse extends Element {
   }
 
   static createElement(e, tool) {
-    mouse.x = e.screenX;
+    const relativeMousePosition = tool.relativeMousePosition(e);
+    mouse.x = relativeMousePosition.x;
     mouse.radiusX = Math.abs(mouse.x - mouse.startX) / 2;
-    mouse.y = e.screenY;
+    mouse.y = relativeMousePosition.y;
     mouse.radiusY = Math.abs(mouse.y - mouse.startY) / 2;
     const element = {
       startX: mouse.startX,
@@ -79,7 +81,7 @@ export default class Ellipse extends Element {
         y: mouse.startY - mouse.radiusY,
       },
     };
-    const ellipse = new Ellipse(
+    return new Ellipse(
       tool.name,
       tool.properties,
       tool.events,
@@ -87,7 +89,6 @@ export default class Ellipse extends Element {
       element,
       null,
     );
-    return ellipse;
   }
 }
 
