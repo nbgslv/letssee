@@ -24,8 +24,8 @@ export default class Ellipse extends Element {
     editor.ctx.ellipse(
       this.startX,
       this.startY,
-      this.radiusX,
-      this.radiusY,
+      this.width / 2,
+      this.height / 2,
       0,
       0,
       2 * Math.PI,
