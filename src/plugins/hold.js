@@ -172,6 +172,8 @@ export default class Hold extends Element {
   resize(mouse, e) {
     mouse.deltaX = e.movementX;
     mouse.deltaY = e.movementY;
+    this.element.element.resize(mouse, this);
+    /*
     this.affect.forEach(((affect) => {
       switch (affect) {
         case 1:
@@ -196,6 +198,7 @@ export default class Hold extends Element {
       this.element.element.resizer.x = Math.min(this.element.element.startX, this.element.element.x);
       this.element.element.resizer.y = Math.min(this.element.element.startY, this.element.element.y);
     }));
+    */
     this.editor.canvasUpdate(2, true);
   }
 

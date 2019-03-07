@@ -7,30 +7,61 @@ const mouse = {
   startY: 0,
   radiusX: 0,
   radiusY: 0,
+  centerX: 0,
+  centerY: 0,
 };
 
 export default class Ellipse extends Element {
   constructor(name, properties, events, editor, element, style) {
     super(name, properties, events, editor, element, style);
+    this.width = Math.abs(this.startX - element.endX);
+    this.height = Math.abs(this.startY - element.endY);
+    this.centerX = this.startX + (Math.abs(this.startX - element.endX) / 2);
+    this.centerY = this.startY + (Math.abs(this.startY - element.endY) / 2);
     this.endX = element.endX;
     this.endY = element.endY;
-    this.radiusX = element.radiusX;
-    this.radiusY = element.radiusY;
+    this.radiusX = Math.abs(this.startX - this.endX) / 2;
+    this.radiusY = Math.abs(this.startY - this.endY) / 2;
   }
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     editor.ctx.beginPath();
     editor.ctx.ellipse(
-      this.startX,
-      this.startY,
-      this.width / 2,
-      this.height / 2,
+      this.centerX,
+      this.centerY,
+      this.radiusX,
+      this.radiusY,
       0,
       0,
       2 * Math.PI,
     );
     editor.ctx.stroke();
+  }
+
+  resize(mouseResize, resizer) {
+    resizer.affect.forEach((affect) => {
+      switch (affect) {
+        case 1:
+          this.startX += mouseResize.deltaX;
+          this.width -= mouseResize.deltaX;
+          this.resizer.x = this.startX - this.width / 2;
+          break;
+        case 2:
+          this.startY += mouseResize.deltaY;
+          this.height -= mouseResize.deltaY;
+          this.resizer.y = this.startY - this.height / 2;
+          break;
+        case 3:
+          this.width += mouseResize.deltaX;
+          break;
+        case 4:
+          this.height += mouseResize.deltaY;
+          break;
+        default:
+          console.log('wrong affect number used');
+      }
+    });
   }
 
   static mouseDown(e, tool) {
@@ -62,23 +93,35 @@ export default class Ellipse extends Element {
   static createElement(e, tool) {
     const relativeMousePosition = tool.relativeMousePosition(e);
     mouse.x = relativeMousePosition.x;
-    mouse.radiusX = Math.abs(mouse.x - mouse.startX) / 2;
     mouse.y = relativeMousePosition.y;
-    mouse.radiusY = Math.abs(mouse.y - mouse.startY) / 2;
+    let startX;
+    let startY;
+    let endX;
+    let endY;
+    if (mouse.startX > mouse.x) {
+      startX = mouse.x;
+      endX = mouse.startX;
+    } else {
+      startX = mouse.startX;
+      endX = mouse.x;
+    }
+    if (mouse.startY > mouse.y) {
+      startY = mouse.y;
+      endY = mouse.startY;
+    } else {
+      startY = mouse.startY;
+      endY = mouse.y;
+    }
     const element = {
-      startX: mouse.startX,
-      startY: mouse.startY,
-      endX: mouse.x,
-      endY: mouse.y,
-      radiusX: mouse.radiusX,
-      radiusY: mouse.radiusY,
+      startX,
+      startY,
+      endX,
+      endY,
       x: mouse.startX,
       y: mouse.startY,
-      width: mouse.radiusX * 2,
-      height: mouse.radiusY * 2,
       resizer: {
-        x: mouse.startX - mouse.radiusX,
-        y: mouse.startY - mouse.radiusY,
+        x: startX,
+        y: startY,
       },
     };
     return new Ellipse(
