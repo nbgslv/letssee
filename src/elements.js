@@ -27,16 +27,49 @@ export default class Element extends Tool {
     }
   }
 
+  resize(mouseResize, affecter) {
+    affecter.forEach(((affect) => {
+      switch (affect) {
+        case 1:
+          this.width -= mouseResize.deltaX;
+          this.startX += mouseResize.deltaX;
+          break;
+        case 2:
+          this.height -= mouseResize.deltaY;
+          this.startY += mouseResize.deltaY;
+          break;
+        case 3:
+          this.width += mouseResize.deltaX;
+          this.x += mouseResize.deltaX;
+          break;
+        case 4:
+          this.height += mouseResize.deltaY;
+          this.y += mouseResize.deltaY;
+          break;
+        default:
+          console.log('wrong affect parameter');
+      }
+      this.resizer.x = Math.min(this.element.element.startX, this.element.element.x);
+      this.resizer.y = Math.min(this.element.element.startY, this.element.element.y);
+    }));
+  }
+
+  move(mouseMove) {
+    this.startX += mouseMove.deltaX;
+    this.startY += mouseMove.deltaY;
+    this.x += mouseMove.deltaX;
+    this.y += mouseMove.deltaY;
+    this.resizer.x += mouseMove.deltaX;
+    this.resizer.y += mouseMove.deltaY;
+  }
+
   addLayer() {
     this.layer = this.editor.layers + 1;
     this.editor.layers += 1;
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    console.log(`
-     + ': ' + ((${this.startX} <= ${mousePositionX}) && (${this.startX} + ${this.width} >= ${mousePositionX})
-        && (${this.startY} <= ${mousePositionY}) && (${this.startY} + ${this.height} >= ${mousePositionY}))`);
     return (this.startX <= mousePositionX) && (this.startX + this.width >= mousePositionX)
-      && (this.startY  <= mousePositionY) && (this.startY + this.height >= mousePositionY);
+      && (this.startY <= mousePositionY) && (this.startY + this.height >= mousePositionY);
   }
 }

@@ -172,43 +172,14 @@ export default class Hold extends Element {
   resize(mouse, e) {
     mouse.deltaX = e.movementX;
     mouse.deltaY = e.movementY;
-    this.element.element.resize(mouse, this);
-    /*
-    this.affect.forEach(((affect) => {
-      switch (affect) {
-        case 1:
-          this.element.element.width -= mouse.deltaX;
-          this.element.element.startX += mouse.deltaX;
-          break;
-        case 2:
-          this.element.element.height -= mouse.deltaY;
-          this.element.element.startY += mouse.deltaY;
-          break;
-        case 3:
-          this.element.element.width += mouse.deltaX;
-          this.element.element.x += mouse.deltaX;
-          break;
-        case 4:
-          this.element.element.height += mouse.deltaY;
-          this.element.element.y += mouse.deltaY;
-          break;
-        default:
-          console.log('wrong affect parameter');
-      }
-      this.element.element.resizer.x = Math.min(this.element.element.startX, this.element.element.x);
-      this.element.element.resizer.y = Math.min(this.element.element.startY, this.element.element.y);
-    }));
-    */
+    this.element.element.resize(mouse, this.affect);
     this.editor.canvasUpdate(2, true);
   }
 
   moveElement(mouse, e) {
-    this.element.startX += e.movementX;
-    this.element.startY += e.movementY;
-    this.element.x += e.movementX;
-    this.element.y += e.movementY;
-    this.element.resizer.x += e.movementX;
-    this.element.resizer.y += e.movementY;
+    mouse.deltaX = e.movementX;
+    mouse.deltaY = e.movementY;
+    this.element.move(mouse);
     this.editor.canvasUpdate(2, true);
   }
 

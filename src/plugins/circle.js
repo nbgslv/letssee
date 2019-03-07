@@ -20,8 +20,8 @@ export default class Ellipse extends Element {
     this.centerY = this.startY + (Math.abs(this.startY - element.endY) / 2);
     this.endX = element.endX;
     this.endY = element.endY;
-    this.radiusX = Math.abs(this.startX - this.endX) / 2;
-    this.radiusY = Math.abs(this.startY - this.endY) / 2;
+    this.radiusX = this.width / 2;
+    this.radiusY = this.height / 2;
   }
 
   draw(canvas = true) {
@@ -39,29 +39,54 @@ export default class Ellipse extends Element {
     editor.ctx.stroke();
   }
 
-  resize(mouseResize, resizer) {
-    resizer.affect.forEach((affect) => {
+  resize(mouseResize, affecter) {
+    affecter.forEach((affect) => {
       switch (affect) {
         case 1:
-          this.startX += mouseResize.deltaX;
+          this.startX += mouseResize.deltaX / 2;
+          this.centerX += mouseResize.deltaX / 2;
           this.width -= mouseResize.deltaX;
-          this.resizer.x = this.startX - this.width / 2;
+          this.radiusX -= mouseResize.deltaX / 2;
+          this.resizer.x = this.centerX - this.radiusX;
           break;
         case 2:
-          this.startY += mouseResize.deltaY;
+          this.startY += mouseResize.deltaY / 2;
+          this.centerY += mouseResize.deltaY / 2;
           this.height -= mouseResize.deltaY;
-          this.resizer.y = this.startY - this.height / 2;
+          this.radiusY -= mouseResize.deltaY / 2;
+          this.resizer.y = this.centerY - this.radiusY;
           break;
         case 3:
+          this.startX += mouseResize.deltaX / 2;
+          this.centerX += mouseResize.deltaX / 2;
           this.width += mouseResize.deltaX;
+          this.radiusX += mouseResize.deltaX / 2;
+          this.resizer.x = this.centerX - this.radiusX;
           break;
         case 4:
+          this.startY += mouseResize.deltaY / 2;
+          this.centerY += mouseResize.deltaY / 2;
           this.height += mouseResize.deltaY;
+          this.radiusY += mouseResize.deltaY / 2;
+          this.resizer.y = this.centerY - this.radiusY;
           break;
         default:
           console.log('wrong affect number used');
       }
     });
+  }
+
+  move(mouseMove) {
+    this.startX += mouseMove.deltaX;
+    this.startY += mouseMove.deltaY;
+    this.endX += mouseMove.deltaX;
+    this.endY += mouseMove.deltaY;
+    this.x += mouseMove.deltaX;
+    this.y += mouseMove.deltaY;
+    this.centerX += mouseMove.deltaX;
+    this.centerY += mouseMove.deltaY;
+    this.resizer.x += mouseMove.deltaX;
+    this.resizer.y += mouseMove.deltaY;
   }
 
   static mouseDown(e, tool) {
