@@ -33,10 +33,12 @@ export default class Element extends Tool {
         case 1:
           this.width -= mouseResize.deltaX;
           this.startX += mouseResize.deltaX;
+          this.resizer.x += mouseResize.deltaX;
           break;
         case 2:
           this.height -= mouseResize.deltaY;
           this.startY += mouseResize.deltaY;
+          this.resizer.y += mouseResize.deltaY;
           break;
         case 3:
           this.width += mouseResize.deltaX;
@@ -49,8 +51,6 @@ export default class Element extends Tool {
         default:
           console.log('wrong affect parameter');
       }
-      this.resizer.x = Math.min(this.element.element.startX, this.element.element.x);
-      this.resizer.y = Math.min(this.element.element.startY, this.element.element.y);
     }));
   }
 

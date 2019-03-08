@@ -75,7 +75,7 @@ export default class Hold extends Element {
     };
     resizers.push(resizer);
     for (let i = 1; i <= resizers.length; i += 1) {
-      const resize = resizers[i-1];
+      const resize = resizers[i - 1];
       const dimensions = {
         startX: resize.x,
         startY: resize.y,
