@@ -12,6 +12,8 @@ export default class Element extends Tool {
     this.y = element.y;
     this.width = element.width;
     this.height = element.height;
+    this.rotation = 0;
+    this.rotationChange = false;
     this.style = style;
     this.selected = false;
     this.layer = layer;
@@ -25,6 +27,10 @@ export default class Element extends Tool {
         y: element.resizer.y,
       };
     }
+  }
+
+  draw(canvas = true) {
+    return canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
   }
 
   resize(mouseResize, affecter) {
@@ -47,6 +53,18 @@ export default class Element extends Tool {
         case 4:
           this.height += mouseResize.deltaY;
           this.y += mouseResize.deltaY;
+          break;
+        case 5:
+          this.editor.canvas.upperCanvas.ctx.translate(this.width / 2, this.height / 2);
+          this.editor.canvas.upperCanvas.ctx.rotate(
+            Element.calculateRotationDegrees(
+              mouseResize.x,
+              mouseResize.y,
+              mouseResize.x + mouseResize.deltaX,
+              mouseResize.y + mouseResize.deltaY,
+            ),
+          );
+          this.draw(false);
           break;
         default:
           console.log('wrong affect parameter');
@@ -71,5 +89,9 @@ export default class Element extends Tool {
   mouseInElement(mousePositionX, mousePositionY) {
     return (this.startX <= mousePositionX) && (this.startX + this.width >= mousePositionX)
       && (this.startY <= mousePositionY) && (this.startY + this.height >= mousePositionY);
+  }
+
+  static calculateRotationDegrees(x, y, x2, y2) {
+    return Math.atan2(x, y) - Math.atan2(x2, y2);
   }
 }
