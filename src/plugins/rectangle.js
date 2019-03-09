@@ -12,20 +12,24 @@ const mouse = {
 export default class Rectangle extends Element {
   draw(canvas = true) {
     const editor = super.draw(canvas);
+    this.editor.canvas.canvas.ctx.save();
     if (this.rotation !== 0 || this.rotationChange) {
-      this.editor.canvasUpdate(2, false);
+
+      this.editor.canvas.canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
       const translationPointX = this.startX + this.width / 2;
       const translationPointY = this.startY + this.height / 2;
       this.editor.canvas.canvas.ctx.translate(translationPointX, translationPointY);
-      this.rotate(this.rotation * Math.PI / 180);
+      this.rotate(this.rotation);
       this.rotationChange = false;
       this.editor.canvas.canvas.ctx.translate(-translationPointX, -translationPointY);
     }
     editor.ctx.strokeRect(this.startX, this.startY, this.width, this.height);
+    editor.ctx.restore();
   }
 
   rotate(rotateDegrees) {
     if (rotateDegrees !== 0) {
+
       this.editor.canvas.canvas.ctx.rotate(rotateDegrees);
     }
   }
