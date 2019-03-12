@@ -25,7 +25,7 @@ export default class Ellipse extends Element {
   }
 
   draw(canvas = true) {
-    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    const editor = super.draw(canvas);
     editor.ctx.beginPath();
     editor.ctx.ellipse(
       this.centerX,
@@ -37,6 +37,7 @@ export default class Ellipse extends Element {
       2 * Math.PI,
     );
     editor.ctx.stroke();
+    editor.ctx.restore();
   }
 
   resize(mouseResize, affecter) {
@@ -69,6 +70,15 @@ export default class Ellipse extends Element {
           this.height += mouseResize.deltaY;
           this.radiusY += mouseResize.deltaY / 2;
           this.resizer.y = this.centerY - this.radiusY;
+          break;
+        case 5:
+          this.rotation = Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
+          );
+          this.rotationChange = true;
           break;
         default:
           console.log('wrong affect number used');

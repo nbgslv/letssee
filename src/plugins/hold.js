@@ -13,6 +13,7 @@ export default class Hold extends Element {
     this.type = type;
     this.affect = affect;
     this.holder = holder;
+    this.rotated = false;
     this.dragging = false;
     this.resizing = false;
     this.resizerId = resizerId;
@@ -92,6 +93,10 @@ export default class Hold extends Element {
         width: this.resizerWidth,
         height: this.resizerHeight,
         element: this.element,
+        resizer: {
+          x: resize.x,
+          y: resize.y,
+        },
       };
       const box = new Hold(
         tool.name,
@@ -119,6 +124,10 @@ export default class Hold extends Element {
         width: element.width + strokeDistX * 2,
         height: element.height + strokeDistY * 2,
         rotateDistY: rotateDistY - resizerHeight,
+        resizer: {
+          x: element.resizer.x,
+          y: element.resizer.y,
+        },
       },
       'stroke',
       null,
@@ -126,28 +135,45 @@ export default class Hold extends Element {
       null,
       null,
     );
-    stroke.draw(true, true);
+    this.resizers.push(stroke);
+    this.editor.elements.push(stroke);
   }
 
-  draw(canvas = true, stroke = false) {
+  draw(canvas = true, type = this.type) {
     const editor = canvas ? this.editor.canvas.canvas : this.canvas.upperCanvas;
     editor.ctx.beginPath();
-    if (stroke) {
+    if (type === 'stroke') {
       editor.ctx.strokeRect(this.x, this.y, this.width, this.height);
       editor.ctx.moveTo(this.x + this.width / 2, this.y);
       editor.ctx.lineTo(this.x + this.width / 2, this.y - this.element.rotateDistY);
       editor.ctx.stroke();
-    } else {
+    } else if (type === 'resizer') {
       editor.ctx.fillRect(this.startX, this.startY, this.width, this.height);
     }
   }
 
-  select(element, tool) {
+  rotate(editor) {
+    const element = this.element;
+    editor.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const translationPointX = element.startX + element.width / 2;
+    const translationPointY = element.startY + element.height / 2;
+    editor.ctx.translate(translationPointX, translationPointY);
+    const rotation = element.rotation;
+    editor.ctx.rotate(rotation);
+    console.log(`rotation: ${rotation}`);
+    editor.ctx.translate(-translationPointX, -translationPointY);
+  }
+
+  select(element, tool, canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     this.element = element;
     this.element.selected = true;
     this.editor.canvasUpdate(2, false);
+    editor.ctx.save();
     this.drawResizers(tool);
+    //this.rotate(editor);
     this.editor.canvasUpdate(3, true);
+    editor.ctx.restore();
     this.element.holder = this;
     this.editor.selection.push(element);
   }
@@ -188,7 +214,6 @@ export default class Hold extends Element {
     mouse.deltaX = e.movementX;
     mouse.deltaY = e.movementY;
     this.element.element.resize(mouse, this.affect);
-    //this.editor.canvasUpdate(2, true);
   }
 
   moveElement(mouse, e) {
@@ -254,16 +279,19 @@ export default class Hold extends Element {
       positionY: relativeMousePosition.y,
     };
     let resizerElement;
+    let rotationAngle;
     tool.editor.elements.forEach((element) => {
       if (element.holder !== null) {
         if (element.name !== 'hold' && element.holder.dragging) {
           element.holder.moveElement(mouse, e, tool);
         } else if (element.resizing) {
+          rotationAngle = element.rotation;
           element.resize(mouse, e, tool);
           resizerElement = element;
         }
       }
     });
+    let rotation;
     tool.editor.selection.forEach((element) => {
       if (element.holder.dragging || element.holder.resizing) {
         const dragged = element.holder.dragging;

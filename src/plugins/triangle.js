@@ -46,13 +46,14 @@ export default class Triangle extends Element {
   }
 
   draw(canvas = true) {
-    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    const editor = super.draw(canvas);
     editor.ctx.beginPath();
     editor.ctx.moveTo(this.headPoint.x, this.headPoint.y);
     editor.ctx.lineTo(this.leftPoint.x, this.leftPoint.y);
     editor.ctx.lineTo(this.rightPoint.x, this.rightPoint.y);
     editor.ctx.lineTo(this.headPoint.x, this.headPoint.y);
     editor.ctx.stroke();
+    editor.ctx.restore();
   }
 
   resize(mouseResize, affecter) {
@@ -64,10 +65,12 @@ export default class Triangle extends Element {
           this.leftPoint.x += mouseResize.deltaX;
           this.width -= mouseResize.deltaX;
           this.headPoint.x -= this.width / 2 - oldWidth / 2;
+          this.startX += mouseResize.deltaX;
           this.resizer.x += mouseResize.deltaX;
           break;
         case 2:
           this.headPoint.y += mouseResize.deltaY;
+          this.startY += mouseResize.deltaY;
           this.resizer.y += mouseResize.deltaY;
           this.height -= mouseResize.deltaY;
           break;
@@ -82,10 +85,18 @@ export default class Triangle extends Element {
           this.rightPoint.y += mouseResize.deltaY;
           this.height += mouseResize.deltaY;
           break;
+        case 5:
+          this.rotation = Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
+          ) - 180 * Math.PI / 180;
+          this.rotationChange = true;
+          break;
         default:
           console.log('no');
       }
-      console.log(`x: ${this.resizer.x} | y: ${this.resizer.y}`);
     });
   }
 

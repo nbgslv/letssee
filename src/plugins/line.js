@@ -8,11 +8,6 @@ const mouse = {
 };
 
 export default class Line extends Element {
-  constructor(name, properties, events, editor, element, style) {
-    super(name, properties, events, editor, element, style);
-    this.startX = element.startX;
-    this.startY = element.startY;
-  }
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
@@ -20,6 +15,48 @@ export default class Line extends Element {
     editor.ctx.moveTo(this.startX, this.startY);
     editor.ctx.lineTo(this.x, this.y);
     editor.ctx.stroke();
+  }
+
+  resize(mouseResize, affecter) {
+    affecter.forEach(((affect) => {
+      switch (affect) {
+        case 1:
+          this.width -= mouseResize.deltaX;
+          this.x += mouseResize.deltaX;
+          this.resizer.x += mouseResize.deltaX;
+          break;
+        case 2:
+          this.height -= mouseResize.deltaY;
+          this.startY += mouseResize.deltaY;
+          this.resizer.y += mouseResize.deltaY;
+          break;
+        case 3:
+          this.width += mouseResize.deltaX;
+          this.startX += mouseResize.deltaX;
+          break;
+        case 4:
+          this.height += mouseResize.deltaY;
+          this.y += mouseResize.deltaY;
+          break;
+        case 5:
+          this.rotation = Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
+          );
+          console.log(Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
+          ) * 180 / Math.PI);
+          this.rotationChange = true;
+          break;
+        default:
+          console.log('wrong affect parameter');
+      }
+    }));
   }
 
   static mouseDown(e, tool) {
@@ -60,8 +97,8 @@ export default class Line extends Element {
       width: Math.abs(mouse.x - mouse.startX),
       height: Math.abs(mouse.y - mouse.startY),
       resizer: {
-        x: mouse.x,
-        y: mouse.y,
+        x: mouse.startX < mouse.x ? mouse.startX : mouse.x,
+        y: mouse.startY < mouse.y ? mouse.startY : mouse.x,
       },
     };
     return new Line(

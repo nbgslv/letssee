@@ -12,62 +12,8 @@ const mouse = {
 export default class Rectangle extends Element {
   draw(canvas = true) {
     const editor = super.draw(canvas);
-    this.editor.canvas.canvas.ctx.save();
-    if (this.rotation !== 0 || this.rotationChange) {
-
-      this.editor.canvas.canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const translationPointX = this.startX + this.width / 2;
-      const translationPointY = this.startY + this.height / 2;
-      this.editor.canvas.canvas.ctx.translate(translationPointX, translationPointY);
-      this.rotate(this.rotation);
-      this.rotationChange = false;
-      this.editor.canvas.canvas.ctx.translate(-translationPointX, -translationPointY);
-    }
     editor.ctx.strokeRect(this.startX, this.startY, this.width, this.height);
     editor.ctx.restore();
-  }
-
-  rotate(rotateDegrees) {
-    if (rotateDegrees !== 0) {
-
-      this.editor.canvas.canvas.ctx.rotate(rotateDegrees);
-    }
-  }
-
-  resize(mouseResize, affecter) {
-    affecter.forEach(((affect) => {
-      switch (affect) {
-        case 1:
-          this.width -= mouseResize.deltaX;
-          this.startX += mouseResize.deltaX;
-          this.resizer.x += mouseResize.deltaX;
-          break;
-        case 2:
-          this.height -= mouseResize.deltaY;
-          this.startY += mouseResize.deltaY;
-          this.resizer.y += mouseResize.deltaY;
-          break;
-        case 3:
-          this.width += mouseResize.deltaX;
-          this.x += mouseResize.deltaX;
-          break;
-        case 4:
-          this.height += mouseResize.deltaY;
-          this.y += mouseResize.deltaY;
-          break;
-        case 5:
-          this.rotation += Element.calculateRotationDegrees(
-            mouseResize.x,
-            mouseResize.y,
-            mouseResize.x + mouseResize.deltaX,
-            mouseResize.y + mouseResize.deltaY,
-          );
-          this.rotationChange = true;
-          break;
-        default:
-          console.log('wrong affect parameter');
-      }
-    }));
   }
 
   static mouseDown(e, tool) {

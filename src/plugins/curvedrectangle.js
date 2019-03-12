@@ -25,11 +25,11 @@ export default class CurvedRectangle extends Element {
   }
 
   draw(canvas = true) {
+    const editor = super.draw(canvas);
     this.width = Math.abs(this.x - this.startX);
     this.height = Math.abs(this.y - this.startY);
     this.curveX = this.width <= this.curveXY * 2 ? Math.abs(this.width) / 2 : this.curveXY;
     this.curveY = this.height <= this.curveXY * 2 ? Math.abs(this.height) / 2 : this.curveXY;
-    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     let transformedStartX;
     let transformedStartY;
     let transformedX;
@@ -153,6 +153,7 @@ export default class CurvedRectangle extends Element {
       transformedY = this.startY;
     }
     editor.ctx.stroke();
+    editor.ctx.restore();
     this.startX = transformedStartX;
     this.startY = transformedStartY;
     this.x = transformedX;

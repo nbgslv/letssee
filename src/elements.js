@@ -1,5 +1,6 @@
 import Tool from './tools'
 
+
 export default class Element extends Tool {
   constructor(name, properties, events, editor, element, style, layer = 1) {
     // TODO elements file
@@ -30,7 +31,24 @@ export default class Element extends Tool {
   }
 
   draw(canvas = true) {
-    return canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    editor.ctx.save();
+    if (this.rotation !== 0 || this.rotationChange) {
+      this.rotate(editor);
+    }
+    return editor;
+  }
+
+  rotate(editor) {
+    editor.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const translationPointX = this.startX + this.width / 2;
+    const translationPointY = this.startY + this.height / 2;
+    editor.ctx.translate(translationPointX, translationPointY);
+    const rotation = this.rotation === 0 ? 0.01 : this.rotation - 90 * Math.PI / 180;
+    console.log(this.rotation);
+    editor.ctx.rotate(rotation);
+    this.rotationChange = false;
+    editor.ctx.translate(-translationPointX, -translationPointY);
   }
 
   resize(mouseResize, affecter) {
@@ -55,16 +73,19 @@ export default class Element extends Tool {
           this.y += mouseResize.deltaY;
           break;
         case 5:
-          this.editor.canvas.upperCanvas.ctx.translate(this.width / 2, this.height / 2);
-          this.editor.canvas.upperCanvas.ctx.rotate(
-            Element.calculateRotationDegrees(
-              mouseResize.x,
-              mouseResize.y,
-              mouseResize.x + mouseResize.deltaX,
-              mouseResize.y + mouseResize.deltaY,
-            ),
+          this.rotation = Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
           );
-          this.draw(false);
+          console.log(Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
+          ) * 180 / Math.PI);
+          this.rotationChange = true;
           break;
         default:
           console.log('wrong affect parameter');
@@ -87,11 +108,11 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    return (this.startX <= mousePositionX) && (this.startX + this.width >= mousePositionX)
-      && (this.startY <= mousePositionY) && (this.startY + this.height >= mousePositionY);
+    return (this.resizer.x <= mousePositionX) && (this.resizer.x + this.width >= mousePositionX)
+      && (this.resizer.y <= mousePositionY) && (this.resizer.y + this.height >= mousePositionY);
   }
 
-  static calculateRotationDegrees(x, y, x2, y2) {
-    return Math.atan2(x, y) - Math.atan2(x2, y2);
+  static calculateRotationDegrees(x, y, centerX, centerY) {
+    return Math.atan2(y - centerY, x - centerX);
   }
 }
