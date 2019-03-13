@@ -154,14 +154,10 @@ export default class Hold extends Element {
 
   rotate(editor) {
     const element = this.element;
-    editor.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const translationPointX = element.startX + element.width / 2;
-    const translationPointY = element.startY + element.height / 2;
-    editor.ctx.translate(translationPointX, translationPointY);
-    const rotation = element.rotation;
-    editor.ctx.rotate(rotation);
-    console.log(`rotation: ${rotation}`);
-    editor.ctx.translate(-translationPointX, -translationPointY);
+    const tool = {
+
+    }
+    this.drawResizers({this.name, this.properties, this.events});
   }
 
   select(element, tool, canvas = true) {
@@ -171,7 +167,7 @@ export default class Hold extends Element {
     this.editor.canvasUpdate(2, false);
     editor.ctx.save();
     this.drawResizers(tool);
-    //this.rotate(editor);
+    this.rotate(editor);
     this.editor.canvasUpdate(3, true);
     editor.ctx.restore();
     this.element.holder = this;
