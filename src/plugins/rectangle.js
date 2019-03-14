@@ -24,8 +24,6 @@ export default class Rectangle extends Element {
     const rotation = this.rotation === 0 ? 0.01 : this.rotation - 90 * Math.PI / 180;
     console.log(this.rotation);
     editor.ctx.rotate(rotation);
-    this.holder.rotation = this.rotation;
-    this.holder.rotate(editor);
     this.rotationChange = false;
     editor.ctx.translate(-translationPointX, -translationPointY);
     /*
