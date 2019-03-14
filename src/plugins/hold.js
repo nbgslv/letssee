@@ -20,84 +20,176 @@ export default class Hold extends Element {
     this.id = Math.random();
   }
 
-  drawResizers(tool) {
+  get resizers() {
     const resizerWidth = 10;
     const resizerHeight = 10;
     const strokeDistX = 10;
     const strokeDistY = 10;
     const rotateDistY = 25;
-    const resizers = [];
     const element = this.element;
     let resizer;
-    resizer = {
-      x: element.resizer.x - strokeDistX - resizerWidth / 2,
-      y: element.resizer.y - strokeDistY - resizerHeight / 2,
-      affect: [1, 2],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x + element.width / 2 - resizerWidth / 2,
-      y: element.resizer.y - strokeDistY - resizerHeight / 2,
-      affect: [2],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x + element.width + strokeDistX - resizerWidth / 2,
-      y: element.resizer.y - strokeDistY - resizerHeight / 2,
-      affect: [2, 3],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x + element.width + strokeDistX - resizerWidth / 2,
-      y: element.resizer.y + element.height / 2 - resizerHeight / 2,
-      affect: [3],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x + element.width + strokeDistX - resizerWidth / 2,
-      y: element.resizer.y + element.height + strokeDistY - resizerHeight / 2,
-      affect: [3, 4],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x + element.width / 2 - resizerWidth / 2,
-      y: element.resizer.y + element.height + strokeDistY - resizerHeight / 2,
-      affect: [4],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x - strokeDistX - resizerWidth / 2,
-      y: element.resizer.y + element.height + strokeDistY - resizerHeight / 2,
-      affect: [4, 1],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x - strokeDistX - resizerWidth / 2,
-      y: element.resizer.y + element.height / 2 - resizerHeight / 2,
-      affect: [1],
-    };
-    resizers.push(resizer);
-    resizer = {
-      x: element.resizer.x + element.width / 2 - resizerWidth / 2,
-      y: element.resizer.y - rotateDistY - resizerHeight / 2,
-      affect: [5],
-    };
-    resizers.push(resizer);
-    for (let i = 1; i <= resizers.length; i += 1) {
-      const resize = resizers[i - 1];
-      const dimensions = {
-        startX: resize.x,
-        startY: resize.y,
-        x: resize.x + this.resizerWidth,
-        y: resize.y + this.resizerHeight,
+    const resizers = [
+      {
+        startX: element.resizer.x - strokeDistX - resizerWidth / 2,
+        startY: element.resizer.y - strokeDistY - resizerHeight / 2,
+        x: (element.resizer.x - strokeDistX - resizerWidth / 2) + this.resizerWidth,
+        y: (element.resizer.y - strokeDistY - resizerHeight / 2) + this.resizerHeight,
         width: this.resizerWidth,
         height: this.resizerHeight,
-        element: this.element,
-        resizer: {
-          x: resize.x,
-          y: resize.y,
-        },
-      };
+        affect: [1, 2],
+        type: 'resizer',
+        selfId: 1,
+      },
+      {
+        startX: element.resizer.x + element.width / 2 - resizerWidth / 2,
+        startY: element.resizer.y - strokeDistY - resizerHeight / 2,
+        x: (element.resizer.x + element.width / 2 - resizerWidth / 2) + this.resizerWidth,
+        y: (element.resizer.y - strokeDistY - resizerHeight / 2) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [2],
+        type: 'resizer',
+        selfId: 2,
+      },
+      {
+        startX: element.resizer.x + element.width + strokeDistX - resizerWidth / 2,
+        startY: element.resizer.y - strokeDistY - resizerHeight / 2,
+        x: (element.resizer.x + element.width + strokeDistX - resizerWidth / 2) + this.resizerWidth,
+        y: (element.resizer.y - strokeDistY - resizerHeight / 2) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [2, 3],
+        type: 'resizer',
+        selfId: 3,
+      },
+      {
+        startX: element.resizer.x + element.width + strokeDistX - resizerWidth / 2,
+        startY: element.resizer.y + element.height / 2 - resizerHeight / 2,
+        x: (element.resizer.x + element.width + strokeDistX - resizerWidth / 2) + this.resizerWidth,
+        y: (element.resizer.y + element.height / 2 - resizerHeight / 2) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [3],
+        type: 'resizer',
+        selfId: 4,
+      },
+      {
+        startX: element.resizer.x + element.width + strokeDistX - resizerWidth / 2,
+        startY: element.resizer.y + element.height + strokeDistY - resizerHeight / 2,
+        x: (element.resizer.x + element.width + strokeDistX - resizerWidth / 2) + this.resizerWidth,
+        y: (
+          element.resizer.y + element.height + strokeDistY - resizerHeight / 2
+        ) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [3, 4],
+        type: 'resizer',
+        selfId: 5,
+      },
+      {
+        startX: element.resizer.x + element.width / 2 - resizerWidth / 2,
+        startY: element.resizer.y + element.height + strokeDistY - resizerHeight / 2,
+        x: (element.resizer.x + element.width / 2 - resizerWidth / 2) + this.resizerWidth,
+        y: (
+          element.resizer.y + element.height + strokeDistY - resizerHeight / 2
+        ) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [4],
+        type: 'resizer',
+        selfId: 6,
+      },
+      {
+        startX: element.resizer.x - strokeDistX - resizerWidth / 2,
+        startY: element.resizer.y + element.height + strokeDistY - resizerHeight / 2,
+        x: (element.resizer.x - strokeDistX - resizerWidth / 2) + this.resizerWidth,
+        y: (
+          element.resizer.y + element.height + strokeDistY - resizerHeight / 2
+        ) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [4, 1],
+        type: 'resizer',
+        selfId: 7,
+      },
+      {
+        startX: element.resizer.x - strokeDistX - resizerWidth / 2,
+        startY: element.resizer.y + element.height / 2 - resizerHeight / 2,
+        x: (element.resizer.x - strokeDistX - resizerWidth / 2) + this.resizerWidth,
+        y: (element.resizer.y + element.height / 2 - resizerHeight / 2) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [1],
+        type: 'resizer',
+        selfId: 8,
+      },
+      {
+        startX: element.resizer.x + element.width / 2 - resizerWidth / 2,
+        startY: element.resizer.y - rotateDistY - resizerHeight / 2,
+        x: (element.resizer.x + element.width / 2 - resizerWidth / 2) + this.resizerWidth,
+        y: (element.resizer.y - rotateDistY - resizerHeight / 2) + this.resizerHeight,
+        width: this.resizerWidth,
+        height: this.resizerHeight,
+        affect: [5],
+        type: 'rotator',
+        selfId: 9,
+      },
+    ];
+    const lines = [
+      {
+        startX: resizers[0].x,
+        startY: resizers[0].y - this.resizerHeight / 2,
+        x: resizers[1].startX,
+        y: resizers[1].startY - this.resizerHeight / 2,
+        type: 'line',
+        selfId: 1,
+      },
+      {
+        startX: resizers[1].x,
+        startY: resizers[1].y - this.resizerHeight / 2,
+        x: resizers[2].startX,
+        y: resizers[2].startY - this.resizerHeight / 2,
+        type: 'line',
+        selfId: 2,
+      },
+      {
+        startX: resizers[2].x - this.resizerWidth / 2,
+        startY: resizers[2].y,
+        x: resizers[3].startX + this.resizerWidth / 2,
+        y: resizers[3].startY,
+        type: 'line',
+        selfId: 3,
+      },
+      {
+        startX: resizers[3].x - this.resizerWidth / 2,
+        startY: resizers[3].y,
+        x: resizers[4].startX + this.resizerWidth / 2,
+        y: resizers[4].startY,
+        type: 'line',
+        selfId: 4,
+      },
+      {
+        startX: resizers[4].startX,
+        startY: resizers[4].startY + this.resizerHeight / 2,
+        x: resizers[5].x,
+        y: resizers[5].y - this.resizerHeight / 2,
+        type: 'line',
+        selfId: 5,
+      },
+      {
+        startX: resizers[5].startX,
+        startY: resizers[5].startY + this.resizerHeight / 2,
+        x: resizers[6].x,
+        y: resizers[6].y - this.resizerHeight / 2,
+        type: 'line',
+        selfId: 6,
+      },
+      {
+        startX: resizers[6].startX + this.resizerWidth / 2,
+        startY: resizers[6].startY,
+        x: resizers
+      }
+    ];
       const box = new Hold(
         tool.name,
         tool.properties,
@@ -153,11 +245,6 @@ export default class Hold extends Element {
   }
 
   rotate(editor) {
-    const element = this.element;
-    const tool = {
-
-    }
-    this.drawResizers({this.name, this.properties, this.events});
   }
 
   select(element, tool, canvas = true) {
