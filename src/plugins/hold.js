@@ -3,7 +3,7 @@ import Element from '../elements';
 let selection;
 
 export default class Hold extends Element {
-  constructor(name, properties, events, editor, element = null, type, affect = null, holder = null, resizerId = 0, style) {
+  constructor(name, properties, events, editor, element = null, style) {
     super(name, properties, events, editor, element, style);
     this.resizerWidth = 10;
     this.resizerHeight = 10;
@@ -13,13 +13,10 @@ export default class Hold extends Element {
     this.element = element;
     this.resizers = [];
     this.lines = [];
-    this.type = type;
-    this.affect = affect;
-    this.holder = holder;
+    this.activeResizer = -1;
     this.rotated = false;
     this.dragging = false;
     this.resizing = false;
-    this.resizerId = resizerId;
     this.id = Math.random();
   }
 
@@ -144,7 +141,7 @@ export default class Hold extends Element {
         startX: resizers[0].x,
         startY: resizers[0].y - resizerHeight / 2,
         x: resizers[1].startX,
-        y: resizers[1].startY - resizerHeight / 2,
+        y: resizers[1].startY + resizerHeight / 2,
         type: 'line',
         selfId: 1,
       },
@@ -152,7 +149,7 @@ export default class Hold extends Element {
         startX: resizers[1].x,
         startY: resizers[1].y - resizerHeight / 2,
         x: resizers[2].startX,
-        y: resizers[2].startY - resizerHeight / 2,
+        y: resizers[2].startY + resizerHeight / 2,
         type: 'line',
         selfId: 2,
       },
@@ -199,7 +196,7 @@ export default class Hold extends Element {
       {
         startX: resizers[7].startX + resizerWidth / 2,
         startY: resizers[7].startY,
-        x: resizers[0].x + resizerWidth / 2,
+        x: resizers[0].x - resizerWidth / 2,
         y: resizers[0].y,
         type: 'line',
         selfId: 8,
@@ -209,6 +206,8 @@ export default class Hold extends Element {
         startY: resizers[1].startY,
         x: resizers[8].x - resizerWidth / 2,
         y: resizers[8].y,
+        type: 'line',
+        selfId: 9,
       },
     ];
     return {
@@ -220,7 +219,7 @@ export default class Hold extends Element {
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.canvas.upperCanvas;
     const { resizers, lines } = this.resizersArrays;
-    for (let i = 0; i < resizers.length; i += 1){
+    for (let i = 0; i < resizers.length; i += 1) {
       editor.ctx.fillRect(
         resizers[i].startX,
         resizers[i].startY,
@@ -228,7 +227,7 @@ export default class Hold extends Element {
         resizers[i].height,
       );
     }
-    for (let j = 0; j < lines.length; j += 1){
+    for (let j = 0; j < lines.length; j += 1) {
       editor.ctx.moveTo(lines[j].startX, lines[j].startY);
       editor.ctx.lineTo(lines[j].x, lines[j].y);
       editor.ctx.stroke();
@@ -238,32 +237,17 @@ export default class Hold extends Element {
   }
 
   select(element, tool, canvas = true) {
-    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    //const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     this.element = element;
     this.element.selected = true;
     this.editor.canvasUpdate(2, false);
-    editor.ctx.save();
-    this.drawResizers(tool);
-    this.rotate(editor);
-    this.editor.canvasUpdate(3, true);
-    editor.ctx.restore();
+    //this.rotate(editor);
+    this.draw(true);
     this.element.holder = this;
     this.editor.selection.push(element);
   }
 
   deselect() {
-    for (let i = this.editor.elements.length - 1; i >= 0; i -= 1) {
-      let restart = false;
-      const element = this.editor.elements[i];
-      for (let j = 0; j < this.resizers.length; j += 1) {
-        const resizer = this.resizers[j];
-        if (element.name === 'hold' && element.id === resizer.id) {
-          this.editor.elements.splice(i, 1);
-          restart = true;
-        }
-      }
-      if (restart) i = this.editor.elements.length;
-    }
     for (let k = 0; k < this.editor.selection.length; k += 1) {
       const element = this.editor.selection[k];
       if (this.element.id === element.id) {
@@ -280,13 +264,13 @@ export default class Hold extends Element {
     this.element = undefined;
   }
 
-  resize(mouse, e, tool) {
+  resize(mouse, e, tool, activeResizer) {
     const relativeMousePosition = tool.relativeMousePosition(e);
     mouse.x = relativeMousePosition.x;
     mouse.y = relativeMousePosition.y;
     mouse.deltaX = e.movementX;
     mouse.deltaY = e.movementY;
-    this.element.element.resize(mouse, this.affect);
+    this.element.resize(mouse, this.resizers[activeResizer].affect);
   }
 
   moveElement(mouse, e) {
@@ -294,6 +278,18 @@ export default class Hold extends Element {
     mouse.deltaY = e.movementY;
     this.element.move(mouse);
     this.editor.canvasUpdate(2, true);
+  }
+
+  mouseInResizer(mousePositionX, mousePositionY) {
+    for (let i = 0; i < this.resizers.length; i += 1) {
+      if ((this.resizers[i].startX <= mousePositionX)
+      && (this.resizers[i].startX + this.resizers[i].width >= mousePositionX)
+      && (this.resizers[i].startY <= mousePositionY)
+      && (this.resizers[i].startY + this.resizers[i].height >= mousePositionY)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   static deselectAll(tool) {
@@ -318,12 +314,14 @@ export default class Hold extends Element {
             select.holder.dragging = true;
           });
           selected = true;
+          /*
         } else if (element.name === 'hold') {
           tool.editor.selection.forEach((select) => {
             select.holder.resizing = true;
           });
           element.resizing = true;
           selected = true;
+          */
         } else {
           if (!(e.ctrlKey) && element.editor.selection.length > 0) this.deselectAll(tool);
           element.holder = new Hold(
@@ -336,7 +334,15 @@ export default class Hold extends Element {
           );
           element.holder.select(element, tool);
           selected = true;
+          element.editor.canvasUpdate(2, true);
         }
+      } else if (element.holder.mouseInResizer(mouse.positionX, mouse.positionY) >= 0) {
+        element.holder.activeResizer = element.holder.mouseInResizer(
+          mouse.positionX, mouse.positionY,
+        );
+        console.log(element.holder.activeResizer);
+        element.holder.resizing = true;
+        selected = true;
       }
     });
     if (!selected) {
@@ -352,19 +358,16 @@ export default class Hold extends Element {
       positionY: relativeMousePosition.y,
     };
     let resizerElement;
-    let rotationAngle;
     tool.editor.elements.forEach((element) => {
       if (element.holder !== null) {
         if (element.name !== 'hold' && element.holder.dragging) {
           element.holder.moveElement(mouse, e, tool);
-        } else if (element.resizing) {
-          rotationAngle = element.rotation;
-          element.resize(mouse, e, tool);
+        } else if (element.holder.resizing && element.holder.activeResizer >= 0) {
+          element.holder.resize(mouse, e, tool, element.holder.activeResizer);
           resizerElement = element;
         }
       }
     });
-    let rotation;
     tool.editor.selection.forEach((element) => {
       if (element.holder.dragging || element.holder.resizing) {
         const dragged = element.holder.dragging;
@@ -405,12 +408,7 @@ export default class Hold extends Element {
         if (element.name !== 'hold' && element.holder.dragging) {
           element.holder.moveElement(mouse, e, tool);
         } else if (element.holder.resizing) {
-          element.holder.resizers.forEach((resizer) => {
-            if (resizer.resizing) {
-              resizer.resize(mouse, e, tool);
-              resized = resizer;
-            }
-          });
+          element.holder.resize(mouse, e, tool, element.holder.activeResizer);
         }
         if (element.holder !== null) {
           element.holder.dragging = false;
