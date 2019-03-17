@@ -35,7 +35,6 @@ export default class Element extends Tool {
     editor.ctx.save();
     if (this.rotation !== 0 || this.rotationChange) {
       this.rotate(editor);
-      this.holder.rotate(editor);
     }
     return editor;
   }

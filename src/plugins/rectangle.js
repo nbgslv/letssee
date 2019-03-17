@@ -26,17 +26,6 @@ export default class Rectangle extends Element {
     editor.ctx.rotate(rotation);
     this.rotationChange = false;
     editor.ctx.translate(-translationPointX, -translationPointY);
-    /*
-    const updatedCoord = Rectangle.updatedCoord(
-      translationPointX,
-      translationPointY,
-      this.startX,
-      this.startY,
-      rotation * Math.PI / 180,
-    );
-    this.resizer.x = updatedCoord.newX;
-    this.resizer.y = updatedCoord.newY;
-    */
   }
 
   resize(mouseResize, affecter) {
@@ -133,23 +122,5 @@ export default class Rectangle extends Element {
       element,
       null,
     );
-  }
-
-  static updatedCoord(centerX, centerY, oldX, oldY, rotation) {
-    const diffX = oldX - centerX;
-    const diffY = oldY - centerY;
-    const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-
-    // find angle from pivot to corner
-    rotation += Math.atan2(diffY, diffX);
-
-    // get new x and y and round it off to integer
-    const newX = centerX + distance * Math.cos(rotation);
-    const newY = centerY + distance * Math.sin(rotation);
-
-    return {
-      newX,
-      newY,
-    };
   }
 }
