@@ -7,14 +7,26 @@ export default class Element extends Tool {
     // TODO figure out how to implement different types of elements
     super(name, properties, events, editor);
     this.id = Math.random();
+    this.upperCanvas = false;
     this.startX = element.startX;
     this.startY = element.startY;
     this.x = element.x;
     this.y = element.y;
     this.width = element.width;
     this.height = element.height;
-    this.rotation = 0;
-    this.rotationChange = false;
+    this.mouse = {
+      positionX: 0,
+      positionY: 0,
+      ctrlKey: false,
+      shiftKey: false,
+    };
+    this.transformation = {
+      activeAffecter: -1,
+      transform: false,
+      dragging: false,
+      transformMatrix: [],
+      rotationAngle: 0,
+    };
     this.style = style;
     this.selected = false;
     this.layer = layer;
@@ -43,6 +55,9 @@ export default class Element extends Tool {
     editor.ctx.setTransform(1, 0, 0, 1, 0, 0);
     const translationPointX = this.startX + this.width / 2;
     const translationPointY = this.startY + this.height / 2;
+    if (this.holder !== null) {
+      this.holder.draw();
+    }
     editor.ctx.translate(translationPointX, translationPointY);
     const rotation = this.rotation === 0 ? 0.01 : this.rotation - 90 * Math.PI / 180;
     console.log(this.rotation);
@@ -93,6 +108,29 @@ export default class Element extends Tool {
     }));
   }
 
+  transform() {
+    if (this.transformation.dragging) {
+      this.move();
+    } else {
+      this.transformation.transform = true;
+      const ctx = this.upperCanvas
+        ? this.editor.canvas.upperCanvas.ctx
+        : this.editor.canvas.canvas.ctx;
+      ctx.save();
+      ctx.setTransform(this.transformation.transformMatrix);
+      if (this.transformation.rotationAngle > 0) {
+        ctx.save();
+        this.translateToCenter();
+        ctx.rotate(this.transformation.rotationAngle);
+        this.unTranslate();
+        ctx.restore();
+      }
+      if (this.holder) this.holder.draw();
+      this.draw();
+      ctx.restore();
+    }
+  }
+
   move(mouseMove) {
     this.startX += mouseMove.deltaX;
     this.startY += mouseMove.deltaY;
@@ -110,6 +148,14 @@ export default class Element extends Tool {
   mouseInElement(mousePositionX, mousePositionY) {
     return (this.resizer.x <= mousePositionX) && (this.resizer.x + this.width >= mousePositionX)
       && (this.resizer.y <= mousePositionY) && (this.resizer.y + this.height >= mousePositionY);
+  }
+
+  static relativeMousePosition(e) {
+    const rect = this.editor.boundingRect;
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
   }
 
   static calculateRotationDegrees(x, y, centerX, centerY) {

@@ -144,14 +144,13 @@ export default class Editor {
     return this.canvas.canvas.getBoundingClientRect();
   }
 
-  canvasUpdate(
-    canvas,
-    draw,
-    x = 0,
-    y = 0,
-    width = this.canvas.canvas.width,
-    height = this.canvas.canvas.height,
-  ) {
+  clearCanvas(canvas, dimensions) {
+    const {
+      x,
+      y,
+      width,
+      height,
+    } = dimensions;
     switch (canvas) {
       case 0:
         this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
@@ -167,13 +166,17 @@ export default class Editor {
         break;
       default:
         console.log('canvas parameter is not set properly. Try 0, 1, 2');
-        return;
     }
-    if (draw) {
-      // Layers.sortByLayers();
-      this.elements.forEach((element) => {
+  }
+
+  renderCanvas() {
+    // Layers.sortByLayers();
+    this.elements.forEach((element) => {
+      if (element.transformation.transform) {
+        element.transform();
+      } else {
         element.draw();
-      });
-    }
+      }
+    });
   }
 }

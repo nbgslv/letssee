@@ -307,12 +307,12 @@ export default class Hold extends Element {
     }
   }
 
-  static mouseDown(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    const mouse = {
-      positionX: relativeMousePosition.x,
-      positionY: relativeMousePosition.y,
-    };
+  mouseDown(e) {
+    const relativeMousePosition = Element.relativeMousePosition(e);
+    [this.element.positionX, this.element.positionY] = [
+      relativeMousePosition.x,
+      relativeMousePosition.y,
+    ];
     let selected = false;
     tool.editor.elements.forEach((element) => {
       if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
