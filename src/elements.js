@@ -146,8 +146,11 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    return (this.resizer.x <= mousePositionX) && (this.resizer.x + this.width >= mousePositionX)
-      && (this.resizer.y <= mousePositionY) && (this.resizer.y + this.height >= mousePositionY);
+    if ((this.resizer.x <= mousePositionX) && (this.resizer.x + this.width >= mousePositionX)
+      && (this.resizer.y <= mousePositionY) && (this.resizer.y + this.height >= mousePositionY)) {
+      return this;
+    }
+    return false;
   }
 
   static relativeMousePosition(e) {

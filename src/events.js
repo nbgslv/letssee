@@ -1,3 +1,68 @@
+class Events {
+  constructor(editor) {
+    this.editor = editor;
+    this.dispatcher = new Dispatcher();
+  }
+
+  initCanvasEvent(e) {
+    this.canvasEvent = {
+      ctrlKey: e.ctrlKey,
+      shiftKey: e.shiftKey,
+      mouse: {
+        pageX: e.pageX,
+        pageY: e.pageY,
+        clientX: e.clientX,
+        clientY: e.clientY,
+      },
+      position: {
+        inCanvas: false,
+        inElement: false,
+        resizer: -1,
+      },
+    };
+  }
+
+  onMouseDown(e) {
+    const event = this.initCanvasEvent(e);
+    const {
+      canvasPositionLeft,
+      canvasPositionTop,
+    } = this.editor.position;
+    const canvasWidth = this.editor.width;
+    const canvasHeight = this.editor.height;
+
+    if (
+      event.mouse.pageX >= canvasPositionLeft
+      && event.mouse.pageX <= canvasPositionLeft + canvasWidth
+      && event.mouse.pageY >= canvasPositionTop
+      && event.mouse.pageY <= canvasPositionTop + canvasHeight
+    ) {
+      event.mouse.x = this.editor.getBo
+    }
+
+    this.editor.elements.forEach((element) => {
+      if (element.mouseInElement(ev))
+    })
+    if (element) {
+      if (this.editor.hasSelection) {
+        this.editor.selection.forEach((selectionElement) => {
+          selectionElement.onMouseDown();
+        });
+      } else {
+        element.onMouseDown(this);
+      }
+    }
+  }
+
+  get relativeMousePosition() {
+    const rect = this.editor.boundingRect;
+    return {
+      x: this.canvasEvent.mouse.clientX - rect.left,
+      y: this.canvasEvent.mouse.clientY - rect.top,
+    };
+  }
+}
+
 class DispatcherEvent {
   constructor(eventName) {
     this.eventName = eventName;

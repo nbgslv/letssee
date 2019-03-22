@@ -3,6 +3,10 @@ export default class Editor {
     this.editorContainerID = containerID;
     this.height = height;
     this.width = width;
+    this.position = {
+      left: 0,
+      top: 0,
+    };
     this.options = options;
     this.elements = [];
     this.tools = tools;
@@ -32,6 +36,8 @@ export default class Editor {
     const canvas = {};
     canvas.container = document.getElementById(this.editorContainerID);
     canvas.canvas = document.createElement('canvas');
+
+    this.position = canvas.canvas.getBoundingClientRect();
 
     // rowA and rowB creation
     canvas.rowA = document.createElement('div');
@@ -140,17 +146,29 @@ export default class Editor {
     this.canvas.upperCanvas.addEventListener('mouseup', e => this.activeTool.toolEventHandler(e));
   }
 
+  initEvents() {
+    this.events = new Events();
+  }
+
   get boundingRect() {
     return this.canvas.canvas.getBoundingClientRect();
   }
 
-  clearCanvas(canvas, dimensions) {
-    const {
-      x,
-      y,
-      width,
-      height,
-    } = dimensions;
+  get hasSelection() {
+    return this.selection.length > 1;
+  }
+
+  renderAll() {
+    this.clearCanvas(2);
+    this.renderCanvas();
+  }
+
+  clearCanvas(canvas, {
+    x = 0,
+    y = 0,
+    width = this.width,
+    height = this.height,
+  } = null) {
     switch (canvas) {
       case 0:
         this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);
