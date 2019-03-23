@@ -1,3 +1,5 @@
+import Events from './events';
+
 export default class Editor {
   constructor(containerID, height, width, options = {}, tools) {
     this.editorContainerID = containerID;
@@ -141,7 +143,8 @@ export default class Editor {
     });
     // canvas event listeners for default tool
 
-    this.canvas.upperCanvas.addEventListener('mousedown', e => this.activeTool.toolEventHandler(e));
+    const events = new Events(this);
+    this.canvas.upperCanvas.addEventListener('mousedown', e => events.onMouseDown(e));
     this.canvas.upperCanvas.addEventListener('mousemove', e => this.activeTool.toolEventHandler(e));
     this.canvas.upperCanvas.addEventListener('mouseup', e => this.activeTool.toolEventHandler(e));
   }

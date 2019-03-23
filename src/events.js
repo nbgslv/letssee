@@ -1,11 +1,12 @@
 class Events {
   constructor(editor) {
     this.editor = editor;
-    this.dispatcher = new Dispatcher();
   }
 
   initCanvasEvent(e) {
     this.canvasEvent = {
+      element: null,
+      selection: false,
       ctrlKey: e.ctrlKey,
       shiftKey: e.shiftKey,
       mouse: {
@@ -13,6 +14,8 @@ class Events {
         pageY: e.pageY,
         clientX: e.clientX,
         clientY: e.clientY,
+        canvasX: null,
+        canvasY: null,
       },
       position: {
         inCanvas: false,
@@ -23,35 +26,53 @@ class Events {
   }
 
   onMouseDown(e) {
+    e.preventDefault();
+    e.stopPropagation();
     const event = this.initCanvasEvent(e);
-    const {
-      canvasPositionLeft,
-      canvasPositionTop,
-    } = this.editor.position;
-    const canvasWidth = this.editor.width;
-    const canvasHeight = this.editor.height;
-
     if (
       event.mouse.pageX >= canvasPositionLeft
       && event.mouse.pageX <= canvasPositionLeft + canvasWidth
       && event.mouse.pageY >= canvasPositionTop
       && event.mouse.pageY <= canvasPositionTop + canvasHeight
     ) {
-      event.mouse.x = this.editor.getBo
+      const relativeMousePosition = this.relativeMousePosition();
+      this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
+      this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
+      this.editor.elements.forEach((element) => {
+        const chosenElement = element.mouseInElement(
+          this.canvasEvent.mouse.canvasX,
+          this.canvasEvent.mouse.canvasY,
+        );
+        if (chosenElement) {
+          this.canvasEvent.element = chosenElement;
+          this.handleChooseElement();
+        } else {
+          this.handleCanvasMouseDown();
+        }
+      });
     }
+  }
 
-    this.editor.elements.forEach((element) => {
-      if (element.mouseInElement(ev))
-    })
-    if (element) {
-      if (this.editor.hasSelection) {
-        this.editor.selection.forEach((selectionElement) => {
-          selectionElement.onMouseDown();
-        });
-      } else {
-        element.onMouseDown(this);
+  get mousePosition() {
+    const {
+      canvasPositionLeft,
+      canvasPositionTop,
+    } = this.editor.position;
+    const canvasWidth = this.editor.width;
+    const canvasHeight = this.editor.height;
+    if (
+      event.mouse.pageX >= canvasPositionLeft
+      && event.mouse.pageX <= canvasPositionLeft + canvasWidth
+      && event.mouse.pageY >= canvasPositionTop
+      && event.mouse.pageY <= canvasPositionTop + canvasHeight
+    ) {
+      const relativeMousePosition = this.relativeMousePosition();
+      this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
+      this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
+      this.editor.elements.forEach((element) => {
+
       }
-    }
+
   }
 
   get relativeMousePosition() {
@@ -61,8 +82,28 @@ class Events {
       y: this.canvasEvent.mouse.clientY - rect.top,
     };
   }
+
+  handleCanvasMouseDown() {
+    this.editor.deselectAll();
+    this.editor.activeTool.createElement();
+  }
+
+  handleChooseElement() {
+    // if element not selected, select it
+    if (!this.canvasEvent.element.holder) {
+      this.canvasEvent.element.select();
+      if (
+        this.editor.selection.length === 1
+        && !this.canvasEvent.ctrlKey
+      ) this.editor.deselectAll();
+    } else {
+      this.canvasEvent.element.select();
+      this.canvasEvent.element.drag();
+    }
+  }
 }
 
+/*
 class DispatcherEvent {
   constructor(eventName) {
     this.eventName = eventName;
@@ -133,3 +174,4 @@ class Dispatcher {
     }
   }
 }
+*/
