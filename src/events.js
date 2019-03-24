@@ -25,31 +25,62 @@ class Events {
     };
   }
 
-  onMouseDown(e) {
+  mainEventHandler(e) {
     e.preventDefault();
     e.stopPropagation();
-    const event = this.initCanvasEvent(e);
-    if (
-      event.mouse.pageX >= canvasPositionLeft
-      && event.mouse.pageX <= canvasPositionLeft + canvasWidth
-      && event.mouse.pageY >= canvasPositionTop
-      && event.mouse.pageY <= canvasPositionTop + canvasHeight
-    ) {
-      const relativeMousePosition = this.relativeMousePosition();
-      this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
-      this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
-      this.editor.elements.forEach((element) => {
-        const chosenElement = element.mouseInElement(
-          this.canvasEvent.mouse.canvasX,
-          this.canvasEvent.mouse.canvasY,
-        );
-        if (chosenElement) {
-          this.canvasEvent.element = chosenElement;
-          this.handleChooseElement();
-        } else {
-          this.handleCanvasMouseDown();
-        }
-      });
+    this.initCanvasEvent(e);
+    this.updateMousePosition();
+    switch (e.type) {
+      case 'mousedown':
+        this.onMouseDown();
+        break;
+      case 'mousemove':
+        this.onMouseMove();
+        break;
+      case 'mouseup':
+        this.onMouseUp();
+        break;
+      case 'click':
+        this.onClick();
+        break;
+      default:
+        throw new Error(`Events module wasn't set to handle with this event type: ${e.type}`);
+    }
+  }
+
+  onMouseDown() {
+    if (this.canvasEvent.position.inElement) {
+      this.handleElementMouseDown();
+    } else if (this.canvasEvent.position.inCanvas) {
+      this.handleCanvasMouseDown();
+    }
+  }
+
+  onMouseMove() {
+    if (this.canvasEvent.element) {
+      this.handleSelectionMouseMove();
+    } else if (this.canvasEvent.position.inCanvas) {
+      this.handleDrawMouseMove();
+    }
+  }
+
+  onMouseUp() {
+    // end every action
+    // see if deselect needed
+  }
+
+  updateMousePosition() {
+    const mousePosition = this.mousePosition;
+    if (mousePosition) {
+      this.canvasEvent.position.inCanvas = true;
+      this.canvasEvent.position.inElement = true;
+      this.canvasEvent.element = mousePosition;
+    } else if (!mousePosition) {
+      this.canvasEvent.position.inCanvas = true;
+      this.canvasEvent.position.inElement = false;
+    } else {
+      this.canvasEvent.position.inCanvas = false;
+      this.canvasEvent.position.inElement = false;
     }
   }
 
@@ -61,18 +92,25 @@ class Events {
     const canvasWidth = this.editor.width;
     const canvasHeight = this.editor.height;
     if (
-      event.mouse.pageX >= canvasPositionLeft
-      && event.mouse.pageX <= canvasPositionLeft + canvasWidth
-      && event.mouse.pageY >= canvasPositionTop
-      && event.mouse.pageY <= canvasPositionTop + canvasHeight
+      this.canvasEvent.mouse.pageX >= canvasPositionLeft
+      && this.canvasEvent.mouse.pageX <= canvasPositionLeft + canvasWidth
+      && this.canvasEvent.mouse.pageY >= canvasPositionTop
+      && this.canvasEvent.mouse.pageY <= canvasPositionTop + canvasHeight
     ) {
       const relativeMousePosition = this.relativeMousePosition();
       this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
       this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
       this.editor.elements.forEach((element) => {
-
-      }
-
+        if (
+          element.mouseInElement(
+            this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
+          )) {
+          return element;
+        }
+        return false;
+      });
+    }
+    return null;
   }
 
   get relativeMousePosition() {
@@ -83,12 +121,7 @@ class Events {
     };
   }
 
-  handleCanvasMouseDown() {
-    this.editor.deselectAll();
-    this.editor.activeTool.createElement();
-  }
-
-  handleChooseElement() {
+  handleElementMouseDown() {
     // if element not selected, select it
     if (!this.canvasEvent.element.holder) {
       this.canvasEvent.element.select();
@@ -100,6 +133,11 @@ class Events {
       this.canvasEvent.element.select();
       this.canvasEvent.element.drag();
     }
+  }
+
+  handleCanvasMouseDown() {
+    this.editor.deselectAll();
+    this.editor.activeTool.createElement();
   }
 }
 

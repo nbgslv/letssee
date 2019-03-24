@@ -1,6 +1,5 @@
 import Settings from './settings';
 import Editor from './editor';
-import Events from './events';
 import { defaultTools } from './letse.default.tools.config';
 
 try {

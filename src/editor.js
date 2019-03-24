@@ -144,9 +144,9 @@ export default class Editor {
     // canvas event listeners for default tool
 
     const events = new Events(this);
-    this.canvas.upperCanvas.addEventListener('mousedown', e => events.onMouseDown(e));
-    this.canvas.upperCanvas.addEventListener('mousemove', e => this.activeTool.toolEventHandler(e));
-    this.canvas.upperCanvas.addEventListener('mouseup', e => this.activeTool.toolEventHandler(e));
+    this.canvas.upperCanvas.addEventListener('mousedown', e => events.mainEventHandler(e));
+    this.canvas.upperCanvas.addEventListener('mousemove', e => events.mainEventHandler(e));
+    this.canvas.upperCanvas.addEventListener('mouseup', e => events.mainEventHandler(e));
   }
 
   initEvents() {
@@ -199,5 +199,13 @@ export default class Editor {
         element.draw();
       }
     });
+  }
+
+  deselectAll() {
+    for (let i = 0; i < this.selection.length; i += 1) {
+      const selected = this.selection[i];
+      selected.holder.deselect();
+      i = -1;
+    }
   }
 }

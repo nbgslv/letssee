@@ -1,7 +1,5 @@
 import Element from '../elements';
 
-let selection;
-
 export default class Hold extends Element {
   constructor(name, properties, events, editor, element = null, style) {
     super(name, properties, events, editor, element, style);
@@ -240,7 +238,7 @@ export default class Hold extends Element {
 
   select() {
     this.element.selected = true;
-    this.editor.canvasUpdate(2, false);
+    this.editor.renderAll();
     this.draw(true);
     this.editor.selection.push(this.element);
   }
@@ -253,7 +251,7 @@ export default class Hold extends Element {
         break;
       }
     }
-    this.editor.canvasUpdate(2, true);
+    this.editor.renderAll();
     this.resizers = [];
     this.dragging = false;
     this.resizing = false;
@@ -268,22 +266,24 @@ export default class Hold extends Element {
 
   resize(mouse, e, tool, activeResizer) {
     const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.x = relativeMousePosition.x;
-    mouse.y = relativeMousePosition.y;
-    mouse.deltaX = e.movementX;
-    mouse.deltaY = e.movementY;
+    const mousePosition = mouse;
+    mousePosition.x = relativeMousePosition.x;
+    mousePosition.y = relativeMousePosition.y;
+    mousePosition.deltaX = e.movementX;
+    mousePosition.deltaY = e.movementY;
     this.element.resize(mouse, this.resizers[activeResizer].affect);
-    this.editor.canvasUpdate(2, true);
+    this.editor.renderAll();
     this.draw();
   }
 
   moveElement(mouse, e) {
-    this.editor.canvasUpdate(2, false);
-    mouse.deltaX = e.movementX;
-    mouse.deltaY = e.movementY;
+    this.editor.clearCanvas(2);
+    const mousePosition = mouse;
+    mousePosition.deltaX = e.movementX;
+    mousePosition.deltaY = e.movementY;
     this.element.move(mouse);
-    this.editor.canvasUpdate(2, false);
-    this.editor.canvasUpdate(2, true);
+    this.editor.clearCanvas(2);
+    this.editor.renderAll();
     this.draw();
   }
 
@@ -297,14 +297,6 @@ export default class Hold extends Element {
       }
     }
     return -1;
-  }
-
-  static deselectAll(tool) {
-    for (let i = 0; i < tool.editor.selection.length; i += 1) {
-      const selected = tool.editor.selection[i];
-      selected.holder.deselect();
-      i = -1;
-    }
   }
 
   mouseDown(e) {
@@ -401,6 +393,5 @@ export default class Hold extends Element {
   }
 }
 
-// TODO resolve stroke problem
 // TODO rotate
 // TODO hold line and hold text
