@@ -1,24 +1,19 @@
-import Tool from './tools'
-
+import Tool from './tools';
 
 export default class Element extends Tool {
-  constructor(name, properties, events, editor, element, style, layer = 1) {
+  constructor(name, toolInstance, editor, style = null, layer = 1) {
     // TODO elements file
     // TODO figure out how to implement different types of elements
-    super(name, properties, events, editor);
-    this.id = Math.random();
+    super(name, toolInstance, editor);
+    this.id = Symbol('element');
     this.upperCanvas = false;
-    this.startX = element.startX;
-    this.startY = element.startY;
-    this.x = element.x;
-    this.y = element.y;
-    this.width = element.width;
-    this.height = element.height;
-    this.mouse = {
-      positionX: 0,
-      positionY: 0,
-      ctrlKey: false,
-      shiftKey: false,
+    this.dimensions = {
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0,
+      width: 0,
+      height: 0,
     };
     this.transformation = {
       activeAffecter: -1,
@@ -42,13 +37,44 @@ export default class Element extends Tool {
     }
   }
 
+  mouseMove() {
+    const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
+    const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
+    const endX = this.editor.events.canvasEvent.mouse.canvasX;
+    const endY = this.editor.events.canvasEvent.mouse.canvasY;
+    this.elementDimensions = {
+      startX,
+      startY,
+      endX,
+      endY,
+      width: Math.abs(startX - endX),
+      height: Math.abs(startY - endY),
+    };
+    this.editor.clearCanvas(0);
+    this.draw(false);
+  }
+
+  mouseUp() {
+    this.mouseMove();
+    this.editor.elements.push(this);
+    this.editor.renderAll();
+  }
+
+  set elementDimensions(dimensions) {
+    this.dimensions.startX = dimensions.startX;
+    this.dimensions.startY = dimensions.startY;
+    this.dimensions.endX = dimensions.endX;
+    this.dimensions.endY = dimensions.endY;
+    this.dimensions.width = dimensions.width;
+    this.dimensions.height = dimensions.height;
+  }
+
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     editor.ctx.save();
     if (this.rotation !== 0 || this.rotationChange) {
       this.rotate(editor);
     }
-    return editor;
   }
 
   rotate(editor) {
@@ -138,6 +164,11 @@ export default class Element extends Tool {
     this.y += mouseMove.deltaY;
     this.resizer.x += mouseMove.deltaX;
     this.resizer.y += mouseMove.deltaY;
+  }
+
+  select() {
+    this.holder = new Hold();
+    this.holder.select();
   }
 
   addLayer() {

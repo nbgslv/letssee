@@ -111,25 +111,16 @@ export default class Editor {
     this.activeTool = this.tools[0];
     this.tools.forEach((tool) => {
       const div = document.createElement('div');
-      div.style.backgroundImage = `url("${tool.properties.icon}")`;
+      div.style.backgroundImage = `url("${tool.toolInstance.properties.icon}")`;
       div.setAttribute('id', tool.name);
       div.setAttribute('class', 'tool enable unactive');
       div.addEventListener('click', (e) => {
         const lastTool = this.activeTool;
         this.activeTool = tool;
         if (tool.properties.type === 'canvas-tool') {
-          const promise = new Promise((resolve) => {
-            this.activeTool.toolEventHandler(e);
-            resolve(this.activeTool.recordUndo());
-          });
+          // activate tool
         } else if (tool.properties.type === 'own-click') {
-          const promise = new Promise((resolve) => {
-            this.activeTool.toolEventHandler(e);
-            resolve(() => {
-              this.activeTool.recordUndo();
-              this.activeTool = lastTool;
-            });
-          });
+          tool.ownClickEvent();
         }
       });
       if (tool.properties.toolbar === 'main') {
@@ -137,9 +128,7 @@ export default class Editor {
       } else if (tool.properties.toolbar === 'second') {
         this.canvas.secondToolbar.appendChild(div);
       }
-      if (tool.canvas === undefined) {
-        tool.editor = this;
-      }
+      tool.editor = this;
     });
     // canvas event listeners for default tool
 
@@ -147,10 +136,8 @@ export default class Editor {
     this.canvas.upperCanvas.addEventListener('mousedown', e => events.mainEventHandler(e));
     this.canvas.upperCanvas.addEventListener('mousemove', e => events.mainEventHandler(e));
     this.canvas.upperCanvas.addEventListener('mouseup', e => events.mainEventHandler(e));
-  }
 
-  initEvents() {
-    this.events = new Events();
+    this.events = events;
   }
 
   get boundingRect() {

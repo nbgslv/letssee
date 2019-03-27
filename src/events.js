@@ -1,4 +1,4 @@
-class Events {
+export default class Events {
   constructor(editor) {
     this.editor = editor;
   }
@@ -6,6 +6,7 @@ class Events {
   initCanvasEvent(e) {
     this.canvasEvent = {
       element: null,
+      elementDrawn: null,
       selection: false,
       ctrlKey: e.ctrlKey,
       shiftKey: e.shiftKey,
@@ -14,6 +15,8 @@ class Events {
         pageY: e.pageY,
         clientX: e.clientX,
         clientY: e.clientY,
+        startCanvasX: null,
+        startCanvasY: null,
         canvasX: null,
         canvasY: null,
       },
@@ -22,6 +25,7 @@ class Events {
         inElement: false,
         resizer: -1,
       },
+      cache: null,
     };
   }
 
@@ -52,6 +56,9 @@ class Events {
     if (this.canvasEvent.position.inElement) {
       this.handleElementMouseDown();
     } else if (this.canvasEvent.position.inCanvas) {
+      const relativeMousePosition = this.relativeMousePosition;
+      this.canvasEvent.mouse.startCanvasX = relativeMousePosition.x;
+      this.canvasEvent.mouse.startCanvasY = relativeMousePosition.y;
       this.handleCanvasMouseDown();
     }
   }
@@ -59,14 +66,13 @@ class Events {
   onMouseMove() {
     if (this.canvasEvent.element) {
       this.handleSelectionMouseMove();
-    } else if (this.canvasEvent.position.inCanvas) {
+    } else if (this.canvasEvent.position.inCanvas && this.canvasEvent.elementDrawn) {
       this.handleDrawMouseMove();
     }
   }
 
   onMouseUp() {
-    // end every action
-    // see if deselect needed
+    this.handleMouseUp();
   }
 
   updateMousePosition() {
@@ -97,7 +103,7 @@ class Events {
       && this.canvasEvent.mouse.pageY >= canvasPositionTop
       && this.canvasEvent.mouse.pageY <= canvasPositionTop + canvasHeight
     ) {
-      const relativeMousePosition = this.relativeMousePosition();
+      const relativeMousePosition = this.relativeMousePosition;
       this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
       this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
       this.editor.elements.forEach((element) => {
@@ -138,6 +144,42 @@ class Events {
   handleCanvasMouseDown() {
     this.editor.deselectAll();
     this.editor.activeTool.createElement();
+  }
+
+  handleSelectionMouseMove() {
+    if (this.canvasEvent.selection) {
+      this.editor.selection.forEach((element) => {
+        element.mouseMove();
+      });
+    } else {
+      this.canvasEvent.element.holder.mouseMove();
+    }
+  }
+
+  handleDrawMouseMove() {
+    this.canvasEvent.elementDrawn.mouseMove();
+  }
+
+  handleMouseUp() {
+    if (this.canvasEvent.elementDrawn) {
+      this.canvasEvent.elementDrawn.mouseUp();
+    } else if (this.canvasEvent.selection) {
+      this.canvasEvent.selection.forEach((element) => {
+        element.mouseUp();
+      });
+    } else if (this.canvasEvent.element) {
+      this.canvasEvent.element.mouseUp();
+    }
+    if (this.canvasEvent.cache) {
+      this.recordUndo();
+    }
+  }
+
+  recordUndo() {
+    this.editor.undo.length = 0;
+    this.editor.elements.forEach((element) => {
+      this.editor.undo.push(element);
+    });
   }
 }
 
