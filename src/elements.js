@@ -1,10 +1,10 @@
 import Tool from './tools';
 
 export default class Element extends Tool {
-  constructor(name, toolInstance, editor, style = null, layer = 1) {
+  constructor(name, moduleName, properties, events, editor, style = null, layer = 1) {
     // TODO elements file
     // TODO figure out how to implement different types of elements
-    super(name, toolInstance, editor);
+    super(name, moduleName, properties, events, editor);
     this.id = Symbol('element');
     this.upperCanvas = false;
     this.dimensions = {
@@ -27,14 +27,14 @@ export default class Element extends Tool {
     this.layer = layer;
     this.addLayer();
     this.holder = null;
-    if (element.resizer === undefined) {
       this.resizer = null;
+      /*
     } else {
       this.resizer = {
         x: element.resizer.x,
         y: element.resizer.y,
       };
-    }
+       */
   }
 
   mouseMove() {
@@ -75,6 +75,7 @@ export default class Element extends Tool {
     if (this.rotation !== 0 || this.rotationChange) {
       this.rotate(editor);
     }
+    return editor;
   }
 
   rotate(editor) {

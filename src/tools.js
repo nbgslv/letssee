@@ -1,8 +1,7 @@
-import DynamicClasses from './dynamicClasses';
-
 export default class Tool {
-  constructor(name, properties, events, editor = undefined) {
+  constructor(name, moduleName, properties, events, editor = undefined) {
     this.name = name;
+    this.moduleName = moduleName;
     this.toolInstance = this;
     this.properties = properties;
     this.events = events;
@@ -10,11 +9,8 @@ export default class Tool {
   }
 
   createElement() {
-    const args = [
-      this.name,
-      this,
-      this.editor,
-    ];
-    new DynamicClasses(this.name, args);
+    const element = this.editor.createElement(this.moduleName, this);
+    element.draw();
+    this.editor.renderAll();
   }
 }

@@ -11,7 +11,8 @@ import { plugins } from './letse.config';
 
 const settings = new Settings(plugins, defaultTools);
 const tools = settings.createTools();
+const pluginsMap = settings.pluginsMap;
 
-const editor = new Editor('letse-canvas-container', 300, 300, null, tools);
+const editor = new Editor('letse-canvas-container', 300, 300, null, tools, pluginsMap);
 editor.initCanvas();
 editor.initToolBars();

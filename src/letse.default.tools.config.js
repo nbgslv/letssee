@@ -2,6 +2,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'hold',
+    moduleName: 'Hold',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -19,6 +20,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'undoredo',
+    moduleName: 'Undoredo',
     properties: {
       enable: true,
       type: 'own-click',
@@ -34,6 +36,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'undoredo',
+    moduleName: 'Undoredo',
     properties: {
       enable: true,
       type: 'own-click',
@@ -49,6 +52,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'zoominout',
+    moduleName: 'ZoomInOut',
     properties: {
       enable: true,
       type: 'own-click',
@@ -64,6 +68,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'zoominout',
+    moduleName: 'ZoomInOut',
     properties: {
       enable: true,
       type: 'own-click',
@@ -79,6 +84,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'viewport',
+    moduleName: 'Viewport',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -96,6 +102,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'layers',
+    moduleName: 'Layers',
     properties: {
       enable: true,
       type: 'own-click',
@@ -111,6 +118,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'layers',
+    moduleName: 'Layers',
     properties: {
       enable: true,
       type: 'own-click',
@@ -126,6 +134,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'rectangle',
+    moduleName: 'Rectangle',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -143,6 +152,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'line',
+    moduleName: 'Line',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -160,6 +170,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'circle',
+    moduleName: 'Circle',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -177,6 +188,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'triangle',
+    moduleName: 'Triangle',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -194,6 +206,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'curvedrectangle',
+    moduleName: 'Curvedrectangle',
     properties: {
       enable: true,
       type: 'canvas-tool',
@@ -211,6 +224,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'text',
+    moduleName: 'Text',
     properties: {
       enable: true,
       type: 'canvas-tool',

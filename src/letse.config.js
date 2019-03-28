@@ -2,6 +2,7 @@ export const plugins = [
   {
     category: 'tool',
     name: 'clear',
+    moduleName: 'Clear',
     properties: {
       enable: true,
       type: 'own-click',

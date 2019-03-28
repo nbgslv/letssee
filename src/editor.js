@@ -1,7 +1,7 @@
 import Events from './events';
 
 export default class Editor {
-  constructor(containerID, height, width, options = {}, tools) {
+  constructor(containerID, height, width, options = {}, tools, pluginsMap) {
     this.editorContainerID = containerID;
     this.height = height;
     this.width = width;
@@ -13,6 +13,7 @@ export default class Editor {
     this.elements = [];
     this.tools = tools;
     this.activeTool = undefined;
+    this.pluginsMap = pluginsMap;
     this.undo = [];
     this.redo = [];
     this.layers = 1;
@@ -117,9 +118,7 @@ export default class Editor {
       div.addEventListener('click', (e) => {
         const lastTool = this.activeTool;
         this.activeTool = tool;
-        if (tool.properties.type === 'canvas-tool') {
-          // activate tool
-        } else if (tool.properties.type === 'own-click') {
+        if (tool.properties.type === 'own-click') {
           tool.ownClickEvent();
         }
       });
@@ -140,6 +139,10 @@ export default class Editor {
     this.events = events;
   }
 
+  createElement(moduleName, tool) {
+    return new this.pluginsMap[moduleName](tool.name, tool.moduleName, tool.properties, tool.events, this);
+  }
+
   get boundingRect() {
     return this.canvas.canvas.getBoundingClientRect();
   }
@@ -154,11 +157,16 @@ export default class Editor {
   }
 
   clearCanvas(canvas, {
-    x = 0,
+    x,
     y = 0,
     width = this.width,
     height = this.height,
-  } = null) {
+  } = {
+    x: 0,
+    y: 0,
+    width: this.width,
+    height: this.height,
+  }) {
     switch (canvas) {
       case 0:
         this.canvas.upperCanvas.ctx.clearRect(x, y, width, height);

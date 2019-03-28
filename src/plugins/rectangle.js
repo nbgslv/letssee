@@ -2,9 +2,9 @@ import Element from '../elements';
 
 export default class Rectangle extends Element {
   draw(canvas = true) {
-    const editor = super.draw(canvas);
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     editor.ctx.strokeRect(this.startX, this.startY, this.width, this.height);
-    editor.ctx.restore();
+    // editor.ctx.restore();
   }
 
   rotate(editor) {
