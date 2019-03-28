@@ -143,6 +143,10 @@ export default class Editor {
     return new this.pluginsMap[moduleName](tool.name, tool.moduleName, tool.properties, tool.events, this);
   }
 
+  set newElement(element) {
+    this.elements.push(element);
+  }
+
   get boundingRect() {
     return this.canvas.canvas.getBoundingClientRect();
   }

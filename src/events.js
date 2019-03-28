@@ -1,6 +1,7 @@
 export default class Events {
   constructor(editor) {
     this.editor = editor;
+    this.canvasEvent = null;
   }
 
   initCanvasEvent(e) {
@@ -15,6 +16,8 @@ export default class Events {
         pageY: e.pageY,
         clientX: e.clientX,
         clientY: e.clientY,
+        screenX: e.screenX,
+        screenY: e.screenY,
         startCanvasX: null,
         startCanvasY: null,
         canvasX: null,
@@ -26,14 +29,16 @@ export default class Events {
         resizer: -1,
       },
       cache: null,
+      e,
     };
   }
 
   mainEventHandler(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.initCanvasEvent(e);
-    this.updateMousePosition();
+    if (this.canvasEvent === null) this.initCanvasEvent(e);
+    this.canvasEvent.e = e;
+    this.updatePosition();
     switch (e.type) {
       case 'mousedown':
         this.onMouseDown();
@@ -73,9 +78,11 @@ export default class Events {
 
   onMouseUp() {
     this.handleMouseUp();
+    this.canvasEvent = null;
   }
 
-  updateMousePosition() {
+  updatePosition() {
+    this.updateMousePosition();
     const mousePosition = this.mousePosition;
     if (mousePosition) {
       this.canvasEvent.position.inCanvas = true;
@@ -90,11 +97,18 @@ export default class Events {
     }
   }
 
+  updateMousePosition() {
+    this.canvasEvent.mouse.clientX = this.canvasEvent.e.clientX;
+    this.canvasEvent.mouse.clientY = this.canvasEvent.e.clientY;
+    this.canvasEvent.mouse.pageX = this.canvasEvent.e.pageX;
+    this.canvasEvent.mouse.pageY = this.canvasEvent.e.pageY;
+    this.canvasEvent.mouse.screenX = this.canvasEvent.e.screenX;
+    this.canvasEvent.mouse.screenY = this.canvasEvent.e.screenY;
+  }
+
   get mousePosition() {
-    const {
-      canvasPositionLeft,
-      canvasPositionTop,
-    } = this.editor.position;
+    const canvasPositionLeft = this.editor.position.left;
+    const canvasPositionTop = this.editor.position.top;
     const canvasWidth = this.editor.width;
     const canvasHeight = this.editor.height;
     if (
@@ -143,7 +157,7 @@ export default class Events {
 
   handleCanvasMouseDown() {
     this.editor.deselectAll();
-    this.editor.activeTool.createElement();
+    this.canvasEvent.elementDrawn = this.editor.activeTool.createElement();
   }
 
   handleSelectionMouseMove() {
@@ -157,7 +171,7 @@ export default class Events {
   }
 
   handleDrawMouseMove() {
-    this.canvasEvent.elementDrawn.mouseMove();
+    this.canvasEvent.elementDrawn.updateElement();
   }
 
   handleMouseUp() {

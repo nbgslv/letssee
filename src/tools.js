@@ -10,7 +10,6 @@ export default class Tool {
 
   createElement() {
     const element = this.editor.createElement(this.moduleName, this);
-    element.draw();
-    this.editor.renderAll();
+    return element;
   }
 }

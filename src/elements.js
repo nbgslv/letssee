@@ -37,25 +37,25 @@ export default class Element extends Tool {
        */
   }
 
-  mouseMove() {
+  updateElement() {
     const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
     const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
     const endX = this.editor.events.canvasEvent.mouse.canvasX;
     const endY = this.editor.events.canvasEvent.mouse.canvasY;
     this.elementDimensions = {
-      startX,
-      startY,
-      endX,
-      endY,
+      startX: Math.min(endX, startX),
+      startY: Math.min(endY, startY),
+      endX: Math.max(endY, startY),
+      endY: Math.max(endY, startY),
       width: Math.abs(startX - endX),
       height: Math.abs(startY - endY),
     };
-    this.editor.clearCanvas(0);
+    this.editor.renderAll();
     this.draw(false);
   }
 
   mouseUp() {
-    this.mouseMove();
+    this.updateElement();
     this.editor.elements.push(this);
     this.editor.renderAll();
   }
@@ -178,8 +178,8 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    if ((this.resizer.x <= mousePositionX) && (this.resizer.x + this.width >= mousePositionX)
-      && (this.resizer.y <= mousePositionY) && (this.resizer.y + this.height >= mousePositionY)) {
+    if ((this.dimensions.startX <= mousePositionX) && (this.dimensions.startXx + this.dimensions.width >= mousePositionX)
+      && (this.dimensions.startY <= mousePositionY) && (this.dimensions.y + this.dimensions.height >= mousePositionY)) {
       return this;
     }
     return false;
