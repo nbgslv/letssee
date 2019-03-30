@@ -1,226 +1,108 @@
 import Element from '../elements';
 
-const mouse = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  startX: 0,
-  startY: 0,
-  curveXY: 25,
-  curveX: 25,
-  curveY: 25,
-};
-
-// TODO find better way to define curveXY 25
-
 export default class CurvedRectangle extends Element {
-  constructor(name, properties, events, editor, element, style) {
-    super(name, properties, events, editor, element, style);
-    this.startX = element.startX;
-    this.startY = element.startY;
-    this.curveXY = element.curveXY;
-    this.curveX = element.curveX;
-    this.curveY = element.curveY;
+  constructor(name, moduleName, properties, events, editor) {
+    super(name, moduleName, properties, events, editor);
+    // TODO get from tools options
+    this.curveXY = 25;
+    this.curveX = 25;
+    this.curveY = 25;
   }
 
   draw(canvas = true) {
     const editor = super.draw(canvas);
-    this.width = Math.abs(this.x - this.startX);
-    this.height = Math.abs(this.y - this.startY);
-    this.curveX = this.width <= this.curveXY * 2 ? Math.abs(this.width) / 2 : this.curveXY;
-    this.curveY = this.height <= this.curveXY * 2 ? Math.abs(this.height) / 2 : this.curveXY;
+    editor.ctx.beginPath();
+    editor.ctx.moveTo(this.dimensions.startX + this.curveX, this.dimensions.startY);
+    editor.ctx.lineTo(this.dimensions.endX - this.curveX, this.dimensions.startY);
+    editor.ctx.quadraticCurveTo(
+      this.dimensions.endX,
+      this.dimensions.startY,
+      this.dimensions.endX,
+      this.dimensions.startY + this.curveY,
+    );
+    editor.ctx.lineTo(this.dimensions.endX, this.dimensions.endY - this.curveY);
+    editor.ctx.quadraticCurveTo(
+      this.dimensions.endX,
+      this.dimensions.endY,
+      this.dimensions.endX - this.curveX,
+      this.dimensions.endY,
+    );
+    editor.ctx.lineTo(this.dimensions.startX + this.curveX, this.dimensions.endY);
+    editor.ctx.quadraticCurveTo(
+      this.dimensions.startX,
+      this.dimensions.endY,
+      this.dimensions.startX,
+      this.dimensions.endY - this.curveY,
+    );
+    editor.ctx.lineTo(this.dimensions.startX, this.dimensions.startY + this.curveY);
+    editor.ctx.quadraticCurveTo(
+      this.dimensions.startX,
+      this.dimensions.startY,
+      this.dimensions.startX + this.curveX,
+      this.dimensions.startY,
+    );
+    editor.ctx.stroke();
+    //editor.ctx.restore();
+  }
+
+  updateElement() {
+    const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
+    const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
+    const endX = this.editor.events.canvasEvent.mouse.canvasX;
+    const endY = this.editor.events.canvasEvent.mouse.canvasY;
     let transformedStartX;
     let transformedStartY;
     let transformedX;
     let transformedY;
-    editor.ctx.beginPath();
-    if (this.x > this.startX && this.y > this.startY) {
-      editor.ctx.moveTo(this.startX + this.curveX, this.startY);
-      editor.ctx.lineTo(this.x - this.curveX, this.startY);
-      editor.ctx.quadraticCurveTo(
-        this.x,
-        this.startY,
-        this.x,
-        this.startY + this.curveY,
-      );
-      editor.ctx.lineTo(this.x, this.y - this.curveY);
-      editor.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
-      editor.ctx.lineTo(this.startX + this.curveX, this.y);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.y,
-        this.startX,
-        this.y - this.curveY,
-      );
-      editor.ctx.lineTo(this.startX, this.startY + this.curveY);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.startY,
-        this.startX + this.curveX,
-        this.startY,
-      );
-      transformedStartX = this.startX;
-      transformedStartY = this.startY;
-      transformedX = this.x;
-      transformedY = this.y;
-    } else if (this.x < this.startX && this.y < this.startY) {
-      editor.ctx.moveTo(this.startX - this.curveX, this.startY);
-      editor.ctx.lineTo(this.x + this.curveX, this.startY);
-      editor.ctx.quadraticCurveTo(
-        this.x,
-        this.startY,
-        this.x,
-        this.startY - this.curveY,
-      );
-      editor.ctx.lineTo(this.x, this.y + this.curveY);
-      editor.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
-      editor.ctx.lineTo(this.startX - this.curveX, this.y);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.y,
-        this.startX,
-        this.y + this.curveY,
-      );
-      editor.ctx.lineTo(this.startX, this.startY - this.curveY);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.startY,
-        this.startX - this.curveX,
-        this.startY,
-      );
-      transformedStartX = this.x;
-      transformedStartY = this.y;
-      transformedX = this.startX;
-      transformedY = this.startY;
-    } else if (this.x < this.startX && this.y > this.startY) {
-      editor.ctx.moveTo(this.startX - this.curveX, this.startY);
-      editor.ctx.lineTo(this.x + this.curveX, this.startY);
-      editor.ctx.quadraticCurveTo(
-        this.x,
-        this.startY,
-        this.x,
-        this.startY + this.curveY,
-      );
-      editor.ctx.lineTo(this.x, this.y - this.curveY);
-      editor.ctx.quadraticCurveTo(this.x, this.y, this.x + this.curveX, this.y);
-      editor.ctx.lineTo(this.startX - this.curveX, this.y);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.y,
-        this.startX,
-        this.y - this.curveY,
-      );
-      editor.ctx.lineTo(this.startX, this.startY + this.curveY);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.startY,
-        this.startX - this.curveX,
-        this.startY,
-      );
-      transformedStartX = this.x;
-      transformedStartY = this.startY;
-      transformedX = this.startX;
-      transformedY = this.y;
-    } else if (this.x > this.startX && this.y < this.startY) {
-      editor.ctx.moveTo(this.startX + this.curveX, this.startY);
-      editor.ctx.lineTo(this.x - this.curveX, this.startY);
-      editor.ctx.quadraticCurveTo(
-        this.x,
-        this.startY,
-        this.x,
-        this.startY - this.curveY,
-      );
-      editor.ctx.lineTo(this.x, this.y + this.curveY);
-      editor.ctx.quadraticCurveTo(this.x, this.y, this.x - this.curveX, this.y);
-      editor.ctx.lineTo(this.startX + this.curveX, this.y);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.y,
-        this.startX,
-        this.y + this.curveY,
-      );
-      editor.ctx.lineTo(this.startX, this.startY - this.curveY);
-      editor.ctx.quadraticCurveTo(
-        this.startX,
-        this.startY,
-        this.startX + this.curveX,
-        this.startY,
-      );
-      transformedStartX = this.startX;
-      transformedStartY = this.y;
-      transformedX = this.x;
-      transformedY = this.startY;
+    if (endX > startX && endY > startY) {
+      transformedStartX = startX;
+      transformedStartY = startY;
+      transformedX = endX;
+      transformedY = endY;
+    } else if (endX < startX && endY < startY) {
+      transformedStartX = endX;
+      transformedStartY = endY;
+      transformedX = startX;
+      transformedY = startY;
+    } else if (endX < startX && endY > startY) {
+      transformedStartX = endX;
+      transformedStartY = startY;
+      transformedX = startX;
+      transformedY = endY;
+    } else if (endX > startX && endY < startY) {
+      transformedStartX = startX;
+      transformedStartY = endY;
+      transformedX = endX;
+      transformedY = startY;
     }
-    editor.ctx.stroke();
-    editor.ctx.restore();
-    this.startX = transformedStartX;
-    this.startY = transformedStartY;
-    this.x = transformedX;
-    this.y = transformedY;
-    this.resizer.x = transformedStartX;
-    this.resizer.y = transformedStartY;
-  }
-
-  static mouseDown(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    this.started = true;
-    mouse.startX = relativeMousePosition.x;
-    mouse.startY = relativeMousePosition.y;
-  }
-
-  static mouseMove(e, tool) {
-    let element;
-    if (this.started) {
-      element = this.createElement(e, tool);
-      element.editor.canvasUpdate(0, false);
-      element.draw(false);
-    }
-    return element;
-  }
-
-  static mouseUp(e, tool) {
-    if (this.started) {
-      const element = this.mouseMove(e, tool);
-      element.draw(true);
-      element.editor.elements.push(element);
-      element.editor.canvasUpdate(2, true);
-      this.started = false;
-    }
-  }
-
-  static createElement(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.x = relativeMousePosition.x;
-    mouse.y = relativeMousePosition.y;
-    mouse.width = Math.abs(mouse.x - mouse.startX);
-    mouse.height = Math.abs(mouse.y - mouse.startY);
-    mouse.curveX = mouse.width <= mouse.curveXY * 2 ? Math.abs(mouse.width) / 2 : mouse.curveXY;
-    mouse.curveY = mouse.height <= mouse.curveXY * 2 ? Math.abs(mouse.height) / 2 : mouse.curveXY;
-    const element = {
-      x: mouse.x,
-      y: mouse.y,
-      width: mouse.width,
-      height: mouse.height,
-      startX: mouse.startX,
-      startY: mouse.startY,
-      curveXY: mouse.curveXY,
-      curveX: mouse.curveX,
-      curveY: mouse.curveY,
-      resizer: {
-        x: mouse.startX,
-        y: mouse.startY,
-      },
+    this.elementDimensions = {
+      startX: transformedStartX,
+      startY: transformedStartY,
+      endX: transformedX,
+      endY: transformedY,
+      width: Math.abs(startX - endX),
+      height: Math.abs(startY - endY),
     };
-    return new CurvedRectangle(
-      tool.name,
-      tool.properties,
-      tool.events,
-      tool.editor,
-      element,
-      null,
-    );
+    this.editor.renderAll();
+    this.draw(false);
+  }
+
+  set elementDimensions(dimensions) {
+    const {
+      startX,
+      startY,
+      endX,
+      endY,
+      width,
+      height,
+    } = dimensions;
+    this.dimensions.startX = startX;
+    this.dimensions.startY = startY;
+    this.dimensions.endX = endX;
+    this.dimensions.endY = endY;
+    this.dimensions.width = width;
+    this.dimensions.height = height;
+    this.curveX = width <= this.curveXY * 2 ? Math.abs(width) / 2 : this.curveXY;
+    this.curveY = height <= this.curveXY * 2 ? Math.abs(height) / 2 : this.curveXY;
   }
 }
-
-// TODO make code less complicate + use this.draw instead of repeating draw functions each module

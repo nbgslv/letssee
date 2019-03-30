@@ -1,33 +1,87 @@
 import Element from '../elements';
 
-const mouse = {
-  x: 0,
-  y: 0,
-  startX: 0,
-  startY: 0,
-};
-
 export default class Triangle extends Element {
-  constructor(name, properties, events, editor, element, style) {
-    super(name, properties, events, editor, element, style);
+  constructor(name, moduleName, properties, events, editor) {
+    super(name, moduleName, properties, events, editor);
     this.headPoint = {
-      x: this.startX,
-      y: this.startY,
+      x: 0,
+      y: 0,
+    };
+    this.leftPoint = {
+      x: 0,
+      y: 0,
+    };
+    this.rightPoint = {
+      x: 0,
+      y: 0,
+    };
+  }
+
+  draw(canvas = true) {
+    const editor = super.draw(canvas);
+    editor.ctx.beginPath();
+    editor.ctx.moveTo(this.headPoint.x, this.headPoint.y);
+    editor.ctx.lineTo(this.leftPoint.x, this.leftPoint.y);
+    editor.ctx.lineTo(this.rightPoint.x, this.rightPoint.y);
+    editor.ctx.closePath();
+    editor.ctx.stroke();
+    //editor.ctx.restore();
+  }
+
+  updateElement() {
+    const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
+    const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
+    const endX = this.editor.events.canvasEvent.mouse.canvasX;
+    const endY = this.editor.events.canvasEvent.mouse.canvasY;
+    const width = Math.abs((endX - startX) * 2);
+    const height = Math.abs(endY - startY);
+
+
+    this.elementDimensions = {
+      startX,
+      startY,
+      endX,
+      endY,
+      width,
+      height,
+    };
+    this.editor.renderAll();
+    this.draw(false);
+  }
+
+  set elementDimensions(dimensions) {
+    const {
+      startX,
+      startY,
+      endX,
+      endY,
+      width,
+      height,
+    } = dimensions;
+    this.dimensions.startX = startX;
+    this.dimensions.startY = startY;
+    this.dimensions.endX = endX;
+    this.dimensions.endY = endY;
+    this.dimensions.width = width;
+    this.dimensions.height = height;
+    this.headPoint = {
+      x: startX,
+      y: startY,
     };
     let leftPointX;
     let leftPointY;
     let rightPointX;
     let rightPointY;
-    if (this.startX > this.x) {
-      leftPointX = this.x;
-      leftPointY = this.y;
-      rightPointX = this.startX - this.x + this.startX;
-      rightPointY = this.y;
+    if (startX > endX) {
+      leftPointX = endX;
+      leftPointY = endY;
+      rightPointX = startX - endX + startX;
+      rightPointY = endY;
     } else {
-      leftPointX = this.startX - this.x + this.startX;
-      leftPointY = this.y;
-      rightPointX = this.x;
-      rightPointY = this.y;
+      leftPointX = startX - endX + startX;
+      leftPointY = endY;
+      rightPointX = endX;
+      rightPointY = endY;
     }
     this.leftPoint = {
       x: leftPointX,
@@ -38,22 +92,9 @@ export default class Triangle extends Element {
       y: rightPointY,
     };
     this.resizer = {
-      x: element.startX > element.x ? element.x : element.x - element.width,
-      y: element.startY,
+      x: startX > endX ? endX : endX - width,
+      y: startY,
     };
-    this.startX = element.startX > element.x ? element.x : element.x - element.width;
-    this.startY = element.startY;
-  }
-
-  draw(canvas = true) {
-    const editor = super.draw(canvas);
-    editor.ctx.beginPath();
-    editor.ctx.moveTo(this.headPoint.x, this.headPoint.y);
-    editor.ctx.lineTo(this.leftPoint.x, this.leftPoint.y);
-    editor.ctx.lineTo(this.rightPoint.x, this.rightPoint.y);
-    editor.ctx.lineTo(this.headPoint.x, this.headPoint.y);
-    editor.ctx.stroke();
-    editor.ctx.restore();
   }
 
   resize(mouseResize, affecter) {
@@ -113,53 +154,5 @@ export default class Triangle extends Element {
     this.y += mouseMove.deltaY;
     this.resizer.x += mouseMove.deltaX;
     this.resizer.y += mouseMove.deltaY;
-  }
-
-  static mouseDown(e, tool) {
-    this.started = true;
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.startX = relativeMousePosition.x;
-    mouse.startY = relativeMousePosition.y;
-  }
-
-  static mouseMove(e, tool) {
-    let element;
-    if (this.started) {
-      element = this.createElement(e, tool);
-      element.editor.canvasUpdate(0, false);
-      element.draw(false);
-    }
-    return element;
-  }
-
-  static mouseUp(e, tool) {
-    if (this.started) {
-      const element = this.mouseMove(e, tool);
-      element.editor.elements.push(element);
-      element.editor.canvasUpdate(0, true);
-      this.started = false;
-    }
-  }
-
-  static createElement(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.x = relativeMousePosition.x;
-    mouse.y = relativeMousePosition.y;
-    const element = {
-      startX: mouse.startX,
-      startY: mouse.startY,
-      x: mouse.x,
-      y: mouse.y,
-      width: Math.abs((mouse.x - mouse.startX) * 2),
-      height: Math.abs(mouse.y - mouse.startY),
-    };
-    return new Triangle(
-      tool.name,
-      tool.properties,
-      tool.events,
-      tool.editor,
-      element,
-      null,
-    );
   }
 }

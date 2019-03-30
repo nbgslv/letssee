@@ -206,7 +206,7 @@ export const defaultTools = [
   {
     category: 'tool',
     name: 'curvedrectangle',
-    moduleName: 'Curvedrectangle',
+    moduleName: 'CurvedRectangle',
     properties: {
       enable: true,
       type: 'canvas-tool',

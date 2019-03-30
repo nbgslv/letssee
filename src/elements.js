@@ -15,6 +15,10 @@ export default class Element extends Tool {
       width: 0,
       height: 0,
     };
+    this.resizer = {
+      topLeftX: 0,
+      topLeftY: 0,
+    };
     this.transformation = {
       activeAffecter: -1,
       transform: false,
@@ -37,6 +41,21 @@ export default class Element extends Tool {
        */
   }
 
+  draw(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    /*editor.ctx.save();
+    if (this.rotation !== 0 || this.rotationChange) {
+      this.rotate(editor);
+    }*/
+    return editor;
+  }
+
+  endDraw() {
+    this.updateElement();
+    this.editor.elements.push(this);
+    this.editor.renderAll();
+  }
+
   updateElement() {
     const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
     const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
@@ -54,12 +73,6 @@ export default class Element extends Tool {
     this.draw(false);
   }
 
-  mouseUp() {
-    this.updateElement();
-    this.editor.elements.push(this);
-    this.editor.renderAll();
-  }
-
   set elementDimensions(dimensions) {
     this.dimensions.startX = dimensions.startX;
     this.dimensions.startY = dimensions.startY;
@@ -67,15 +80,6 @@ export default class Element extends Tool {
     this.dimensions.endY = dimensions.endY;
     this.dimensions.width = dimensions.width;
     this.dimensions.height = dimensions.height;
-  }
-
-  draw(canvas = true) {
-    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    editor.ctx.save();
-    if (this.rotation !== 0 || this.rotationChange) {
-      this.rotate(editor);
-    }
-    return editor;
   }
 
   rotate(editor) {

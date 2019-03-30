@@ -176,7 +176,7 @@ export default class Events {
 
   handleMouseUp() {
     if (this.canvasEvent.elementDrawn) {
-      this.canvasEvent.elementDrawn.mouseUp();
+      this.canvasEvent.elementDrawn.endDraw();
     } else if (this.canvasEvent.selection) {
       this.canvasEvent.selection.forEach((element) => {
         element.mouseUp();
