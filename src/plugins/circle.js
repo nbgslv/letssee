@@ -1,27 +1,16 @@
 import Element from '../elements';
 
-const mouse = {
-  x: 0,
-  y: 0,
-  startX: 0,
-  startY: 0,
-  radiusX: 0,
-  radiusY: 0,
-  centerX: 0,
-  centerY: 0,
-};
-
 export default class Ellipse extends Element {
-  constructor(name, properties, events, editor, element, style) {
-    super(name, properties, events, editor, element, style);
-    this.width = Math.abs(this.startX - element.endX);
-    this.height = Math.abs(this.startY - element.endY);
-    this.centerX = this.startX + (Math.abs(this.startX - element.endX) / 2);
-    this.centerY = this.startY + (Math.abs(this.startY - element.endY) / 2);
-    this.endX = element.endX;
-    this.endY = element.endY;
-    this.radiusX = this.width / 2;
-    this.radiusY = this.height / 2;
+  constructor(name, moduleName, properties, events, editor) {
+    super(name, moduleName, properties, events, editor);
+    this.width = 0;
+    this.height = 0;
+    this.centerX = 0;
+    this.centerY = 0;
+    this.endX = 0;
+    this.endY = 0;
+    this.radiusX = 0;
+    this.radiusY = 0;
   }
 
   draw(canvas = true) {
@@ -38,6 +27,44 @@ export default class Ellipse extends Element {
     );
     editor.ctx.stroke();
     editor.ctx.restore();
+  }
+
+  updateElement() {
+    const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
+    const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
+    const endX = this.editor.events.canvasEvent.mouse.canvasX;
+    const endY = this.editor.events.canvasEvent.mouse.canvasY;
+    this.elementDimensions = {
+      startX: Math.min(endX, startX),
+      startY: Math.min(endY, startY),
+      endX: Math.max(endY, startY),
+      endY: Math.max(endY, startY),
+      width: Math.abs(startX - endX),
+      height: Math.abs(startY - endY),
+    };
+    this.editor.renderAll();
+    this.draw(false);
+  }
+
+  set elementDimensions(dimensions) {
+    const {
+      startX,
+      startY,
+      endX,
+      endY,
+      width,
+      height,
+    } = dimensions;
+    this.dimensions.startX = startX;
+    this.dimensions.startY = startY;
+    this.dimensions.endX = endX;
+    this.dimensions.endY = endY;
+    this.dimensions.width = Math.abs(startX - endX);
+    this.dimensions.height = Math.abs(startY - endY);
+    this.radiusX = width / 2;
+    this.radiusY = height / 2;
+    this.centerX = startX + this.radiusX;
+    this.centerY = startY + this.radiusY;
   }
 
   resize(mouseResize, affecter) {
@@ -97,76 +124,6 @@ export default class Ellipse extends Element {
     this.centerY += mouseMove.deltaY;
     this.resizer.x += mouseMove.deltaX;
     this.resizer.y += mouseMove.deltaY;
-  }
-
-  static mouseDown(e, tool) {
-    this.started = true;
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.startX = relativeMousePosition.x;
-    mouse.startY = relativeMousePosition.y;
-  }
-
-  static mouseMove(e, tool) {
-    let element;
-    if (this.started) {
-      element = this.createElement(e, tool);
-      element.editor.canvasUpdate(0, false);
-      element.draw(false);
-    }
-    return element;
-  }
-
-  static mouseUp(e, tool) {
-    if (this.started) {
-      const element = this.mouseMove(e, tool);
-      element.editor.elements.push(element);
-      element.editor.canvasUpdate(2, true);
-      this.started = false;
-    }
-  }
-
-  static createElement(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.x = relativeMousePosition.x;
-    mouse.y = relativeMousePosition.y;
-    let startX;
-    let startY;
-    let endX;
-    let endY;
-    if (mouse.startX > mouse.x) {
-      startX = mouse.x;
-      endX = mouse.startX;
-    } else {
-      startX = mouse.startX;
-      endX = mouse.x;
-    }
-    if (mouse.startY > mouse.y) {
-      startY = mouse.y;
-      endY = mouse.startY;
-    } else {
-      startY = mouse.startY;
-      endY = mouse.y;
-    }
-    const element = {
-      startX,
-      startY,
-      endX,
-      endY,
-      x: mouse.startX,
-      y: mouse.startY,
-      resizer: {
-        x: startX,
-        y: startY,
-      },
-    };
-    return new Ellipse(
-      tool.name,
-      tool.properties,
-      tool.events,
-      tool.editor,
-      element,
-      null,
-    );
   }
 }
 

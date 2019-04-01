@@ -1,21 +1,45 @@
 import Element from './elements';
 
-export default class Hold extends Element {
-  constructor (name, properties, events, editor, element = null, style) {
-    super(name, properties, events, editor, element, style);
+export default class Hold {
+  constructor(element) {
     this.resizerWidth = 10;
     this.resizerHeight = 10;
     this.strokeDistX = 10;
     this.strokeDistY = 10;
     this.rotateDistY = 25;
     this.element = element;
-    this.resizers = [];
-    this.lines = [];
+    this.resizers = this.resizersArrays.resizers;
+    this.lines = this.resizersArrays.lines;
     this.activeResizer = -1;
     this.rotated = false;
     this.dragging = false;
     this.resizing = false;
-    this.id = Math.random();
+  }
+  
+  draw(canvas = true) {
+    const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
+    for (let i = 0; i < this.resizers.length; i += 1) {
+      editor.ctx.fillRect(
+        this.resizers[i].startX,
+        this.resizers[i].startY,
+        this.resizers[i].width,
+        this.resizers[i].height,
+      );
+    }
+    for (let j = 0; j < this.lines.length; j += 1) {
+      editor.ctx.beginPath();
+      editor.ctx.moveTo(this.lines[j].startX, this.lines[j].startY);
+      editor.ctx.lineTo(this.lines[j].x, this.lines[j].y);
+      editor.ctx.stroke();
+      editor.ctx.closePath();
+    }
+  }
+
+  select() {
+    this.element.editor.renderAll();
+    this.draw(true);
+    this.element.editor.selection.push(this.element);
+    this.element.selected = true; // must be set after rendering canvas
   }
 
   get resizersArrays() {
@@ -256,34 +280,7 @@ export default class Hold extends Element {
     });
   }
 
-  draw(canvas = true) {
-    const editor = canvas ? this.editor.canvas.canvas : this.canvas.upperCanvas;
-    const {resizers, lines} = this.resizersArrays;
-    for (let i = 0; i < resizers.length; i += 1) {
-      editor.ctx.fillRect(
-        resizers[i].startX,
-        resizers[i].startY,
-        resizers[i].width,
-        resizers[i].height,
-      );
-    }
-    for (let j = 0; j < lines.length; j += 1) {
-      editor.ctx.beginPath();
-      editor.ctx.moveTo(lines[j].startX, lines[j].startY);
-      editor.ctx.lineTo(lines[j].x, lines[j].y);
-      editor.ctx.stroke();
-      editor.ctx.closePath();
-    }
-    this.resizers = resizers;
-    this.lines = lines;
-  }
 
-  select() {
-    this.element.selected = true;
-    this.editor.renderAll();
-    this.draw(true);
-    this.editor.selection.push(this.element);
-  }
 
   deselect() {
     for (let k = 0; k < this.editor.selection.length; k += 1) {

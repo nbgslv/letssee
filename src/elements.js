@@ -1,4 +1,5 @@
 import Tool from './tools';
+import Hold from './hold';
 
 export default class Element extends Tool {
   constructor(name, moduleName, properties, events, editor, style = null, layer = 1) {
@@ -31,7 +32,6 @@ export default class Element extends Tool {
     this.layer = layer;
     this.addLayer();
     this.holder = null;
-      this.resizer = null;
       /*
     } else {
       this.resizer = {
@@ -64,7 +64,7 @@ export default class Element extends Tool {
     this.elementDimensions = {
       startX: Math.min(endX, startX),
       startY: Math.min(endY, startY),
-      endX: Math.max(endY, startY),
+      endX: Math.max(endX, startX),
       endY: Math.max(endY, startY),
       width: Math.abs(startX - endX),
       height: Math.abs(startY - endY),
@@ -80,6 +80,11 @@ export default class Element extends Tool {
     this.dimensions.endY = dimensions.endY;
     this.dimensions.width = dimensions.width;
     this.dimensions.height = dimensions.height;
+  }
+  
+  select() {
+    this.holder = new Hold(this);
+    this.holder.select();
   }
 
   rotate(editor) {
@@ -171,19 +176,14 @@ export default class Element extends Tool {
     this.resizer.y += mouseMove.deltaY;
   }
 
-  select() {
-    this.holder = new Hold();
-    this.holder.select();
-  }
-
   addLayer() {
     this.layer = this.editor.layers + 1;
     this.editor.layers += 1;
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    if ((this.dimensions.startX <= mousePositionX) && (this.dimensions.startXx + this.dimensions.width >= mousePositionX)
-      && (this.dimensions.startY <= mousePositionY) && (this.dimensions.y + this.dimensions.height >= mousePositionY)) {
+    if ((this.dimensions.startX <= mousePositionX) && (this.dimensions.startX + this.dimensions.width >= mousePositionX)
+      && (this.dimensions.startY <= mousePositionY) && (this.dimensions.startY + this.dimensions.height >= mousePositionY)) {
       return this;
     }
     return false;

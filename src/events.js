@@ -8,6 +8,7 @@ export default class Events {
     this.canvasEvent = {
       element: null,
       elementDrawn: null,
+      elementSelected: null,
       selection: false,
       ctrlKey: e.ctrlKey,
       shiftKey: e.shiftKey,
@@ -111,6 +112,7 @@ export default class Events {
     const canvasPositionTop = this.editor.position.top;
     const canvasWidth = this.editor.width;
     const canvasHeight = this.editor.height;
+    let answer = null;
     if (
       this.canvasEvent.mouse.pageX >= canvasPositionLeft
       && this.canvasEvent.mouse.pageX <= canvasPositionLeft + canvasWidth
@@ -125,12 +127,11 @@ export default class Events {
           element.mouseInElement(
             this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
           )) {
-          return element;
+          answer = element;
         }
-        return false;
       });
     }
-    return null;
+    return answer;
   }
 
   get relativeMousePosition() {
@@ -147,11 +148,13 @@ export default class Events {
       this.canvasEvent.element.select();
       this.canvasEvent.element.drag();
     } else {
+      
       this.canvasEvent.element.select();
-      if (
+      this.canvasEvent.elementSelected = this.canvasEvent.element;
+      /* if (
         this.editor.selection.length === 1
           && !this.canvasEvent.ctrlKey
-      ) this.editor.deselectAll();
+      ) this.editor.deselectAll(); */
     }
   }
 
@@ -165,7 +168,7 @@ export default class Events {
       this.editor.selection.forEach((element) => {
         element.mouseMove();
       });
-    } else {
+    } else if (this.canvasEvent.elementSelected) {
       this.canvasEvent.element.holder.mouseMove();
     }
   }

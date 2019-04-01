@@ -1,20 +1,29 @@
 import Element from '../elements';
 
-const mouse = {
-  x: 0,
-  y: 0,
-  startX: 0,
-  startY: 0,
-};
-
 export default class Line extends Element {
-
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     editor.ctx.beginPath();
-    editor.ctx.moveTo(this.startX, this.startY);
-    editor.ctx.lineTo(this.x, this.y);
+    editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
+    editor.ctx.lineTo(this.dimensions.endX, this.dimensions.endY);
     editor.ctx.stroke();
+  }
+
+  updateElement() {
+    const startX = this.editor.events.canvasEvent.mouse.startCanvasX;
+    const startY = this.editor.events.canvasEvent.mouse.startCanvasY;
+    const endX = this.editor.events.canvasEvent.mouse.canvasX;
+    const endY = this.editor.events.canvasEvent.mouse.canvasY;
+    this.elementDimensions = {
+      startX,
+      startY,
+      endX,
+      endY,
+      width: Math.abs(startX - endX),
+      height: Math.abs(startY - endY),
+    };
+    this.editor.renderAll();
+    this.draw(false);
   }
 
   resize(mouseResize, affecter) {
@@ -57,57 +66,5 @@ export default class Line extends Element {
           console.log('wrong affect parameter');
       }
     }));
-  }
-
-  static mouseDown(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    this.started = true;
-    mouse.startX = relativeMousePosition.x;
-    mouse.startY = relativeMousePosition.y;
-  }
-
-  static mouseMove(e, tool) {
-    let element;
-    if (this.started) {
-      element = this.createElement(e, tool);
-      element.editor.canvasUpdate(0, false);
-      element.draw(false);
-    }
-    return element;
-  }
-
-  static mouseUp(e, tool) {
-    if (this.started) {
-      const element = this.mouseMove(e, tool);
-      element.editor.elements.push(element);
-      element.editor.canvasUpdate(2, true);
-      this.started = false;
-    }
-  }
-
-  static createElement(e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    mouse.x = relativeMousePosition.x;
-    mouse.y = relativeMousePosition.y;
-    const element = {
-      startX: mouse.startX,
-      startY: mouse.startY,
-      x: mouse.x,
-      y: mouse.y,
-      width: Math.abs(mouse.x - mouse.startX),
-      height: Math.abs(mouse.y - mouse.startY),
-      resizer: {
-        x: mouse.startX < mouse.x ? mouse.startX : mouse.x,
-        y: mouse.startY < mouse.y ? mouse.startY : mouse.x,
-      },
-    };
-    return new Line(
-      tool.name,
-      tool.properties,
-      tool.events,
-      tool.editor,
-      element,
-      null,
-    );
   }
 }

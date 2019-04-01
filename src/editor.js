@@ -196,6 +196,7 @@ export default class Editor {
         element.transform();
       } else {
         element.draw();
+        if (element.selected) element.holder.select();
       }
     });
   }
