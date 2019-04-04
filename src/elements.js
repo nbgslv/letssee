@@ -7,6 +7,7 @@ export default class Element extends Tool {
     // TODO figure out how to implement different types of elements
     super(name, moduleName, properties, events, editor);
     this.id = Symbol('element');
+    this.type = 'element';
     this.upperCanvas = false;
     this.dimensions = {
       startX: 0,
@@ -80,11 +81,54 @@ export default class Element extends Tool {
     this.dimensions.endY = dimensions.endY;
     this.dimensions.width = dimensions.width;
     this.dimensions.height = dimensions.height;
+    this.resizer.topLeftX = dimensions.startX;
+    this.resizer.topLeftY = dimensions.startY;
   }
-  
+
   select() {
     this.holder = new Hold(this);
     this.holder.select();
+  }
+
+  resize() {
+    const mouseResize = {
+      deltaX: this.editor.events.canvasEvent.mouse.canvasX
+        - this.editor.events.canvasEvent.mouse.startCanvasX,
+      deltaY: this.editor.events.canvasEvent.mouse.canvasY
+        - this.editor.events.canvasEvent.mouse.startCanvasY,
+    };
+    this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
+      switch (affect) {
+        case 1:
+          this.dimensions.width -= mouseResize.deltaX;
+          this.dimensions.startX += mouseResize.deltaX;
+          this.resizer.topLeftX += mouseResize.deltaX;
+          break;
+        case 2:
+          this.dimensions.height -= mouseResize.deltaY;
+          this.dimensions.startY += mouseResize.deltaY;
+          this.resizer.topLeftY += mouseResize.deltaY;
+          break;
+        case 3:
+          this.dimensions.width += mouseResize.deltaX;
+          this.dimensions.endX += mouseResize.deltaX;
+          break;
+        case 4:
+          this.dimensions.height += mouseResize.deltaY;
+          this.dimensions.endY += mouseResize.deltaY;
+          break;
+        case 5:
+          this.rotation = Element.calculateRotationDegrees(
+            mouseResize.positionX,
+            mouseResize.positionY,
+            this.startX + this.width / 2,
+            this.startY + this.height / 2,
+          );
+          break;
+        default:
+          console.log('wrong affect parameter');
+      }
+    }));
   }
 
   rotate(editor) {
@@ -100,48 +144,6 @@ export default class Element extends Tool {
     editor.ctx.rotate(rotation);
     this.rotationChange = false;
     editor.ctx.translate(-translationPointX, -translationPointY);
-  }
-
-  resize(mouseResize, affecter) {
-    affecter.forEach(((affect) => {
-      switch (affect) {
-        case 1:
-          this.width -= mouseResize.deltaX;
-          this.startX += mouseResize.deltaX;
-          this.resizer.x += mouseResize.deltaX;
-          break;
-        case 2:
-          this.height -= mouseResize.deltaY;
-          this.startY += mouseResize.deltaY;
-          this.resizer.y += mouseResize.deltaY;
-          break;
-        case 3:
-          this.width += mouseResize.deltaX;
-          this.x += mouseResize.deltaX;
-          break;
-        case 4:
-          this.height += mouseResize.deltaY;
-          this.y += mouseResize.deltaY;
-          break;
-        case 5:
-          this.rotation = Element.calculateRotationDegrees(
-            mouseResize.positionX,
-            mouseResize.positionY,
-            this.startX + this.width / 2,
-            this.startY + this.height / 2,
-          );
-          console.log(Element.calculateRotationDegrees(
-            mouseResize.positionX,
-            mouseResize.positionY,
-            this.startX + this.width / 2,
-            this.startY + this.height / 2,
-          ) * 180 / Math.PI);
-          this.rotationChange = true;
-          break;
-        default:
-          console.log('wrong affect parameter');
-      }
-    }));
   }
 
   transform() {
@@ -182,8 +184,8 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    if ((this.dimensions.startX <= mousePositionX) && (this.dimensions.startX + this.dimensions.width >= mousePositionX)
-      && (this.dimensions.startY <= mousePositionY) && (this.dimensions.startY + this.dimensions.height >= mousePositionY)) {
+    if ((this.resizer.topLeftX <= mousePositionX) && (this.resizer.topLeftX + this.dimensions.width >= mousePositionX)
+      && (this.resizer.topLeftY <= mousePositionY) && (this.resizer.topLeftY + this.dimensions.height >= mousePositionY)) {
       return this;
     }
     return false;

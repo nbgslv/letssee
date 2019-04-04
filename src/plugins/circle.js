@@ -59,8 +59,10 @@ export default class Ellipse extends Element {
     this.dimensions.startY = startY;
     this.dimensions.endX = endX;
     this.dimensions.endY = endY;
-    this.dimensions.width = Math.abs(startX - endX);
-    this.dimensions.height = Math.abs(startY - endY);
+    this.dimensions.width = width;
+    this.dimensions.height = height;
+    this.resizer.topLeftX = startX;
+    this.resizer.topLeftY = startY;
     this.radiusX = width / 2;
     this.radiusY = height / 2;
     this.centerX = startX + this.radiusX;

@@ -92,8 +92,8 @@ export default class Triangle extends Element {
       y: rightPointY,
     };
     this.resizer = {
-      x: startX > endX ? endX : endX - width,
-      y: startY,
+      topLeftX: Math.min(endX, startX),
+      topLeftY: Math.min(endY, startY),
     };
   }
 

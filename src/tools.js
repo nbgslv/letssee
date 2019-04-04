@@ -9,7 +9,6 @@ export default class Tool {
   }
 
   createElement() {
-    const element = this.editor.createElement(this.moduleName, this);
-    return element;
+    return this.editor.createElement(this.moduleName, this);
   }
 }

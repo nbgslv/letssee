@@ -24,6 +24,7 @@ export default class Rectangle extends Element {
     editor.ctx.translate(-translationPointX, -translationPointY);
   }
 
+  /*
   resize(mouseResize, affecter) {
     affecter.forEach(((affect) => {
       switch (affect) {
@@ -65,4 +66,5 @@ export default class Rectangle extends Element {
       }
     }));
   }
+   */
 }

@@ -9,7 +9,6 @@ export default class Events {
       element: null,
       elementDrawn: null,
       elementSelected: null,
-      selection: false,
       ctrlKey: e.ctrlKey,
       shiftKey: e.shiftKey,
       mouse: {
@@ -27,6 +26,7 @@ export default class Events {
       position: {
         inCanvas: false,
         inElement: false,
+        inResizer: false,
         resizer: -1,
       },
       cache: null,
@@ -59,13 +59,17 @@ export default class Events {
   }
 
   onMouseDown() {
-    if (this.canvasEvent.position.inElement) {
-      this.handleElementMouseDown();
-    } else if (this.canvasEvent.position.inCanvas) {
+    if (this.canvasEvent.position.inCanvas) {
       const relativeMousePosition = this.relativeMousePosition;
       this.canvasEvent.mouse.startCanvasX = relativeMousePosition.x;
       this.canvasEvent.mouse.startCanvasY = relativeMousePosition.y;
-      this.handleCanvasMouseDown();
+      if (this.canvasEvent.position.inElement) {
+        this.handleElementMouseDown();
+      } else if (this.canvasEvent.position.inResizer) {
+        this.handleResizerMouseDown();
+      } else {
+        this.handleCanvasMouseDown();
+      }
     }
   }
 
@@ -87,15 +91,25 @@ export default class Events {
     const mousePosition = this.mousePosition;
     if (mousePosition) {
       this.canvasEvent.position.inCanvas = true;
-      this.canvasEvent.position.inElement = true;
-      this.canvasEvent.element = mousePosition;
+      if (mousePosition.type === 'element') {
+        this.canvasEvent.position.inElement = true;
+        this.canvasEvent.element = mousePosition;
+      } else if (mousePosition.type === 'resizer' || mousePosition.type === 'rotator') {
+        this.canvasEvent.position.inResizer = true;
+        this.canvasEvent.position.resizer = mousePosition;
+      }
     } else if (!mousePosition) {
       this.canvasEvent.position.inCanvas = true;
       this.canvasEvent.position.inElement = false;
+      this.canvasEvent.position.inResizer = false;
     } else {
       this.canvasEvent.position.inCanvas = false;
       this.canvasEvent.position.inElement = false;
+      this.canvasEvent.position.inResizer = false;
     }
+    console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
+    in element: ${this.canvasEvent.position.inElement}
+    in resizer: ${this.canvasEvent.position.inResizer}`);
   }
 
   updateMousePosition() {
@@ -128,6 +142,15 @@ export default class Events {
             this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
           )) {
           answer = element;
+        } else {
+          this.editor.selection.forEach((selection) => {
+            const mouseInResizer = selection.holder.mouseInResizer(
+              this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
+            );
+            if (mouseInResizer) {
+              answer = mouseInResizer;
+            }
+          });
         }
       });
     }
@@ -148,7 +171,6 @@ export default class Events {
       this.canvasEvent.element.select();
       this.canvasEvent.element.drag();
     } else {
-      
       this.canvasEvent.element.select();
       this.canvasEvent.elementSelected = this.canvasEvent.element;
       /* if (
@@ -156,6 +178,12 @@ export default class Events {
           && !this.canvasEvent.ctrlKey
       ) this.editor.deselectAll(); */
     }
+  }
+
+  handleResizerMouseDown() {
+    this.editor.selection.forEach((selection) => {
+      selection.resize();
+    });
   }
 
   handleCanvasMouseDown() {
@@ -169,7 +197,7 @@ export default class Events {
         element.mouseMove();
       });
     } else if (this.canvasEvent.elementSelected) {
-      this.canvasEvent.element.holder.mouseMove();
+      //this.canvasEvent.element.holder.mouseMove();
     }
   }
 
@@ -185,7 +213,7 @@ export default class Events {
         element.mouseUp();
       });
     } else if (this.canvasEvent.element) {
-      this.canvasEvent.element.mouseUp();
+      //this.canvasEvent.element.mouseUp();
     }
     if (this.canvasEvent.cache) {
       this.recordUndo();
