@@ -91,44 +91,46 @@ export default class Element extends Tool {
   }
 
   resize() {
-    const mouseResize = {
-      deltaX: this.editor.events.canvasEvent.mouse.canvasX
-        - this.editor.events.canvasEvent.mouse.startCanvasX,
-      deltaY: this.editor.events.canvasEvent.mouse.canvasY
-        - this.editor.events.canvasEvent.mouse.startCanvasY,
-    };
-    this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
-      switch (affect) {
-        case 1:
-          this.dimensions.width -= mouseResize.deltaX;
-          this.dimensions.startX += mouseResize.deltaX;
-          this.resizer.topLeftX += mouseResize.deltaX;
-          break;
-        case 2:
-          this.dimensions.height -= mouseResize.deltaY;
-          this.dimensions.startY += mouseResize.deltaY;
-          this.resizer.topLeftY += mouseResize.deltaY;
-          break;
-        case 3:
-          this.dimensions.width += mouseResize.deltaX;
-          this.dimensions.endX += mouseResize.deltaX;
-          break;
-        case 4:
-          this.dimensions.height += mouseResize.deltaY;
-          this.dimensions.endY += mouseResize.deltaY;
-          break;
-        case 5:
-          this.rotation = Element.calculateRotationDegrees(
-            mouseResize.positionX,
-            mouseResize.positionY,
-            this.startX + this.width / 2,
-            this.startY + this.height / 2,
-          );
-          break;
-        default:
-          console.log('wrong affect parameter');
-      }
-    }));
+    if (this.editor.events.canvasEvent.resizing) {
+      const mouseResize = {
+        deltaX: this.editor.events.canvasEvent.mouse.canvasX
+          - this.editor.events.canvasEvent.mouse.startCanvasX,
+        deltaY: this.editor.events.canvasEvent.mouse.canvasY
+          - this.editor.events.canvasEvent.mouse.startCanvasY,
+      };
+      this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
+        switch (affect) {
+          case 1:
+            this.dimensions.width -= mouseResize.deltaX;
+            this.dimensions.startX += mouseResize.deltaX;
+            this.resizer.topLeftX += mouseResize.deltaX;
+            break;
+          case 2:
+            this.dimensions.height -= mouseResize.deltaY;
+            this.dimensions.startY += mouseResize.deltaY;
+            this.resizer.topLeftY += mouseResize.deltaY;
+            break;
+          case 3:
+            this.dimensions.width += mouseResize.deltaX;
+            this.dimensions.endX += mouseResize.deltaX;
+            break;
+          case 4:
+            this.dimensions.height += mouseResize.deltaY;
+            this.dimensions.endY += mouseResize.deltaY;
+            break;
+          case 5:
+            this.rotation = Element.calculateRotationDegrees(
+              mouseResize.positionX,
+              mouseResize.positionY,
+              this.startX + this.width / 2,
+              this.startY + this.height / 2,
+            );
+            break;
+          default:
+            console.log('wrong affect parameter');
+        }
+      }));
+    }
   }
 
   rotate(editor) {

@@ -9,6 +9,8 @@ export default class Events {
       element: null,
       elementDrawn: null,
       elementSelected: null,
+      resizing: false,
+      dragging: false,
       ctrlKey: e.ctrlKey,
       shiftKey: e.shiftKey,
       mouse: {
@@ -27,7 +29,7 @@ export default class Events {
         inCanvas: false,
         inElement: false,
         inResizer: false,
-        resizer: -1,
+        resizer: null,
       },
       cache: null,
       e,
@@ -76,6 +78,8 @@ export default class Events {
   onMouseMove() {
     if (this.canvasEvent.element) {
       this.handleSelectionMouseMove();
+    } else if (this.canvasEvent.position.resizer) {
+      this.handleResizerMouseMove();
     } else if (this.canvasEvent.position.inCanvas && this.canvasEvent.elementDrawn) {
       this.handleDrawMouseMove();
     }
@@ -94,9 +98,13 @@ export default class Events {
       if (mousePosition.type === 'element') {
         this.canvasEvent.position.inElement = true;
         this.canvasEvent.element = mousePosition;
+        this.canvasEvent.position.resizer = null;
+        this.canvasEvent.position.inResizer = false;
       } else if (mousePosition.type === 'resizer' || mousePosition.type === 'rotator') {
         this.canvasEvent.position.inResizer = true;
         this.canvasEvent.position.resizer = mousePosition;
+        this.canvasEvent.element = null;
+        this.canvasEvent.position.inElement = false;
       }
     } else if (!mousePosition) {
       this.canvasEvent.position.inCanvas = true;
@@ -181,9 +189,7 @@ export default class Events {
   }
 
   handleResizerMouseDown() {
-    this.editor.selection.forEach((selection) => {
-      selection.resize();
-    });
+    this.canvasEvent.resizing = true;
   }
 
   handleCanvasMouseDown() {
@@ -199,6 +205,13 @@ export default class Events {
     } else if (this.canvasEvent.elementSelected) {
       //this.canvasEvent.element.holder.mouseMove();
     }
+  }
+
+  handleResizerMouseMove() {
+    this.editor.selection.forEach((selection) => {
+      selection.resize();
+    });
+    this.editor.renderAll();
   }
 
   handleDrawMouseMove() {
