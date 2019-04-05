@@ -16,8 +16,9 @@ export default class Hold {
     this.resizing = false;
   }
 
-  draw(canvas = true) {
+  draw(update = false, canvas = true) {
     const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
+    if (update) this.updateResizersArrays();
     for (let i = 0; i < this.resizers.length; i += 1) {
       editor.ctx.fillRect(
         this.resizers[i].startX,
@@ -236,6 +237,11 @@ export default class Hold {
       resizers,
       lines,
     };
+  }
+
+  updateResizersArrays() {
+    this.resizers = this.resizersArrays.resizers;
+    this.lines = this.resizersArrays.lines;
   }
 
   mouseInResizer(mousePositionX, mousePositionY) {

@@ -176,7 +176,6 @@ export default class Events {
   handleElementMouseDown() {
     // if element not selected, select it
     if (this.canvasEvent.element.holder) {
-      this.canvasEvent.element.select();
       this.canvasEvent.element.drag();
     } else {
       this.canvasEvent.element.select();
