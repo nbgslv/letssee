@@ -69,7 +69,7 @@ export default class Events {
         this.handleElementMouseDown();
       } else if (this.canvasEvent.position.inResizer) {
         this.handleResizerMouseDown();
-      } else {
+      } else if (this.editor.activeTool.name !== 'hold') {
         this.handleCanvasMouseDown();
       }
     }
@@ -78,7 +78,7 @@ export default class Events {
   onMouseMove() {
     if (this.canvasEvent.element) {
       this.handleSelectionMouseMove();
-    } else if (this.canvasEvent.position.resizer) {
+    } else if (this.canvasEvent.position.resizer || this.canvasEvent.resizing) {
       this.handleResizerMouseMove();
     } else if (this.canvasEvent.position.inCanvas && this.canvasEvent.elementDrawn) {
       this.handleDrawMouseMove();
@@ -211,6 +211,10 @@ export default class Events {
       selection.resize();
     });
     this.editor.renderAll();
+    this.updatePosition();
+    const relativeMousePosition = this.relativeMousePosition;
+    this.canvasEvent.mouse.startCanvasX = relativeMousePosition.x;
+    this.canvasEvent.mouse.startCanvasY = relativeMousePosition.y;
   }
 
   handleDrawMouseMove() {
@@ -226,10 +230,14 @@ export default class Events {
       });
     } else if (this.canvasEvent.element) {
       //this.canvasEvent.element.mouseUp();
+    } else if (this.canvasEvent.resizing) {
+      this.canvasEvent.resizing = false;
+      this.canvasEvent.position.resizer = null;
     }
     if (this.canvasEvent.cache) {
       this.recordUndo();
     }
+    this.canvasEvent = null;
   }
 
   recordUndo() {
@@ -312,3 +320,5 @@ class Dispatcher {
   }
 }
 */
+
+// TODO update selection and shape after shape 180 deg flip in resize

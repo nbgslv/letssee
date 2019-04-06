@@ -3,8 +3,6 @@ import Element from '../elements';
 export default class Ellipse extends Element {
   constructor(name, moduleName, properties, events, editor) {
     super(name, moduleName, properties, events, editor);
-    this.width = 0;
-    this.height = 0;
     this.centerX = 0;
     this.centerY = 0;
     this.endX = 0;
@@ -69,63 +67,71 @@ export default class Ellipse extends Element {
     this.centerY = startY + this.radiusY;
   }
 
-  resize(mouseResize, affecter) {
-    affecter.forEach((affect) => {
-      switch (affect) {
-        case 1:
-          this.startX += mouseResize.deltaX / 2;
-          this.centerX += mouseResize.deltaX / 2;
-          this.width -= mouseResize.deltaX;
-          this.radiusX -= mouseResize.deltaX / 2;
-          this.resizer.x = this.centerX - this.radiusX;
-          break;
-        case 2:
-          this.startY += mouseResize.deltaY / 2;
-          this.centerY += mouseResize.deltaY / 2;
-          this.height -= mouseResize.deltaY;
-          this.radiusY -= mouseResize.deltaY / 2;
-          this.resizer.y = this.centerY - this.radiusY;
-          break;
-        case 3:
-          this.startX += mouseResize.deltaX / 2;
-          this.centerX += mouseResize.deltaX / 2;
-          this.width += mouseResize.deltaX;
-          this.radiusX += mouseResize.deltaX / 2;
-          this.resizer.x = this.centerX - this.radiusX;
-          break;
-        case 4:
-          this.startY += mouseResize.deltaY / 2;
-          this.centerY += mouseResize.deltaY / 2;
-          this.height += mouseResize.deltaY;
-          this.radiusY += mouseResize.deltaY / 2;
-          this.resizer.y = this.centerY - this.radiusY;
-          break;
-        case 5:
-          this.rotation = Element.calculateRotationDegrees(
-            mouseResize.positionX,
-            mouseResize.positionY,
-            this.startX + this.width / 2,
-            this.startY + this.height / 2,
-          );
-          this.rotationChange = true;
-          break;
-        default:
-          console.log('wrong affect number used');
-      }
-    });
+  resize() {
+    if (this.editor.events.canvasEvent.resizing) {
+      const mouseResize = {
+        deltaX: this.editor.events.canvasEvent.mouse.canvasX
+          - this.editor.events.canvasEvent.mouse.startCanvasX,
+        deltaY: this.editor.events.canvasEvent.mouse.canvasY
+          - this.editor.events.canvasEvent.mouse.startCanvasY,
+      };
+      this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
+        switch (affect) {
+          case 1:
+            this.dimensions.startX += mouseResize.deltaX / 2;
+            this.centerX += mouseResize.deltaX / 2;
+            this.dimensions.width -= mouseResize.deltaX;
+            this.radiusX -= mouseResize.deltaX / 2;
+            this.resizer.topLeftX = this.centerX - this.radiusX;
+            break;
+          case 2:
+            this.dimensions.startY += mouseResize.deltaY / 2;
+            this.centerY += mouseResize.deltaY / 2;
+            this.dimensions.height -= mouseResize.deltaY;
+            this.radiusY -= mouseResize.deltaY / 2;
+            this.resizer.topLeftY = this.centerY - this.radiusY;
+            break;
+          case 3:
+            this.dimensions.startX += mouseResize.deltaX / 2;
+            this.centerX += mouseResize.deltaX / 2;
+            this.dimensions.width += mouseResize.deltaX;
+            this.radiusX += mouseResize.deltaX / 2;
+            this.resizer.topLeftX = this.centerX - this.radiusX;
+            break;
+          case 4:
+            this.dimensions.startY += mouseResize.deltaY / 2;
+            this.centerY += mouseResize.deltaY / 2;
+            this.dimensions.height += mouseResize.deltaY;
+            this.radiusY += mouseResize.deltaY / 2;
+            this.resizer.topLeftY = this.centerY - this.radiusY;
+            break;
+          case 5:
+            this.rotation = Element.calculateRotationDegrees(
+              mouseResize.positionX,
+              mouseResize.positionY,
+              this.dimensions.startX + this.dimensions.width / 2,
+              this.dimensions.startY + this.dimensions.height / 2,
+            );
+            this.rotationChange = true;
+            break;
+          default:
+            console.log('wrong affect number used');
+        }
+      }));
+    }
   }
 
   move(mouseMove) {
-    this.startX += mouseMove.deltaX;
-    this.startY += mouseMove.deltaY;
+    this.dimensions.startX += mouseMove.deltaX;
+    this.dimensions.startY += mouseMove.deltaY;
     this.endX += mouseMove.deltaX;
     this.endY += mouseMove.deltaY;
     this.x += mouseMove.deltaX;
     this.y += mouseMove.deltaY;
     this.centerX += mouseMove.deltaX;
     this.centerY += mouseMove.deltaY;
-    this.resizer.x += mouseMove.deltaX;
-    this.resizer.y += mouseMove.deltaY;
+    this.resizer.topLeftX += mouseMove.deltaX;
+    this.resizer.topLeftY += mouseMove.deltaY;
   }
 }
 

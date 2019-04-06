@@ -104,5 +104,7 @@ export default class CurvedRectangle extends Element {
     this.dimensions.height = height;
     this.curveX = width <= this.curveXY * 2 ? Math.abs(width) / 2 : this.curveXY;
     this.curveY = height <= this.curveXY * 2 ? Math.abs(height) / 2 : this.curveXY;
+    this.resizer.topLeftX = dimensions.startX;
+    this.resizer.topLeftY = dimensions.startY;
   }
 }

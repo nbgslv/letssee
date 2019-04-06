@@ -35,8 +35,6 @@ export default class Triangle extends Element {
     const endY = this.editor.events.canvasEvent.mouse.canvasY;
     const width = Math.abs((endX - startX) * 2);
     const height = Math.abs(endY - startY);
-
-
     this.elementDimensions = {
       startX,
       startY,
@@ -92,53 +90,61 @@ export default class Triangle extends Element {
       y: rightPointY,
     };
     this.resizer = {
-      topLeftX: Math.min(endX, startX),
+      topLeftX: Math.min(Math.max(endX, endX - width), startX - width / 2),
       topLeftY: Math.min(endY, startY),
     };
   }
 
-  resize(mouseResize, affecter) {
-    affecter.forEach((affect) => {
-      let oldWidth;
-      switch (affect) {
-        case 1:
-          oldWidth = this.width;
-          this.leftPoint.x += mouseResize.deltaX;
-          this.width -= mouseResize.deltaX;
-          this.headPoint.x -= this.width / 2 - oldWidth / 2;
-          this.startX += mouseResize.deltaX;
-          this.resizer.x += mouseResize.deltaX;
-          break;
-        case 2:
-          this.headPoint.y += mouseResize.deltaY;
-          this.startY += mouseResize.deltaY;
-          this.resizer.y += mouseResize.deltaY;
-          this.height -= mouseResize.deltaY;
-          break;
-        case 3:
-          oldWidth = this.width;
-          this.rightPoint.x += mouseResize.deltaX;
-          this.width += mouseResize.deltaX;
-          this.headPoint.x += this.width / 2 - oldWidth / 2;
-          break;
-        case 4:
-          this.leftPoint.y += mouseResize.deltaY;
-          this.rightPoint.y += mouseResize.deltaY;
-          this.height += mouseResize.deltaY;
-          break;
-        case 5:
-          this.rotation = Element.calculateRotationDegrees(
-            mouseResize.positionX,
-            mouseResize.positionY,
-            this.startX + this.width / 2,
-            this.startY + this.height / 2,
-          ) - 180 * Math.PI / 180;
-          this.rotationChange = true;
-          break;
-        default:
-          console.log('no');
-      }
-    });
+  resize() {
+    if (this.editor.events.canvasEvent.resizing) {
+      const mouseResize = {
+        deltaX: this.editor.events.canvasEvent.mouse.canvasX
+          - this.editor.events.canvasEvent.mouse.startCanvasX,
+        deltaY: this.editor.events.canvasEvent.mouse.canvasY
+          - this.editor.events.canvasEvent.mouse.startCanvasY,
+      };
+      this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
+        let oldWidth;
+        switch (affect) {
+          case 1:
+            oldWidth = this.dimensions.width;
+            this.leftPoint.x += mouseResize.deltaX;
+            this.dimensions.width -= mouseResize.deltaX;
+            this.headPoint.x -= this.dimensions.width / 2 - oldWidth / 2;
+            this.dimensions.startX += mouseResize.deltaX;
+            this.resizer.topLeftX += mouseResize.deltaX;
+            break;
+          case 2:
+            this.headPoint.y += mouseResize.deltaY;
+            this.dimensions.startY += mouseResize.deltaY;
+            this.resizer.topLeftY += mouseResize.deltaY;
+            this.dimensions.height -= mouseResize.deltaY;
+            break;
+          case 3:
+            oldWidth = this.dimensions.width;
+            this.rightPoint.x += mouseResize.deltaX;
+            this.dimensions.width += mouseResize.deltaX;
+            this.headPoint.x += this.dimensions.width / 2 - oldWidth / 2;
+            break;
+          case 4:
+            this.leftPoint.y += mouseResize.deltaY;
+            this.rightPoint.y += mouseResize.deltaY;
+            this.dimensions.height += mouseResize.deltaY;
+            break;
+          case 5:
+            this.rotation = Element.calculateRotationDegrees(
+              mouseResize.positionX,
+              mouseResize.positionY,
+              this.dimensions.startX + this.dimensions.width / 2,
+              this.dimensions.startY + this.dimensions.height / 2,
+            ) - 180 * Math.PI / 180;
+            this.rotationChange = true;
+            break;
+          default:
+            console.log('no');
+        }
+      }));
+    }
   }
 
   move(mouseMove) {
@@ -152,7 +158,7 @@ export default class Triangle extends Element {
     this.rightPoint.y += mouseMove.deltaY;
     this.x += mouseMove.deltaX;
     this.y += mouseMove.deltaY;
-    this.resizer.x += mouseMove.deltaX;
-    this.resizer.y += mouseMove.deltaY;
+    this.resizer.topLeftX += mouseMove.deltaX;
+    this.resizer.topLeftY += mouseMove.deltaY;
   }
 }
