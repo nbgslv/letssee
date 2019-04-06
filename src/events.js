@@ -76,7 +76,7 @@ export default class Events {
   }
 
   onMouseMove() {
-    if (this.canvasEvent.element) {
+    if (this.canvasEvent.element || this.canvasEvent.dragging) {
       this.handleSelectionMouseMove();
     } else if (this.canvasEvent.position.resizer || this.canvasEvent.resizing) {
       this.handleResizerMouseMove();
@@ -118,6 +118,13 @@ export default class Events {
     console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
     in element: ${this.canvasEvent.position.inElement}
     in resizer: ${this.canvasEvent.position.inResizer}`);
+  }
+
+  updateStartMousePosition() {
+    this.updatePosition();
+    const relativeMousePosition = this.relativeMousePosition;
+    this.canvasEvent.mouse.startCanvasX = relativeMousePosition.x;
+    this.canvasEvent.mouse.startCanvasY = relativeMousePosition.y;
   }
 
   updateMousePosition() {
@@ -176,7 +183,7 @@ export default class Events {
   handleElementMouseDown() {
     // if element not selected, select it
     if (this.canvasEvent.element.holder) {
-      this.canvasEvent.element.drag();
+      this.canvasEvent.dragging = true;
     } else {
       this.canvasEvent.element.select();
       this.canvasEvent.elementSelected = this.canvasEvent.element;
@@ -197,13 +204,16 @@ export default class Events {
   }
 
   handleSelectionMouseMove() {
-    if (this.canvasEvent.selection) {
-      this.editor.selection.forEach((element) => {
-        element.mouseMove();
+    if (this.editor.selection.length > 1) {
+      this.editor.selection.forEach((selection) => {
+        selection.drag();
       });
-    } else if (this.canvasEvent.elementSelected) {
-      //this.canvasEvent.element.holder.mouseMove();
+    } else {
+      this.canvasEvent.element.drag();
     }
+    this.editor.renderAll();
+    this.updatePosition();
+    this.updateStartMousePosition();
   }
 
   handleResizerMouseMove() {
@@ -211,10 +221,7 @@ export default class Events {
       selection.resize();
     });
     this.editor.renderAll();
-    this.updatePosition();
-    const relativeMousePosition = this.relativeMousePosition;
-    this.canvasEvent.mouse.startCanvasX = relativeMousePosition.x;
-    this.canvasEvent.mouse.startCanvasY = relativeMousePosition.y;
+    this.updateStartMousePosition();
   }
 
   handleDrawMouseMove() {
@@ -224,20 +231,10 @@ export default class Events {
   handleMouseUp() {
     if (this.canvasEvent.elementDrawn) {
       this.canvasEvent.elementDrawn.endDraw();
-    } else if (this.canvasEvent.selection) {
-      this.canvasEvent.selection.forEach((element) => {
-        element.mouseUp();
-      });
-    } else if (this.canvasEvent.element) {
-      //this.canvasEvent.element.mouseUp();
-    } else if (this.canvasEvent.resizing) {
-      this.canvasEvent.resizing = false;
-      this.canvasEvent.position.resizer = null;
     }
     if (this.canvasEvent.cache) {
       this.recordUndo();
     }
-    this.canvasEvent = null;
   }
 
   recordUndo() {

@@ -5,8 +5,6 @@ export default class Ellipse extends Element {
     super(name, moduleName, properties, events, editor);
     this.centerX = 0;
     this.centerY = 0;
-    this.endX = 0;
-    this.endY = 0;
     this.radiusX = 0;
     this.radiusY = 0;
   }
@@ -121,17 +119,23 @@ export default class Ellipse extends Element {
     }
   }
 
-  move(mouseMove) {
-    this.dimensions.startX += mouseMove.deltaX;
-    this.dimensions.startY += mouseMove.deltaY;
-    this.endX += mouseMove.deltaX;
-    this.endY += mouseMove.deltaY;
-    this.x += mouseMove.deltaX;
-    this.y += mouseMove.deltaY;
-    this.centerX += mouseMove.deltaX;
-    this.centerY += mouseMove.deltaY;
-    this.resizer.topLeftX += mouseMove.deltaX;
-    this.resizer.topLeftY += mouseMove.deltaY;
+  drag() {
+    if (this.editor.events.canvasEvent.dragging) {
+      const mouseMove = {
+        deltaX: this.editor.events.canvasEvent.mouse.canvasX
+          - this.editor.events.canvasEvent.mouse.startCanvasX,
+        deltaY: this.editor.events.canvasEvent.mouse.canvasY
+          - this.editor.events.canvasEvent.mouse.startCanvasY,
+      };
+      this.dimensions.startX += mouseMove.deltaX;
+      this.dimensions.startY += mouseMove.deltaY;
+      this.dimensions.endX += mouseMove.deltaX;
+      this.dimensions.endY += mouseMove.deltaY;
+      this.centerX += mouseMove.deltaX;
+      this.centerY += mouseMove.deltaY;
+      this.resizer.topLeftX += mouseMove.deltaX;
+      this.resizer.topLeftY += mouseMove.deltaY;
+    }
   }
 }
 

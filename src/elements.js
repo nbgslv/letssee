@@ -133,6 +133,23 @@ export default class Element extends Tool {
     }
   }
 
+  drag() {
+    if (this.editor.events.canvasEvent.dragging) {
+      const mouseMove = {
+        deltaX: this.editor.events.canvasEvent.mouse.canvasX
+          - this.editor.events.canvasEvent.mouse.startCanvasX,
+        deltaY: this.editor.events.canvasEvent.mouse.canvasY
+          - this.editor.events.canvasEvent.mouse.startCanvasY,
+      };
+      this.dimensions.startX += mouseMove.deltaX;
+      this.dimensions.startY += mouseMove.deltaY;
+      this.dimensions.endX += mouseMove.deltaX;
+      this.dimensions.endY += mouseMove.deltaY;
+      this.resizer.topLeftX += mouseMove.deltaX;
+      this.resizer.topLeftY += mouseMove.deltaY;
+    }
+  }
+
   rotate(editor) {
     editor.ctx.setTransform(1, 0, 0, 1, 0, 0);
     const translationPointX = this.startX + this.width / 2;
@@ -169,15 +186,6 @@ export default class Element extends Tool {
       this.draw();
       ctx.restore();
     }
-  }
-
-  move(mouseMove) {
-    this.startX += mouseMove.deltaX;
-    this.startY += mouseMove.deltaY;
-    this.x += mouseMove.deltaX;
-    this.y += mouseMove.deltaY;
-    this.resizer.x += mouseMove.deltaX;
-    this.resizer.y += mouseMove.deltaY;
   }
 
   addLayer() {
