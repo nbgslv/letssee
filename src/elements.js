@@ -21,6 +21,7 @@ export default class Element extends Tool {
       topLeftX: 0,
       topLeftY: 0,
     };
+    this.rotation = 0;
     this.transformation = {
       activeAffecter: -1,
       transform: false,
@@ -120,11 +121,13 @@ export default class Element extends Tool {
             break;
           case 5:
             this.rotation = Element.calculateRotationDegrees(
-              mouseResize.positionX,
-              mouseResize.positionY,
-              this.startX + this.width / 2,
-              this.startY + this.height / 2,
+              this.editor.events.canvasEvent.mouse.canvasX,
+              this.editor.events.canvasEvent.mouse.canvasY,
+              this.dimensions.startX + this.dimensions.width / 2,
+              this.dimensions.startY + this.dimensions.height / 2,
             );
+            console.log(this.rotation);
+            this.rotate();
             break;
           default:
             console.log('wrong affect parameter');
@@ -150,19 +153,36 @@ export default class Element extends Tool {
     }
   }
 
-  rotate(editor) {
-    editor.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const translationPointX = this.startX + this.width / 2;
-    const translationPointY = this.startY + this.height / 2;
-    if (this.holder !== null) {
-      this.holder.draw();
-    }
-    editor.ctx.translate(translationPointX, translationPointY);
+  rotate() {
+    const editor = this.editor.canvas.canvas;
+    //editor.ctx.save();
+    const [
+      a,
+      b,
+      c,
+      d,
+      e,
+      f,
+    ] = this.rotationMatrix;
+    const translationPointX = this.dimensions.startX + this.dimensions.width / 2;
+    const translationPointY = this.dimensions.startY + this.dimensions.height / 2;
+    //editor.ctx.translate(150, 150);
+    editor.ctx.setTransform(a, b, c, d, 150, 150);
+    /*
     const rotation = this.rotation === 0 ? 0.01 : this.rotation - 90 * Math.PI / 180;
     console.log(this.rotation);
-    editor.ctx.rotate(rotation);
-    this.rotationChange = false;
-    editor.ctx.translate(-translationPointX, -translationPointY);
+     */
+    editor.ctx.rotate(this.rotation);
+    this.draw();
+    this.holder.draw(true);
+    //editor.ctx.translate(-150, -150);
+    //editor.ctx.restore();
+  }
+
+  get rotationMatrix() {
+    const cos = Math.cos(this.rotation);
+    const sin = Math.sin(this.rotation);
+    return [cos, sin, -sin, cos, 0, 0];
   }
 
   transform() {
