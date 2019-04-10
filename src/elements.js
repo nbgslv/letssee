@@ -21,11 +21,9 @@ export default class Element extends Tool {
       topLeftX: 0,
       topLeftY: 0,
     };
-    this.rotation = 0;
     this.transformation = {
       activeAffecter: -1,
       transform: false,
-      dragging: false,
       transformMatrix: [],
       rotationAngle: 0,
     };
@@ -120,14 +118,15 @@ export default class Element extends Tool {
             this.dimensions.endY += mouseResize.deltaY;
             break;
           case 5:
-            this.rotation = Element.calculateRotationDegrees(
-              this.editor.events.canvasEvent.mouse.canvasX,
-              this.editor.events.canvasEvent.mouse.canvasY,
-              this.dimensions.startX + this.dimensions.width / 2,
-              this.dimensions.startY + this.dimensions.height / 2,
-            );
-            console.log(this.rotation);
-            this.rotate();
+            this.transformation.transform = true;
+            const {
+              lastAngel,
+              newAngel,
+            } = this.calcRotateAngle;
+            this.transformation.rotationAngle = Element.radiansToDegrees(newAngel - lastAngel)
+              + this.transformation.rotationAngle;
+            if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
+            this.transformation.rotationAngle %= 360;
             break;
           default:
             console.log('wrong affect parameter');
@@ -155,34 +154,102 @@ export default class Element extends Tool {
 
   rotate() {
     const editor = this.editor.canvas.canvas;
-    //editor.ctx.save();
-    const [
-      a,
-      b,
-      c,
-      d,
-      e,
-      f,
-    ] = this.rotationMatrix;
-    const translationPointX = this.dimensions.startX + this.dimensions.width / 2;
-    const translationPointY = this.dimensions.startY + this.dimensions.height / 2;
-    //editor.ctx.translate(150, 150);
-    editor.ctx.setTransform(a, b, c, d, 150, 150);
-    /*
-    const rotation = this.rotation === 0 ? 0.01 : this.rotation - 90 * Math.PI / 180;
-    console.log(this.rotation);
-     */
-    editor.ctx.rotate(this.rotation);
+    editor.ctx.save();
+    const matrix = Element.multiplyMatrices(this.translateMatrix, this.rotationMatrix);
+    editor.ctx.translate(matrix[4], matrix[5]);
+    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], -matrix[4], -matrix[5]);
     this.draw();
-    this.holder.draw(true);
-    //editor.ctx.translate(-150, -150);
-    //editor.ctx.restore();
+    editor.ctx.restore();
   }
 
   get rotationMatrix() {
-    const cos = Math.cos(this.rotation);
-    const sin = Math.sin(this.rotation);
+    const rotationAngel = Element.degreesToRadians(this.transformation.rotationAngle);
+    const cos = Math.cos(rotationAngel);
+    const sin = Math.sin(rotationAngel);
     return [cos, sin, -sin, cos, 0, 0];
+  }
+
+  get translateMatrix() {
+    const translateToCenterValue = this.translateToCenterByRotateVector;
+    return [
+      1,
+      0,
+      0,
+      1,
+      translateToCenterValue.x,
+      translateToCenterValue.y,
+    ];
+  }
+
+  get calcRotateAngle() {
+    const translateToCenterValue = this.translateToCenterByRotateVector;
+    return {
+      lastAngel: Math.atan2(this.editor.events.canvasEvent.mouse.startCanvasY - translateToCenterValue.y,
+        this.editor.events.canvasEvent.mouse.startCanvasX - translateToCenterValue.x),
+      newAngel: Math.atan2(this.editor.events.canvasEvent.mouse.canvasY - translateToCenterValue.y,
+        this.editor.events.canvasEvent.mouse.canvasX - translateToCenterValue.x),
+    };
+  }
+
+  get calcCenterPoint() {
+    const translateX = 0.5 * this.dimensions.width;
+    const translateY = 0.5 * this.dimensions.height;
+    return {
+      translateX,
+      translateY,
+      x: this.dimensions.startX + translateX,
+      y: this.dimensions.startY + translateY,
+    };
+  }
+
+  rotatePoint(rotateVector) {
+    const {
+      x: vectorPointX,
+      y: vectorPointY,
+    } = rotateVector;
+    return {
+      x: this.dimensions.startX + vectorPointX,
+      y: this.dimensions.startY + vectorPointY,
+    };
+  }
+
+  rotateVector(translationToCenter) {
+    const {
+      translateX,
+      translateY,
+    } = translationToCenter;
+    const radians = Element.degreesToRadians(this.transformation.rotationAngle);
+    const sin = Math.sin(radians);
+    const cos = Math.cos(radians);
+    return {
+      x: translateX * cos - translateY * sin,
+      y: translateX * sin - translateY * cos,
+    };
+  }
+
+  get translateToCenterByRotateVector() {
+    const centerPoint = this.calcCenterPoint;
+    const rotateVector = this.rotateVector(centerPoint);
+    return this.rotatePoint(rotateVector);
+  }
+
+  static degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+  static radiansToDegrees(radians) {
+    return radians * 180 / Math.PI;
+  }
+
+  static multiplyMatrices(a, b) {
+    return [
+      a[0] * b[0] + a[2] * b[1],
+      a[1] * b[0] + a[3] * b[1],
+      a[0] * b[2] + a[2] * b[3],
+      a[1] * b[2] + a[3] * b[3],
+      a[0] * b[4] + a[2] * b[5] + a[4],
+      a[1] * b[4] + a[3] * b[5] + a[5],
+    ];
   }
 
   transform() {

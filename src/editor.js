@@ -193,7 +193,7 @@ export default class Editor {
     // Layers.sortByLayers();
     this.elements.forEach((element) => {
       if (element.transformation.transform) {
-        element.transform();
+        element.rotate();
       } else {
         element.draw();
       }

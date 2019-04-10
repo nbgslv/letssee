@@ -2,6 +2,10 @@ export default class Events {
   constructor(editor) {
     this.editor = editor;
     this.canvasEvent = null;
+    this.canvasEventCache = {
+      canvasX: 0,
+      canvasY: 0,
+    };
   }
 
   initCanvasEvent(e) {
@@ -235,6 +239,8 @@ export default class Events {
     if (this.canvasEvent.cache) {
       this.recordUndo();
     }
+    this.canvasEventCache.canvasX = this.canvasEvent.mouse.canvasX;
+    this.canvasEventCache.canvasY = this.canvasEvent.mouse.canvasY;
   }
 
   recordUndo() {

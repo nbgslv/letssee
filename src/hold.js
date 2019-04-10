@@ -19,6 +19,7 @@ export default class Hold {
   draw(update = false, canvas = true) {
     const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
     if (update) this.updateResizersArrays();
+    editor.ctx.save();
     for (let i = 0; i < this.resizers.length; i += 1) {
       editor.ctx.fillRect(
         this.resizers[i].startX,
@@ -34,6 +35,7 @@ export default class Hold {
       editor.ctx.stroke();
       editor.ctx.closePath();
     }
+    editor.ctx.restore();
   }
 
   select() {
