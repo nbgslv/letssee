@@ -123,7 +123,7 @@ export default class Element extends Tool {
               lastAngel,
               newAngel,
             } = this.calcRotateAngle;
-            this.transformation.rotationAngle = Element.radiansToDegrees(newAngel - lastAngel)
+            this.transformation.rotationAngle = Element.radiansToDegrees(lastAngel - newAngel)
               + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
@@ -156,8 +156,7 @@ export default class Element extends Tool {
     const editor = this.editor.canvas.canvas;
     editor.ctx.save();
     const matrix = Element.multiplyMatrices(this.translateMatrix, this.rotationMatrix);
-    editor.ctx.translate(matrix[4], matrix[5]);
-    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], -matrix[4], -matrix[5]);
+    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[4]);
     this.draw();
     editor.ctx.restore();
   }
