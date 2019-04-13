@@ -191,14 +191,16 @@ export default class Editor {
 
   renderCanvas() {
     // Layers.sortByLayers();
+    this.canvas.canvas.ctx.save();
+    this.canvas.canvas.ctx.transform(1, 0, 0, 1, 0, 0);
     this.elements.forEach((element) => {
-      if (element.transformation.transform) {
-        element.rotate();
-      } else {
-        element.draw();
-      }
+      this.canvas.canvas.ctx.save();
+      if (element.transformation.transform) element.rotate();
+      element.draw();
       if (element.selected) element.holder.draw(true);
+      this.canvas.canvas.ctx.restore();
     });
+    this.canvas.canvas.ctx.restore();
   }
 
   deselectAll() {

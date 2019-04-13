@@ -1,3 +1,5 @@
+import Element from './elements';
+
 export default class Events {
   constructor(editor) {
     this.editor = editor;
@@ -156,24 +158,60 @@ export default class Events {
       this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
       this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
       this.editor.elements.forEach((element) => {
+        let mousePositionX;
+        let mousePositionY;
+        if (element.transformation.transform) {
+          const mousePosition = this.transformedMousePosition(
+            Element.degreesToRadians(element.transformation.rotationAngle),
+          );
+          mousePositionX = mousePosition.mousePositionX;
+          mousePositionY = mousePosition.mousePositionY;
+        } else {
+          mousePositionX = this.canvasEvent.mouse.canvasX;
+          mousePositionY = this.canvasEvent.mouse.canvasY;
+        }
         if (
           element.mouseInElement(
-            this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
+            mousePositionX, mousePositionY,
           )) {
           answer = element;
         } else {
+          let mouseInResizer;
           this.editor.selection.forEach((selection) => {
-            const mouseInResizer = selection.holder.mouseInResizer(
-              this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
+            mouseInResizer = selection.holder.mouseInResizer(
+              mousePositionX, mousePositionY,
             );
             if (mouseInResizer) {
               answer = mouseInResizer;
+            } /*else if (selection.transformation.transformMatrix) {
+              const editor = this.editor.canvas.canvas;
+              editor.ctx.save();
+              editor.ctx.translate(selection.dimensions.startX + selection.dimensions.width / 2, selection.dimensions.startY + selection.dimensions.height / 2);
+              editor.ctx.transform(selection.transformation.transformMatrix[0], selection.transformation.transformMatrix[1], selection.transformation.transformMatrix[2], selection.transformation.transformMatrix[3], selection.transformation.transformMatrix[4], selection.transformation.transformMatrix[5]);
+              editor.ctx.translate(-(selection.dimensions.startX + selection.dimensions.width / 2), -(selection.dimensions.startY + selection.dimensions.height / 2));
+              mouseInResizer = selection.holder.mouseInResizer(
+                this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
+              );
+              if (mouseInResizer) {
+                answer = mouseInResizer;
+              }
+              editor.ctx.restore();
             }
+            */
           });
         }
       });
     }
     return answer;
+  }
+
+  transformedMousePosition(angle) {
+    return {
+      mousePositionX: this.canvasEvent.mouse.canvasX * Math.cos(-angle)
+        - this.canvasEvent.mouse.canvasY * Math.sin(-angle),
+      mousePositionY: this.canvasEvent.mouse.canvasX * Math.sin(-angle)
+        + this.canvasEvent.mouse.clientY * Math.cos(-angle),
+    };
   }
 
   get relativeMousePosition() {

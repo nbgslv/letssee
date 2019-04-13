@@ -24,7 +24,7 @@ export default class Element extends Tool {
     this.transformation = {
       activeAffecter: -1,
       transform: false,
-      transformMatrix: [],
+      transformMatrix: null,
       rotationAngle: 0,
     };
     this.style = style;
@@ -123,10 +123,11 @@ export default class Element extends Tool {
               lastAngel,
               newAngel,
             } = this.calcRotateAngle;
-            this.transformation.rotationAngle = Element.radiansToDegrees(lastAngel - newAngel)
+            this.transformation.rotationAngle = Element.radiansToDegrees(newAngel - lastAngel)
               + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
+            console.log(this.transformation.rotationAngle);
             break;
           default:
             console.log('wrong affect parameter');
@@ -154,11 +155,11 @@ export default class Element extends Tool {
 
   rotate() {
     const editor = this.editor.canvas.canvas;
-    editor.ctx.save();
-    const matrix = Element.multiplyMatrices(this.translateMatrix, this.rotationMatrix);
-    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[4]);
-    this.draw();
-    editor.ctx.restore();
+    const matrix = this.rotationMatrix;
+    this.transformation.transformMatrix = matrix;
+    editor.ctx.translate(this.dimensions.startX + this.dimensions.width / 2, this.dimensions.startY + this.dimensions.height / 2);
+    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    editor.ctx.translate(-(this.dimensions.startX + this.dimensions.width / 2), -(this.dimensions.startY + this.dimensions.height / 2));
   }
 
   get rotationMatrix() {
@@ -191,8 +192,8 @@ export default class Element extends Tool {
   }
 
   get calcCenterPoint() {
-    const translateX = 0.5 * this.dimensions.width;
-    const translateY = 0.5 * this.dimensions.height;
+    const translateX = 0.5 * (this.dimensions.width + 11);
+    const translateY = 0.5 * (this.dimensions.height + 11);
     return {
       translateX,
       translateY,
@@ -222,7 +223,7 @@ export default class Element extends Tool {
     const cos = Math.cos(radians);
     return {
       x: translateX * cos - translateY * sin,
-      y: translateX * sin - translateY * cos,
+      y: translateX * sin + translateY * cos,
     };
   }
 
