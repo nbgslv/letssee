@@ -1,5 +1,3 @@
-import Element from './elements';
-
 export default class Events {
   constructor(editor) {
     this.editor = editor;
@@ -121,9 +119,9 @@ export default class Events {
       this.canvasEvent.position.inElement = false;
       this.canvasEvent.position.inResizer = false;
     }
-    console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
+    /*console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
     in element: ${this.canvasEvent.position.inElement}
-    in resizer: ${this.canvasEvent.position.inResizer}`);
+    in resizer: ${this.canvasEvent.position.inResizer}`);*/
   }
 
   updateStartMousePosition() {

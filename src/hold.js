@@ -179,7 +179,8 @@ export default class Hold {
       },
     ];
     console.log(`clickStartX: ${resizers[0].clickStartX}
-    clickStartY: ${resizers[0].clickStartY}`);
+    clickStartY: ${resizers[0].clickStartY}
+    resizerID: ${resizers[0].selfId}`);
     const lines = [
       {
         startX: resizers[0].x,
@@ -266,16 +267,21 @@ export default class Hold {
   }
 
   updateResizersAfterRotation(rotationAngelDifference) {
-    rotationAngelDifference %= 360;
     this.resizers.forEach((resizer) => {
-      resizer.clickStartX = resizer.clickStartX * Math.cos(-rotationAngelDifference)
-        + resizer.clickStartY * Math.sin(-rotationAngelDifference);
-      resizer.clickStartY = resizer.clickStartY * Math.cos(-rotationAngelDifference)
-        - resizer.clickStartX * Math.sin(-rotationAngelDifference);
+      resizer.clickStartX = (resizer.clickStartX - (this.element.dimensions.startX + (this.element.dimensions.width / 2))) * Math.cos(-rotationAngelDifference)
+        + (resizer.clickStartY - (this.element.dimensions.startY + (this.element.dimensions.height / 2))) * Math.sin(-rotationAngelDifference);
+      resizer.clickStartX += this.element.dimensions.startX + (this.element.dimensions.width / 2);
+      resizer.clickStartY = (resizer.clickStartY - (this.element.dimensions.startY + (this.element.dimensions.height / 2))) * Math.cos(-rotationAngelDifference)
+        - (resizer.clickStartX - (this.element.dimensions.startX + (this.element.dimensions.width / 2))) * Math.sin(-rotationAngelDifference);
+      resizer.clickStartY += this.element.dimensions.startY + (this.element.dimensions.height / 2);
       console.log(`${resizer.selfId}: ${resizer.clickStartX}
-                   ${resizer.selfId}: clickStartY: ${resizer.clickStartY}`);
+               ${resizer.selfId}: clickStartY: ${resizer.clickStartY}`);
       const editor = this.element.editor.canvas.upperCanvas;
+      const transformMatrix = this.element.transformation.transformMatrix;
       editor.ctx.save();
+      if (transformMatrix !== null) {
+        editor.ctx.transform(1, 0, 0, 1, 0, 0);
+      }
       for (let i = 0; i < this.resizers.length; i += 1) {
         editor.ctx.fillStyle = '#FF0000';
         editor.ctx.fillRect(

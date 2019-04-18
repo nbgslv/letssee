@@ -132,7 +132,8 @@ export default class Element extends Tool {
             this.holder.updateResizersAfterRotation(
               Element.degreesToRadians(rotationAngelDifference),
             );
-            console.log(rotationAngelDifference);
+            console.log(this.transformation.rotationAngle, 'angel');
+            console.log(rotationAngelDifference, 'angel difference');
             break;
           default:
             console.log('wrong affect parameter');
