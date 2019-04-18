@@ -32,21 +32,21 @@ export default class Element extends Tool {
     this.layer = layer;
     this.addLayer();
     this.holder = null;
-      /*
-    } else {
-      this.resizer = {
-        x: element.resizer.x,
-        y: element.resizer.y,
-      };
-       */
+    /*
+  } else {
+    this.resizer = {
+      x: element.resizer.x,
+      y: element.resizer.y,
+    };
+     */
   }
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    /*editor.ctx.save();
+    /* editor.ctx.save();
     if (this.rotation !== 0 || this.rotationChange) {
       this.rotate(editor);
-    }*/
+    } */
     return editor;
   }
 
@@ -119,15 +119,20 @@ export default class Element extends Tool {
             break;
           case 5:
             this.transformation.transform = true;
+            this.transformation.rotating = true;
             const {
               lastAngel,
               newAngel,
             } = this.calcRotateAngle;
-            this.transformation.rotationAngle = Element.radiansToDegrees(newAngel - lastAngel)
+            const rotationAngelDifference = Element.radiansToDegrees(newAngel - lastAngel);
+            this.transformation.rotationAngle = rotationAngelDifference
               + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
-            console.log(this.transformation.rotationAngle);
+            this.holder.updateResizersAfterRotation(
+              Element.degreesToRadians(rotationAngelDifference),
+            );
+            console.log(rotationAngelDifference);
             break;
           default:
             console.log('wrong affect parameter');
@@ -157,9 +162,11 @@ export default class Element extends Tool {
     const editor = this.editor.canvas.canvas;
     const matrix = this.rotationMatrix;
     this.transformation.transformMatrix = matrix;
-    editor.ctx.translate(this.dimensions.startX + this.dimensions.width / 2, this.dimensions.startY + this.dimensions.height / 2);
+    editor.ctx.translate(this.dimensions.startX + this.dimensions.width / 2,
+      this.dimensions.startY + this.dimensions.height / 2);
     editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    editor.ctx.translate(-(this.dimensions.startX + this.dimensions.width / 2), -(this.dimensions.startY + this.dimensions.height / 2));
+    editor.ctx.translate(-(this.dimensions.startX + this.dimensions.width / 2),
+      -(this.dimensions.startY + this.dimensions.height / 2));
   }
 
   get rotationMatrix() {

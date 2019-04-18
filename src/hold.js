@@ -19,7 +19,6 @@ export default class Hold {
   draw(update = false, canvas = true) {
     const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
     if (update) this.updateResizersArrays();
-    editor.ctx.save();
     for (let i = 0; i < this.resizers.length; i += 1) {
       editor.ctx.fillRect(
         this.resizers[i].startX,
@@ -35,7 +34,6 @@ export default class Hold {
       editor.ctx.stroke();
       editor.ctx.closePath();
     }
-    editor.ctx.restore();
   }
 
   select() {
@@ -60,6 +58,9 @@ export default class Hold {
         startY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
         x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
         y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+        clickStartX: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+
         width: resizerWidth,
         height: resizerHeight,
         affect: [1, 2],
@@ -71,6 +72,8 @@ export default class Hold {
         startY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
         x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2) + resizerWidth,
         y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+        clickStartX: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [2],
@@ -82,6 +85,8 @@ export default class Hold {
         startY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
         x: (element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2) + resizerWidth,
         y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+        clickStartX: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [2, 3],
@@ -93,6 +98,8 @@ export default class Hold {
         startY: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
         x: (element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2) + resizerWidth,
         y: (element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2) + resizerHeight,
+        clickStartX: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [3],
@@ -106,6 +113,8 @@ export default class Hold {
         y: (
           element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
         ) + resizerHeight,
+        clickStartX: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [3, 4],
@@ -119,6 +128,8 @@ export default class Hold {
         y: (
           element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
         ) + resizerHeight,
+        clickStartX: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [4],
@@ -132,6 +143,8 @@ export default class Hold {
         y: (
           element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
         ) + resizerHeight,
+        clickStartX: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [4, 1],
@@ -143,6 +156,8 @@ export default class Hold {
         startY: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
         x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
         y: (element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2) + resizerHeight,
+        clickStartX: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [1],
@@ -154,6 +169,8 @@ export default class Hold {
         startY: element.resizer.topLeftY - rotateDistY - resizerHeight / 2,
         x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2) + resizerWidth,
         y: (element.resizer.topLeftY - rotateDistY - resizerHeight / 2) + resizerHeight,
+        clickStartX: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+        clickStartY: element.resizer.topLeftY - rotateDistY - resizerHeight / 2,
         width: resizerWidth,
         height: resizerHeight,
         affect: [5],
@@ -161,6 +178,8 @@ export default class Hold {
         selfId: 9,
       },
     ];
+    console.log(`clickStartX: ${resizers[0].clickStartX}
+    clickStartY: ${resizers[0].clickStartY}`);
     const lines = [
       {
         startX: resizers[0].x,
@@ -246,15 +265,48 @@ export default class Hold {
     this.lines = this.resizersArrays.lines;
   }
 
+  updateResizersAfterRotation(rotationAngelDifference) {
+    rotationAngelDifference %= 360;
+    this.resizers.forEach((resizer) => {
+      resizer.clickStartX = resizer.clickStartX * Math.cos(-rotationAngelDifference)
+        + resizer.clickStartY * Math.sin(-rotationAngelDifference);
+      resizer.clickStartY = resizer.clickStartY * Math.cos(-rotationAngelDifference)
+        - resizer.clickStartX * Math.sin(-rotationAngelDifference);
+      console.log(`${resizer.selfId}: ${resizer.clickStartX}
+                   ${resizer.selfId}: clickStartY: ${resizer.clickStartY}`);
+      const editor = this.element.editor.canvas.upperCanvas;
+      editor.ctx.save();
+      for (let i = 0; i < this.resizers.length; i += 1) {
+        editor.ctx.fillStyle = '#FF0000';
+        editor.ctx.fillRect(
+          this.resizers[i].clickStartX,
+          this.resizers[i].clickStartY,
+          this.resizers[i].width,
+          this.resizers[i].height,
+        );
+      }
+      editor.ctx.restore();
+    });
+  }
+
   mouseInResizer(mousePositionX, mousePositionY) {
     let answer = null;
     this.resizers.forEach((resizer) => {
-      if ((resizer.startX <= mousePositionX) && (resizer.startX + resizer.width >= mousePositionX)
-      && (resizer.startY <= mousePositionY) && (resizer.startY + resizer.height >= mousePositionY)) {
+      if ((resizer.clickStartX <= mousePositionX) && (resizer.clickStartX + resizer.width >= mousePositionX)
+      && (resizer.clickStartY <= mousePositionY) && (resizer.clickStartY + resizer.height >= mousePositionY)) {
         answer = resizer;
       }
     });
     return answer;
+  }
+
+  rotateResizers() {
+    this.resizers.forEach((resizer) => {
+      resizer.startX = resizer.startX * Math.cos(-this.element.transformation.rotationAngle)
+        - resizer.startY * Math.sin(-this.element.transformation.rotationAngle);
+      resizer.startY = resizer.startX * Math.sin(-this.element.transformation.rotationAngle)
+        + resizer.startY * Math.cos(-this.element.transformation.rotationAngle);
+    });
   }
 
   static mouseMove (e, tool) {

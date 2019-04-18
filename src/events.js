@@ -160,16 +160,21 @@ export default class Events {
       this.editor.elements.forEach((element) => {
         let mousePositionX;
         let mousePositionY;
+        /*
         if (element.transformation.transform) {
           const mousePosition = this.transformedMousePosition(
             Element.degreesToRadians(element.transformation.rotationAngle),
           );
           mousePositionX = mousePosition.mousePositionX;
           mousePositionY = mousePosition.mousePositionY;
-        } else {
+          console.log(`[transformed]x: ${mousePositionX}
+          [transformed]y: ${mousePositionY}`);
+        } else {*/
           mousePositionX = this.canvasEvent.mouse.canvasX;
           mousePositionY = this.canvasEvent.mouse.canvasY;
-        }
+          console.log(`[]x: ${mousePositionX}
+          []y: ${mousePositionY}`);
+        //}
         if (
           element.mouseInElement(
             mousePositionX, mousePositionY,
@@ -183,21 +188,7 @@ export default class Events {
             );
             if (mouseInResizer) {
               answer = mouseInResizer;
-            } /*else if (selection.transformation.transformMatrix) {
-              const editor = this.editor.canvas.canvas;
-              editor.ctx.save();
-              editor.ctx.translate(selection.dimensions.startX + selection.dimensions.width / 2, selection.dimensions.startY + selection.dimensions.height / 2);
-              editor.ctx.transform(selection.transformation.transformMatrix[0], selection.transformation.transformMatrix[1], selection.transformation.transformMatrix[2], selection.transformation.transformMatrix[3], selection.transformation.transformMatrix[4], selection.transformation.transformMatrix[5]);
-              editor.ctx.translate(-(selection.dimensions.startX + selection.dimensions.width / 2), -(selection.dimensions.startY + selection.dimensions.height / 2));
-              mouseInResizer = selection.holder.mouseInResizer(
-                this.canvasEvent.mouse.canvasX, this.canvasEvent.mouse.canvasY,
-              );
-              if (mouseInResizer) {
-                answer = mouseInResizer;
-              }
-              editor.ctx.restore();
             }
-            */
           });
         }
       });
@@ -277,6 +268,9 @@ export default class Events {
     if (this.canvasEvent.cache) {
       this.recordUndo();
     }
+    this.editor.selection.forEach((selection) => {
+      selection.transformation.rotating = false;
+    });
     this.canvasEventCache.canvasX = this.canvasEvent.mouse.canvasX;
     this.canvasEventCache.canvasY = this.canvasEvent.mouse.canvasY;
   }
