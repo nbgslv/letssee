@@ -117,7 +117,7 @@ export default class Element extends Tool {
             this.dimensions.height += mouseResize.deltaY;
             this.dimensions.endY += mouseResize.deltaY;
             break;
-          case 5:
+          case 5: {
             this.transformation.transform = true;
             this.transformation.rotating = true;
             const {
@@ -132,9 +132,8 @@ export default class Element extends Tool {
             this.holder.updateResizersAfterRotation(
               Element.degreesToRadians(rotationAngelDifference),
             );
-            console.log(this.transformation.rotationAngle, 'angel');
-            console.log(rotationAngelDifference, 'angel difference');
             break;
+          }
           default:
             console.log('wrong affect parameter');
         }
@@ -177,25 +176,17 @@ export default class Element extends Tool {
     return [cos, sin, -sin, cos, 0, 0];
   }
 
-  get translateMatrix() {
-    const translateToCenterValue = this.translateToCenterByRotateVector;
-    return [
-      1,
-      0,
-      0,
-      1,
-      translateToCenterValue.x,
-      translateToCenterValue.y,
-    ];
-  }
-
   get calcRotateAngle() {
     const translateToCenterValue = this.translateToCenterByRotateVector;
     return {
-      lastAngel: Math.atan2(this.editor.events.canvasEvent.mouse.startCanvasY - translateToCenterValue.y,
-        this.editor.events.canvasEvent.mouse.startCanvasX - translateToCenterValue.x),
-      newAngel: Math.atan2(this.editor.events.canvasEvent.mouse.canvasY - translateToCenterValue.y,
-        this.editor.events.canvasEvent.mouse.canvasX - translateToCenterValue.x),
+      lastAngel: Math.atan2(
+        this.editor.events.canvasEvent.mouse.startCanvasY - translateToCenterValue.y,
+        this.editor.events.canvasEvent.mouse.startCanvasX - translateToCenterValue.x,
+      ),
+      newAngel: Math.atan2(
+        this.editor.events.canvasEvent.mouse.canvasY - translateToCenterValue.y,
+        this.editor.events.canvasEvent.mouse.canvasX - translateToCenterValue.x,
+      ),
     };
   }
 
@@ -241,56 +232,16 @@ export default class Element extends Tool {
     return this.rotatePoint(rotateVector);
   }
 
-  static degreesToRadians(degrees) {
-    return degrees * Math.PI / 180;
-  }
-
-  static radiansToDegrees(radians) {
-    return radians * 180 / Math.PI;
-  }
-
-  static multiplyMatrices(a, b) {
-    return [
-      a[0] * b[0] + a[2] * b[1],
-      a[1] * b[0] + a[3] * b[1],
-      a[0] * b[2] + a[2] * b[3],
-      a[1] * b[2] + a[3] * b[3],
-      a[0] * b[4] + a[2] * b[5] + a[4],
-      a[1] * b[4] + a[3] * b[5] + a[5],
-    ];
-  }
-
-  transform() {
-    if (this.transformation.dragging) {
-      this.move();
-    } else {
-      this.transformation.transform = true;
-      const ctx = this.upperCanvas
-        ? this.editor.canvas.upperCanvas.ctx
-        : this.editor.canvas.canvas.ctx;
-      ctx.save();
-      ctx.setTransform(this.transformation.transformMatrix);
-      if (this.transformation.rotationAngle > 0) {
-        ctx.save();
-        this.translateToCenter();
-        ctx.rotate(this.transformation.rotationAngle);
-        this.unTranslate();
-        ctx.restore();
-      }
-      if (this.holder) this.holder.draw();
-      this.draw();
-      ctx.restore();
-    }
-  }
-
   addLayer() {
     this.layer = this.editor.layers + 1;
     this.editor.layers += 1;
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    if ((this.resizer.topLeftX <= mousePositionX) && (this.resizer.topLeftX + this.dimensions.width >= mousePositionX)
-      && (this.resizer.topLeftY <= mousePositionY) && (this.resizer.topLeftY + this.dimensions.height >= mousePositionY)) {
+    if ((this.resizer.topLeftX <= mousePositionX)
+      && (this.resizer.topLeftX + this.dimensions.width >= mousePositionX)
+      && (this.resizer.topLeftY <= mousePositionY)
+      && (this.resizer.topLeftY + this.dimensions.height >= mousePositionY)) {
       return this;
     }
     return false;
@@ -304,7 +255,11 @@ export default class Element extends Tool {
     };
   }
 
-  static calculateRotationDegrees(x, y, centerX, centerY) {
-    return Math.atan2(y - centerY, x - centerX);
+  static degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+  static radiansToDegrees(radians) {
+    return radians * 180 / Math.PI;
   }
 }

@@ -119,9 +119,9 @@ export default class Events {
       this.canvasEvent.position.inElement = false;
       this.canvasEvent.position.inResizer = false;
     }
-    /*console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
+    console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
     in element: ${this.canvasEvent.position.inElement}
-    in resizer: ${this.canvasEvent.position.inResizer}`);*/
+    in resizer: ${this.canvasEvent.position.inResizer}`);
   }
 
   updateStartMousePosition() {
@@ -156,23 +156,8 @@ export default class Events {
       this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
       this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
       this.editor.elements.forEach((element) => {
-        let mousePositionX;
-        let mousePositionY;
-        /*
-        if (element.transformation.transform) {
-          const mousePosition = this.transformedMousePosition(
-            Element.degreesToRadians(element.transformation.rotationAngle),
-          );
-          mousePositionX = mousePosition.mousePositionX;
-          mousePositionY = mousePosition.mousePositionY;
-          console.log(`[transformed]x: ${mousePositionX}
-          [transformed]y: ${mousePositionY}`);
-        } else {*/
-          mousePositionX = this.canvasEvent.mouse.canvasX;
-          mousePositionY = this.canvasEvent.mouse.canvasY;
-          console.log(`[]x: ${mousePositionX}
-          []y: ${mousePositionY}`);
-        //}
+        const mousePositionX = this.canvasEvent.mouse.canvasX;
+        const mousePositionY = this.canvasEvent.mouse.canvasY;
         if (
           element.mouseInElement(
             mousePositionX, mousePositionY,
@@ -192,15 +177,6 @@ export default class Events {
       });
     }
     return answer;
-  }
-
-  transformedMousePosition(angle) {
-    return {
-      mousePositionX: this.canvasEvent.mouse.canvasX * Math.cos(-angle)
-        - this.canvasEvent.mouse.canvasY * Math.sin(-angle),
-      mousePositionY: this.canvasEvent.mouse.canvasX * Math.sin(-angle)
-        + this.canvasEvent.mouse.clientY * Math.cos(-angle),
-    };
   }
 
   get relativeMousePosition() {
@@ -280,78 +256,4 @@ export default class Events {
     });
   }
 }
-
-/*
-class DispatcherEvent {
-  constructor(eventName) {
-    this.eventName = eventName;
-    this.callbacks = [];
-  }
-
-  registerCallback(callback) {
-    this.callbacks.push(callback);
-  }
-
-  unregisterCallback(callback) {
-    // Get the index of the callback in the callbacks array
-    const index = this.callbacks.indexOf(callback);
-    // If the callback is in the array then remove it
-    if (index > -1) {
-      this.callbacks.splice(index, 1);
-    }
-  }
-
-  fire(data) {
-    // We loop over a cloned version of the callbacks array
-    // in case the original array is spliced while looping
-    const callbacks = this.callbacks.slice(0);
-    // loop through the callbacks and call each one
-    callbacks.forEach((callback) => {
-      callback(data);
-    });
-  }
-}
-
-class Dispatcher {
-  constructor() {
-    this.events = {};
-  }
-
-  dispatch(eventName, data) {
-    // First we grab the event
-    const event = this.events[eventName];
-    // If the event exists then we fire it!
-    if (event) {
-      event.fire(data);
-    }
-  }
-
-  on(eventName, callback) {
-    // First we grab the event from this.events
-    let event = this.events[eventName];
-    // If the event does not exist then we should create it!
-    if (!event) {
-      event = new DispatcherEvent(eventName);
-      this.events[eventName] = event;
-    }
-    // Now we add the callback to the event
-    event.registerCallback(callback);
-  }
-
-  off(eventName, callback) {
-    // First get the correct event
-    const event = this.events[eventName];
-    // Check that the event exists and it has the callback registered
-    if (event && event.callbacks.indexOf(callback) > -1) {
-      // if it is registered then unregister it!
-      event.unregisterCallback(callback);
-      // if the event has no callbacks left, delete the event
-      if (event.callbacks.length === 0) {
-        delete this.events[eventName];
-      }
-    }
-  }
-}
-*/
-
 // TODO update selection and shape after shape 180 deg flip in resize
