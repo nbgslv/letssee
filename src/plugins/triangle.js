@@ -15,6 +15,7 @@ export default class Triangle extends Element {
       x: 0,
       y: 0,
     };
+    this.upsideDown = false;
   }
 
   draw(canvas = true) {
@@ -56,10 +57,6 @@ export default class Triangle extends Element {
       width,
       height,
     } = dimensions;
-    this.dimensions.startX = startX;
-    this.dimensions.startY = startY;
-    this.dimensions.endX = endX;
-    this.dimensions.endY = endY;
     this.dimensions.width = width;
     this.dimensions.height = height;
     this.headPoint = {
@@ -89,6 +86,16 @@ export default class Triangle extends Element {
       x: rightPointX,
       y: rightPointY,
     };
+    this.dimensions.startX = this.leftPoint.x;
+    this.dimensions.endX = this.rightPoint.x;
+    if (endY > startY) {
+      this.dimensions.startY = this.headPoint.y;
+      this.dimensions.endY = this.rightPoint.y;
+    } else {
+      this.dimensions.startY = this.leftPoint.y;
+      this.dimensions.endY = this.headPoint.y;
+      this.upsideDown = true;
+    }
     this.resizer = {
       topLeftX: Math.min(Math.max(endX, endX - width), startX - width / 2),
       topLeftY: Math.min(endY, startY),
@@ -105,6 +112,11 @@ export default class Triangle extends Element {
       };
       this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
         let oldWidth;
+        if (this.upsideDown && affect === 2) {
+          affect = 4;
+        } else if (this.upsideDown && affect === 4) {
+          affect = 2;
+        }
         switch (affect) {
           case 1:
             oldWidth = this.dimensions.width;
@@ -131,15 +143,23 @@ export default class Triangle extends Element {
             this.rightPoint.y += mouseResize.deltaY;
             this.dimensions.height += mouseResize.deltaY;
             break;
-          case 5:
-            this.rotation = Element.calculateRotationDegrees(
-              mouseResize.positionX,
-              mouseResize.positionY,
-              this.dimensions.startX + this.dimensions.width / 2,
-              this.dimensions.startY + this.dimensions.height / 2,
-            ) - 180 * Math.PI / 180;
-            this.rotationChange = true;
+          case 5: {
+            this.transformation.transform = true;
+            this.transformation.rotating = true;
+            const {
+              lastAngel,
+              newAngel,
+            } = this.calcRotateAngle;
+            const rotationAngelDifference = Element.radiansToDegrees(newAngel - lastAngel);
+            this.transformation.rotationAngle = rotationAngelDifference
+              + this.transformation.rotationAngle;
+            if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
+            this.transformation.rotationAngle %= 360;
+            this.holder.updateResizersAfterRotation(
+              Element.degreesToRadians(rotationAngelDifference),
+            );
             break;
+          }
           default:
             console.log('no');
         }

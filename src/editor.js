@@ -156,7 +156,7 @@ export default class Editor {
   }
 
   renderAll() {
-    this.clearCanvas(1);
+    this.clearCanvas(2);
     this.renderCanvas();
   }
 

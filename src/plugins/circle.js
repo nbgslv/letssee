@@ -22,7 +22,6 @@ export default class Ellipse extends Element {
       2 * Math.PI,
     );
     editor.ctx.stroke();
-    editor.ctx.restore();
   }
 
   updateElement() {
@@ -103,15 +102,23 @@ export default class Ellipse extends Element {
             this.radiusY += mouseResize.deltaY / 2;
             this.resizer.topLeftY = this.centerY - this.radiusY;
             break;
-          case 5:
-            this.rotation = Element.calculateRotationDegrees(
-              mouseResize.positionX,
-              mouseResize.positionY,
-              this.dimensions.startX + this.dimensions.width / 2,
-              this.dimensions.startY + this.dimensions.height / 2,
+          case 5: {
+            this.transformation.transform = true;
+            this.transformation.rotating = true;
+            const {
+              lastAngel,
+              newAngel,
+            } = this.calcRotateAngle;
+            const rotationAngelDifference = Element.radiansToDegrees(newAngel - lastAngel);
+            this.transformation.rotationAngle = rotationAngelDifference
+              + this.transformation.rotationAngle;
+            if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
+            this.transformation.rotationAngle %= 360;
+            this.holder.updateResizersAfterRotation(
+              Element.degreesToRadians(rotationAngelDifference),
             );
-            this.rotationChange = true;
             break;
+          }
           default:
             console.log('wrong affect number used');
         }

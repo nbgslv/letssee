@@ -1,7 +1,5 @@
-import Element from './elements';
-
 export default class Hold {
-  constructor(element) {
+  constructor (element) {
     this.resizerWidth = 10;
     this.resizerHeight = 10;
     this.strokeDistX = 10;
@@ -16,7 +14,7 @@ export default class Hold {
     this.resizing = false;
   }
 
-  draw(update = false, canvas = true) {
+  draw (update = false, canvas = true) {
     const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
     if (update) this.updateResizersArrays();
     for (let i = 0; i < this.resizers.length; i += 1) {
@@ -36,14 +34,14 @@ export default class Hold {
     }
   }
 
-  select() {
+  select () {
     this.element.editor.renderAll();
     this.draw(true);
     this.element.editor.selection.push(this.element);
     this.element.selected = true; // must be set after rendering canvas
   }
 
-  get resizersArrays() {
+  get resizersArrays () {
     const {
       resizerWidth,
       resizerHeight,
@@ -274,10 +272,8 @@ export default class Hold {
       resizer.clickStartY = (resizer.clickStartY - (this.element.dimensions.startY + (this.element.dimensions.height / 2))) * Math.cos(-rotationAngelDifference)
         - (resizer.clickStartX - (this.element.dimensions.startX + (this.element.dimensions.width / 2))) * Math.sin(-rotationAngelDifference);
       resizer.clickStartY += this.element.dimensions.startY + (this.element.dimensions.height / 2);
-      console.log(`${resizer.selfId}: ${resizer.clickStartX}
-               ${resizer.selfId}: clickStartY: ${resizer.clickStartY}`);
-      const editor = this.element.editor.canvas.upperCanvas;
-      const transformMatrix = this.element.transformation.transformMatrix;
+
+      /*
       editor.ctx.save();
       if (transformMatrix !== null) {
         editor.ctx.transform(1, 0, 0, 1, 0, 0);
@@ -292,6 +288,7 @@ export default class Hold {
         );
       }
       editor.ctx.restore();
+       */
     });
   }
 
@@ -299,75 +296,22 @@ export default class Hold {
     let answer = null;
     this.resizers.forEach((resizer) => {
       if ((resizer.clickStartX <= mousePositionX) && (resizer.clickStartX + resizer.width >= mousePositionX)
-      && (resizer.clickStartY <= mousePositionY) && (resizer.clickStartY + resizer.height >= mousePositionY)) {
+        && (resizer.clickStartY <= mousePositionY) && (resizer.clickStartY + resizer.height >= mousePositionY)) {
         answer = resizer;
       }
     });
     return answer;
   }
 
-  rotateResizers() {
-    this.resizers.forEach((resizer) => {
-      resizer.startX = resizer.startX * Math.cos(-this.element.transformation.rotationAngle)
-        - resizer.startY * Math.sin(-this.element.transformation.rotationAngle);
-      resizer.startY = resizer.startX * Math.sin(-this.element.transformation.rotationAngle)
-        + resizer.startY * Math.cos(-this.element.transformation.rotationAngle);
-    });
-  }
-
-  static mouseMove (e, tool) {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    const mouse = {
-      positionX: relativeMousePosition.x,
-      positionY: relativeMousePosition.y,
-    };
-    tool.editor.elements.forEach((element) => {
-      if (element.holder !== null) {
-        if (element.holder.dragging) {
-          element.holder.moveElement(mouse, e, tool);
-          element.holder.draw();
-        } else if (element.holder.resizing && element.holder.activeResizer >= 0) {
-          element.holder.resize(mouse, e, tool, element.holder.activeResizer);
-        }
-      }
-    });
-  }
-
-  mouseUp() {
-    const relativeMousePosition = tool.relativeMousePosition(e);
-    const mouse = {
-      positionX: relativeMousePosition.x,
-      positionY: relativeMousePosition.y,
-    };
-    tool.editor.elements.forEach((element) => {
-      if (element.holder !== null) {
-        let resized;
-        if (element.holder.dragging) {
-          element.holder.moveElement(mouse, e, tool);
-          //element.holder.draw();
-        } else if (element.holder.resizing) {
-          element.holder.resize(mouse, e, tool, element.holder.activeResizer);
-        }
-        if (element.holder !== null) {
-          element.holder.dragging = false;
-          element.holder.resizing = false;
-          if (resized !== undefined) resized.resizing = false;
-        }
-      }
-    });
-  }
-
-
-
-  deselect() {
-    for (let k = 0; k < this.editor.selection.length; k += 1) {
-      const element = this.editor.selection[k];
+  deselect () {
+    for (let k = 0; k < this.element.editor.selection.length; k += 1) {
+      const element = this.element.editor.selection[k];
       if (this.element.id === element.id) {
-        this.editor.selection.splice(k, 1);
+        this.element.editor.selection.splice(k, 1);
         break;
       }
     }
-    this.editor.renderAll();
+    this.element.editor.renderAll();
     this.resizers = [];
     this.dragging = false;
     this.resizing = false;
@@ -376,11 +320,7 @@ export default class Hold {
     this.element = undefined;
   }
 
-  rotate(editor) {
-    editor.ctx.rotate(this.element.rotation);
-  }
-
-  resize(mouse, e, tool, activeResizer) {
+  resize (mouse, e, tool, activeResizer) {
     const relativeMousePosition = tool.relativeMousePosition(e);
     const mousePosition = mouse;
     mousePosition.x = relativeMousePosition.x;
@@ -390,68 +330,6 @@ export default class Hold {
     this.element.resize(mouse, this.resizers[activeResizer].affect);
     this.editor.renderAll();
     this.draw();
-  }
-
-  moveElement(mouse, e) {
-    this.editor.clearCanvas(2);
-    const mousePosition = mouse;
-    mousePosition.deltaX = e.movementX;
-    mousePosition.deltaY = e.movementY;
-    this.element.move(mouse);
-    this.editor.clearCanvas(2);
-    this.editor.renderAll();
-    this.draw();
-  }
-
-  mouseDown() {
-    const relativeMousePosition = Element.relativeMousePosition(e);
-    [this.element.positionX, this.element.positionY] = [
-      relativeMousePosition.x,
-      relativeMousePosition.y,
-    ];
-    let selected = false;
-    tool.editor.elements.forEach((element) => {
-      if (element.mouseInElement(mouse.positionX, mouse.positionY)) {
-        if (element.selected) {
-          tool.editor.selection.forEach((select) => {
-            select.holder.dragging = true;
-          });
-          selected = true;
-          /*
-        } else if (element.name === 'hold') {
-          tool.editor.selection.forEach((select) => {
-            select.holder.resizing = true;
-          });
-          element.resizing = true;
-          selected = true;
-          */
-        } else {
-          if (!(e.ctrlKey) && element.editor.selection.length > 0) this.deselectAll(tool);
-          element.holder = new Hold(
-            tool.name,
-            tool.properties,
-            tool.events,
-            tool.editor,
-            element,
-            null,
-          );
-          element.holder.select(element, tool);
-          selected = true;
-          element.editor.canvasUpdate(3, true);
-        }
-      } else if (element.holder.mouseInResizer(mouse.positionX, mouse.positionY) >= 0) {
-        element.holder.activeResizer = element.holder.mouseInResizer(
-          mouse.positionX, mouse.positionY,
-        );
-        console.log(element.holder.activeResizer);
-        element.holder.resizing = true;
-        selected = true;
-      }
-    });
-    if (!selected) {
-      this.deselectAll(tool);
-      tool.editor.canvasUpdate(2, true);
-    }
   }
 }
 
