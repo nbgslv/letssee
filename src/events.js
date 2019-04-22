@@ -203,6 +203,9 @@ export default class Events {
 
   handleResizerMouseDown() {
     this.canvasEvent.resizing = true;
+    this.editor.selection.forEach((selection) => {
+      selection.transformation.activeAffecter = this.canvasEvent.position.resizer.affect;
+    });
   }
 
   handleCanvasMouseDown() {
@@ -242,8 +245,9 @@ export default class Events {
     if (this.canvasEvent.cache) {
       this.recordUndo();
     }
+    this.canvasEvent.resizing = false;
     this.editor.selection.forEach((selection) => {
-      selection.transformation.rotating = false;
+      selection.transformation.activeAffecter = [];
     });
     this.canvasEventCache.canvasX = this.canvasEvent.mouse.canvasX;
     this.canvasEventCache.canvasY = this.canvasEvent.mouse.canvasY;

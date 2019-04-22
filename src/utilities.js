@@ -3,17 +3,39 @@ export default class Utilities {
     return Math.log(y) / Math.log(x);
   }
 
-  static getIndex(array, property, value){
-    for (let j = 0; j < array.length; j += 1) {
-      const object = array[j];
-      if (Object.prototype.hasOwnProperty.call(object, property)) {
-        if (object[property] === value) {
-          return j;
-        }
-      } else {
-        console.log(`The array provided must include objects and the property ${property}`);
-        return -1;
-      }
+  static degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+  static radiansToDegrees(radians) {
+    return radians * 180 / Math.PI;
+  }
+
+  static sin(value) {
+    if (value === 0) return 0;
+    let sign = 1;
+    if (value < 0) sign = -1;
+
+    const angleSlice = value / Math.PI * 2;
+    switch (angleSlice) {
+      case 1: return sign;
+      case 2: return 0;
+      case 3: return -sign;
     }
+
+    return Math.sin(value);
+  }
+
+  static cos(value) {
+    if (value === 0) return 1;
+    if (value < 0) value = -value;
+
+    const angleSlice = value / Math.PI * 2;
+    switch (angleSlice) {
+      case 1: case 3: return 0;
+      case 2: return -1;
+    }
+
+    return Math.cos(value);
   }
 }

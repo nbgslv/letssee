@@ -1,5 +1,6 @@
 import Tool from './tools';
 import Hold from './hold';
+import Utilities from './utilities';
 
 export default class Element extends Tool {
   constructor(name, moduleName, properties, events, editor, style = null, layer = 1) {
@@ -22,10 +23,12 @@ export default class Element extends Tool {
       topLeftY: 0,
     };
     this.transformation = {
-      activeAffecter: -1,
-      transform: false,
-      transformMatrix: null,
+      activeAffecter: [],
+      transformed: false,
+      rotationMatrix: null,
+      rotated: false,
       rotationAngle: 0,
+      rotationAngleDifference: 0,
     };
     this.style = style;
     this.selected = false;
@@ -103,35 +106,44 @@ export default class Element extends Tool {
             this.dimensions.width -= mouseResize.deltaX;
             this.dimensions.startX += mouseResize.deltaX;
             this.resizer.topLeftX += mouseResize.deltaX;
+            this.transformation.transformed = true;
             break;
           case 2:
             this.dimensions.height -= mouseResize.deltaY;
             this.dimensions.startY += mouseResize.deltaY;
             this.resizer.topLeftY += mouseResize.deltaY;
+            this.transformation.transformed = true;
             break;
           case 3:
             this.dimensions.width += mouseResize.deltaX;
             this.dimensions.endX += mouseResize.deltaX;
+            this.transformation.transformed = true;
             break;
           case 4:
             this.dimensions.height += mouseResize.deltaY;
             this.dimensions.endY += mouseResize.deltaY;
+            this.transformation.transformed = true;
             break;
           case 5: {
             this.transformation.transform = true;
-            this.transformation.rotating = true;
             const {
               lastAngel,
               newAngel,
             } = this.calcRotateAngle;
-            const rotationAngelDifference = Element.radiansToDegrees(newAngel - lastAngel);
-            this.transformation.rotationAngle = rotationAngelDifference
+            this.transformation.rotationAngleDifference = Utilities.radiansToDegrees(
+              newAngel - lastAngel,
+            );
+            console.log(this.transformation.rotationAngleDifference, 'rotation difference - deg');
+            this.transformation.rotationAngle = this.transformation.rotationAngleDifference
               + this.transformation.rotationAngle;
+            console.log(this.transformation.rotationAngle, 'current angle');
+            this.transformation.rotationAngleDifference = Utilities.degreesToRadians(
+              this.transformation.rotationAngleDifference,
+            );
+            console.log(this.transformation.rotationAngleDifference, 'rotation difference - rad');
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
-            this.holder.updateResizersAfterRotation(
-              Element.degreesToRadians(rotationAngelDifference),
-            );
+            //this.holder.updateResizersAfterRotation();
             break;
           }
           default:
@@ -161,16 +173,17 @@ export default class Element extends Tool {
   rotate() {
     const editor = this.editor.canvas.canvas;
     const matrix = this.rotationMatrix;
-    this.transformation.transformMatrix = matrix;
+    this.transformation.rotationMatrix = matrix;
     editor.ctx.translate(this.dimensions.startX + this.dimensions.width / 2,
       this.dimensions.startY + this.dimensions.height / 2);
     editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     editor.ctx.translate(-(this.dimensions.startX + this.dimensions.width / 2),
       -(this.dimensions.startY + this.dimensions.height / 2));
+    this.transformation.rotated = true;
   }
 
   get rotationMatrix() {
-    const rotationAngel = Element.degreesToRadians(this.transformation.rotationAngle);
+    const rotationAngel = Utilities.degreesToRadians(this.transformation.rotationAngle);
     const cos = Math.cos(rotationAngel);
     const sin = Math.sin(rotationAngel);
     return [cos, sin, -sin, cos, 0, 0];
@@ -217,7 +230,7 @@ export default class Element extends Tool {
       translateX,
       translateY,
     } = translationToCenter;
-    const radians = Element.degreesToRadians(this.transformation.rotationAngle);
+    const radians = Utilities.degreesToRadians(this.transformation.rotationAngle);
     const sin = Math.sin(radians);
     const cos = Math.cos(radians);
     return {
@@ -253,13 +266,5 @@ export default class Element extends Tool {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     };
-  }
-
-  static degreesToRadians(degrees) {
-    return degrees * Math.PI / 180;
-  }
-
-  static radiansToDegrees(radians) {
-    return radians * 180 / Math.PI;
   }
 }

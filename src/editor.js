@@ -197,10 +197,20 @@ export default class Editor {
       this.canvas.canvas.ctx.save();
       if (element.transformation.rotationAngle > 0) element.rotate();
       element.draw();
-      if (element.selected) element.holder.draw();
+      if (element.selected) {
+        Editor.updateSelection(element);
+      }
       this.canvas.canvas.ctx.restore();
     });
     this.canvas.canvas.ctx.restore();
+  }
+
+  static updateSelection(element) {
+    element.holder.updateResizersArrays();
+    element.holder.draw();
+    if (element.transformation.rotationMatrix) {
+      element.holder.updateResizersAfterRotation();
+    }
   }
 
   deselectAll() {

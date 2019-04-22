@@ -1,4 +1,5 @@
 import Element from '../elements';
+import Utilities from '../utilities';
 
 export default class Triangle extends Element {
   constructor(name, moduleName, properties, events, editor) {
@@ -156,7 +157,7 @@ export default class Triangle extends Element {
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
             this.holder.updateResizersAfterRotation(
-              Element.degreesToRadians(rotationAngelDifference),
+              Utilities.degreesToRadians(rotationAngelDifference),
             );
             break;
           }
