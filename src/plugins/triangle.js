@@ -146,19 +146,16 @@ export default class Triangle extends Element {
             break;
           case 5: {
             this.transformation.transform = true;
-            this.transformation.rotating = true;
             const {
               lastAngel,
               newAngel,
             } = this.calcRotateAngle;
-            const rotationAngelDifference = Element.radiansToDegrees(newAngel - lastAngel);
-            this.transformation.rotationAngle = rotationAngelDifference
-              + this.transformation.rotationAngle;
+            this.transformation.rotationAngleDifference = newAngel - lastAngel;
+            this.transformation.rotationAngle = Utilities.radiansToDegrees(
+              this.transformation.rotationAngleDifference,
+            ) + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
-            this.holder.updateResizersAfterRotation(
-              Utilities.degreesToRadians(rotationAngelDifference),
-            );
             break;
           }
           default:

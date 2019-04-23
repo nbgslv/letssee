@@ -80,7 +80,10 @@ export default class Events {
   }
 
   onMouseMove() {
-    if (this.canvasEvent.element || this.canvasEvent.dragging) {
+    if (
+      this.canvasEvent.element
+      || (this.canvasEvent.dragging && !this.canvasEvent.position.resizer)
+    ) {
       this.handleSelectionMouseMove();
     } else if (this.canvasEvent.position.resizer || this.canvasEvent.resizing) {
       this.handleResizerMouseMove();
@@ -245,12 +248,12 @@ export default class Events {
     if (this.canvasEvent.cache) {
       this.recordUndo();
     }
-    this.canvasEvent.resizing = false;
     this.editor.selection.forEach((selection) => {
       selection.transformation.activeAffecter = [];
     });
     this.canvasEventCache.canvasX = this.canvasEvent.mouse.canvasX;
     this.canvasEventCache.canvasY = this.canvasEvent.mouse.canvasY;
+    this.canvasEvent = null;
   }
 
   recordUndo() {

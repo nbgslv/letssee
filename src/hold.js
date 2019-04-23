@@ -468,11 +468,8 @@ export default class Hold {
         clickers[j].y = (corners[j].y - (this.element.dimensions.startY + ((this.element.dimensions.height) / 2))) * Utilities.cos(-rotationAngle)
           - (corners[j].x - (this.element.dimensions.startX + ((this.element.dimensions.width) / 2))) * Utilities.sin(-rotationAngle);
         clickers[j].y += this.element.dimensions.startY + ((this.element.dimensions.height) / 2);
-        //console.log(this.element.transformation.rotationAngleDifference, 'rotation angle difference - rad - hold');
-        console.log(clickers[j].x, 'clickStartX');
-        console.log(clickers[j].y, 'clickStartY');
       }
-      /*
+
       editor.ctx.beginPath();
       editor.ctx.fillStyle = '#FF0000';
       editor.ctx.moveTo(this.resizers[i].clickers.topLeft.x, this.resizers[i].clickers.topLeft.y);
@@ -481,7 +478,7 @@ export default class Hold {
       editor.ctx.lineTo(this.resizers[i].clickers.bottomLeft.x, this.resizers[i].clickers.bottomLeft.y);
       editor.ctx.fill();
       editor.ctx.closePath();
-       */
+
     }
     editor.ctx.restore();
   }

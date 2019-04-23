@@ -130,20 +130,12 @@ export default class Element extends Tool {
               lastAngel,
               newAngel,
             } = this.calcRotateAngle;
-            this.transformation.rotationAngleDifference = Utilities.radiansToDegrees(
-              newAngel - lastAngel,
-            );
-            console.log(this.transformation.rotationAngleDifference, 'rotation difference - deg');
-            this.transformation.rotationAngle = this.transformation.rotationAngleDifference
-              + this.transformation.rotationAngle;
-            console.log(this.transformation.rotationAngle, 'current angle');
-            this.transformation.rotationAngleDifference = Utilities.degreesToRadians(
+            this.transformation.rotationAngleDifference = newAngel - lastAngel;
+            this.transformation.rotationAngle = Utilities.radiansToDegrees(
               this.transformation.rotationAngleDifference,
-            );
-            console.log(this.transformation.rotationAngleDifference, 'rotation difference - rad');
+            ) + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
-            //this.holder.updateResizersAfterRotation();
             break;
           }
           default:
