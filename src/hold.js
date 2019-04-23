@@ -1,7 +1,7 @@
 import Utilities from './utilities';
 
 export default class Hold {
-  constructor (element) {
+  constructor(element) {
     this.resizerWidth = 10;
     this.resizerHeight = 10;
     this.strokeDistX = 10;
@@ -18,31 +18,40 @@ export default class Hold {
 
   draw(canvas = true) {
     const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
+    editor.ctx.beginPath();
+    editor.ctx.fillStyle = '#000000';
     for (let i = 0; i < this.resizers.length; i += 1) {
-      editor.ctx.fillRect(
-        this.resizers[i].startX,
-        this.resizers[i].startY,
-        this.resizers[i].width,
-        this.resizers[i].height,
+      editor.ctx.moveTo(this.resizers[i].corners.topLeft.x, this.resizers[i].corners.topLeft.y);
+      editor.ctx.lineTo(this.resizers[i].corners.topRight.x, this.resizers[i].corners.topLeft.y);
+      editor.ctx.lineTo(
+        this.resizers[i].corners.bottomRight.x,
+        this.resizers[i].corners.bottomRight.y,
+      );
+      editor.ctx.lineTo(
+        this.resizers[i].corners.bottomLeft.x,
+        this.resizers[i].corners.bottomLeft.y,
       );
     }
+    editor.ctx.fill();
+    editor.ctx.closePath();
+    editor.ctx.beginPath();
+    editor.ctx.strokeStyle = '#000000';
     for (let j = 0; j < this.lines.length; j += 1) {
-      editor.ctx.beginPath();
       editor.ctx.moveTo(this.lines[j].startX, this.lines[j].startY);
       editor.ctx.lineTo(this.lines[j].x, this.lines[j].y);
-      editor.ctx.stroke();
-      editor.ctx.closePath();
     }
+    editor.ctx.stroke();
+    editor.ctx.closePath();
   }
 
-  select () {
+  select() {
     this.element.editor.renderAll();
     this.draw(true);
     this.element.editor.selection.push(this.element);
     this.element.selected = true; // must be set after rendering canvas
   }
 
-  get resizersArrays () {
+  get resizersArrays() {
     const {
       resizerWidth,
       resizerHeight,
@@ -53,10 +62,24 @@ export default class Hold {
     } = this;
     const resizers = [
       {
-        startX: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
-        startY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
-        y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+            y: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+          },
+          topRight: {
+            x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
+            y: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+            y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+          },
+          bottomRight: {
+            x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
+            y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [1, 2],
@@ -64,10 +87,26 @@ export default class Hold {
         selfId: 1,
       },
       {
-        startX: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
-        startY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2) + resizerWidth,
-        y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+            y: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+          },
+          topRight: {
+            x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2)
+              + resizerWidth,
+            y: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+            y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+          },
+          bottomRight: {
+            x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2)
+              + resizerWidth,
+            y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [2],
@@ -75,10 +114,28 @@ export default class Hold {
         selfId: 2,
       },
       {
-        startX: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
-        startY: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2) + resizerWidth,
-        y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+            y: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+          },
+          topRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2
+            ) + resizerWidth,
+            y: element.resizer.topLeftY - strokeDistY - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+            y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+          },
+          bottomRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2
+            ) + resizerWidth,
+            y: (element.resizer.topLeftY - strokeDistY - resizerHeight / 2) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [2, 3],
@@ -86,10 +143,32 @@ export default class Hold {
         selfId: 3,
       },
       {
-        startX: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
-        startY: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
-        x: (element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2) + resizerWidth,
-        y: (element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+            y: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
+          },
+          topRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2
+            ) + resizerWidth,
+            y: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2
+            ) + resizerHeight,
+          },
+          bottomRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2
+            ) + resizerWidth,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2
+            ) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [3],
@@ -97,12 +176,38 @@ export default class Hold {
         selfId: 4,
       },
       {
-        startX: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
-        startY: element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2) + resizerWidth,
-        y: (
-          element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
-        ) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+            y: element.resizer.topLeftY
+              + element.dimensions.height
+              + strokeDistY
+              - resizerHeight / 2,
+          },
+          topRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2
+            ) + resizerWidth,
+            y: element.resizer.topLeftY
+              + element.dimensions.height
+              + strokeDistY
+              - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
+            ) + resizerHeight,
+          },
+          bottomRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width + strokeDistX - resizerWidth / 2
+            ) + resizerWidth,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
+            ) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [3, 4],
@@ -110,12 +215,38 @@ export default class Hold {
         selfId: 5,
       },
       {
-        startX: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
-        startY: element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2) + resizerWidth,
-        y: (
-          element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
-        ) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+            y: element.resizer.topLeftY
+              + element.dimensions.height
+              + strokeDistY
+              - resizerHeight / 2,
+          },
+          topRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2
+            ) + resizerWidth,
+            y: element.resizer.topLeftY
+              + element.dimensions.height
+              + strokeDistY
+              - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
+            ) + resizerHeight,
+          },
+          bottomRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2
+            ) + resizerWidth,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
+            ) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [4],
@@ -123,12 +254,34 @@ export default class Hold {
         selfId: 6,
       },
       {
-        startX: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
-        startY: element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
-        y: (
-          element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
-        ) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+            y: element.resizer.topLeftY
+              + element.dimensions.height
+              + strokeDistY
+              - resizerHeight / 2,
+          },
+          topRight: {
+            x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
+            y: element.resizer.topLeftY
+              + element.dimensions.height
+              + strokeDistY
+              - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
+            ) + resizerHeight,
+          },
+          bottomRight: {
+            x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height + strokeDistY - resizerHeight / 2
+            ) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [4, 1],
@@ -136,10 +289,28 @@ export default class Hold {
         selfId: 7,
       },
       {
-        startX: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
-        startY: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
-        x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
-        y: (element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+            y: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
+          },
+          topRight: {
+            x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
+            y: element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX - strokeDistX - resizerWidth / 2,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2
+            ) + resizerHeight,
+          },
+          bottomRight: {
+            x: (element.resizer.topLeftX - strokeDistX - resizerWidth / 2) + resizerWidth,
+            y: (
+              element.resizer.topLeftY + element.dimensions.height / 2 - resizerHeight / 2
+            ) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [1],
@@ -147,10 +318,28 @@ export default class Hold {
         selfId: 8,
       },
       {
-        startX: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
-        startY: element.resizer.topLeftY - rotateDistY - resizerHeight / 2,
-        x: (element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2) + resizerWidth,
-        y: (element.resizer.topLeftY - rotateDistY - resizerHeight / 2) + resizerHeight,
+        corners: {
+          topLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+            y: element.resizer.topLeftY - rotateDistY - resizerHeight / 2,
+          },
+          topRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2
+            ) + resizerWidth,
+            y: element.resizer.topLeftY - rotateDistY - resizerHeight / 2,
+          },
+          bottomLeft: {
+            x: element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2,
+            y: (element.resizer.topLeftY - rotateDistY - resizerHeight / 2) + resizerHeight,
+          },
+          bottomRight: {
+            x: (
+              element.resizer.topLeftX + element.dimensions.width / 2 - resizerWidth / 2
+            ) + resizerWidth,
+            y: (element.resizer.topLeftY - rotateDistY - resizerHeight / 2) + resizerHeight,
+          },
+        },
         width: resizerWidth,
         height: resizerHeight,
         affect: [5],
@@ -160,74 +349,74 @@ export default class Hold {
     ];
     const lines = [
       {
-        startX: resizers[0].x,
-        startY: resizers[0].y - resizerHeight / 2,
-        x: resizers[1].startX,
-        y: resizers[1].startY + resizerHeight / 2,
+        startX: resizers[0].corners.bottomRight.x,
+        startY: resizers[0].corners.bottomRight.y - resizerHeight / 2,
+        x: resizers[1].corners.topLeft.x,
+        y: resizers[1].corners.topLeft.y + resizerHeight / 2,
         type: 'line',
         selfId: 1,
       },
       {
-        startX: resizers[1].x,
-        startY: resizers[1].y - resizerHeight / 2,
-        x: resizers[2].startX,
-        y: resizers[2].startY + resizerHeight / 2,
+        startX: resizers[1].corners.bottomRight.x,
+        startY: resizers[1].corners.bottomRight.y - resizerHeight / 2,
+        x: resizers[2].corners.topLeft.x,
+        y: resizers[2].corners.topLeft.y + resizerHeight / 2,
         type: 'line',
         selfId: 2,
       },
       {
-        startX: resizers[2].x - resizerWidth / 2,
-        startY: resizers[2].y,
-        x: resizers[3].startX + resizerWidth / 2,
-        y: resizers[3].startY,
+        startX: resizers[2].corners.bottomRight.x - resizerWidth / 2,
+        startY: resizers[2].corners.bottomRight.y,
+        x: resizers[3].corners.topLeft.x + resizerWidth / 2,
+        y: resizers[3].corners.topLeft.y,
         type: 'line',
         selfId: 3,
       },
       {
-        startX: resizers[3].x - resizerWidth / 2,
-        startY: resizers[3].y,
-        x: resizers[4].startX + resizerWidth / 2,
-        y: resizers[4].startY,
+        startX: resizers[3].corners.bottomRight.x - resizerWidth / 2,
+        startY: resizers[3].corners.bottomRight.y,
+        x: resizers[4].corners.topLeft.x + resizerWidth / 2,
+        y: resizers[4].corners.topLeft.y,
         type: 'line',
         selfId: 4,
       },
       {
-        startX: resizers[4].startX,
-        startY: resizers[4].startY + resizerHeight / 2,
-        x: resizers[5].x,
-        y: resizers[5].y - resizerHeight / 2,
+        startX: resizers[4].corners.topLeft.x,
+        startY: resizers[4].corners.topLeft.y + resizerHeight / 2,
+        x: resizers[5].corners.bottomRight.x,
+        y: resizers[5].corners.bottomRight.y - resizerHeight / 2,
         type: 'line',
         selfId: 5,
       },
       {
-        startX: resizers[5].startX,
-        startY: resizers[5].startY + resizerHeight / 2,
-        x: resizers[6].x,
-        y: resizers[6].y - resizerHeight / 2,
+        startX: resizers[5].corners.topLeft.x,
+        startY: resizers[5].corners.topLeft.y + resizerHeight / 2,
+        x: resizers[6].corners.bottomRight.x,
+        y: resizers[6].corners.bottomRight.y - resizerHeight / 2,
         type: 'line',
         selfId: 6,
       },
       {
-        startX: resizers[6].startX + resizerWidth / 2,
-        startY: resizers[6].startY,
-        x: resizers[7].x - resizerWidth / 2,
-        y: resizers[7].y,
+        startX: resizers[6].corners.topLeft.x + resizerWidth / 2,
+        startY: resizers[6].corners.topLeft.y,
+        x: resizers[7].corners.bottomRight.x - resizerWidth / 2,
+        y: resizers[7].corners.bottomRight.y,
         type: 'line',
         selfId: 7,
       },
       {
-        startX: resizers[7].startX + resizerWidth / 2,
-        startY: resizers[7].startY,
-        x: resizers[0].x - resizerWidth / 2,
-        y: resizers[0].y,
+        startX: resizers[7].corners.topLeft.x + resizerWidth / 2,
+        startY: resizers[7].corners.topLeft.y,
+        x: resizers[0].corners.bottomRight.x - resizerWidth / 2,
+        y: resizers[0].corners.bottomRight.y,
         type: 'line',
         selfId: 8,
       },
       {
-        startX: resizers[1].startX + resizerWidth / 2,
-        startY: resizers[1].startY,
-        x: resizers[8].x - resizerWidth / 2,
-        y: resizers[8].y,
+        startX: resizers[1].corners.topLeft.x + resizerWidth / 2,
+        startY: resizers[1].corners.topLeft.y,
+        x: resizers[8].corners.bottomRight.x - resizerWidth / 2,
+        y: resizers[8].corners.bottomRight.y,
         type: 'line',
         selfId: 9,
       },
@@ -241,61 +430,56 @@ export default class Hold {
   updateResizersArrays() {
     this.resizers = this.resizersArrays.resizers;
     this.resizers.forEach((resizer) => {
-      resizer.clickStartX = resizer.startX;
-      resizer.clickStartY = resizer.startY;
+      resizer.clickers = {
+        topLeft: {
+          x: resizer.corners.topLeft.x,
+          y: resizer.corners.topLeft.y,
+        },
+        topRight: {
+          x: resizer.corners.topRight.x,
+          y: resizer.corners.topRight.y,
+        },
+        bottomLeft: {
+          x: resizer.corners.bottomLeft.x,
+          y: resizer.corners.bottomLeft.y,
+        },
+        bottomRight: {
+          x: resizer.corners.bottomRight.x,
+          y: resizer.corners.bottomRight.y,
+        },
+      };
+      console.log(resizer.clickers);
     });
     this.lines = this.resizersArrays.lines;
   }
 
   updateResizersAfterRotation() {
-    const rotationAngle = Utilities.degreesToRadians(this.element.transformation.rotationAngle);
-    const rotationAngleDeg = this.element.transformation.rotationAngle;
-    let signX = -1;
-    let signY = 0;
-
-    if (rotationAngleDeg >= 0 && rotationAngleDeg < 90) {
-      signX = -1;
-      signY = 0;
-    } else if (rotationAngleDeg >= 90 && rotationAngleDeg < 180) {
-      signX = -0.5;
-      signY = -0.5;
-    } else if (rotationAngleDeg >= 180 && rotationAngleDeg < 275) {
-      signX = 0;
-      signY = -0.5;
-    } else if (rotationAngleDeg >= 275 && rotationAngleDeg < 360) {
-      signX = 0;
-      signY = 0;
-    }
-    let correcterX = signX * rotationAngleDeg / this.resizerWidth;
-    let correcterY = signY * rotationAngleDeg / this.resizerHeight;
-
-    /*
-    if (rotationAngleDeg > 180 && rotationAngleDeg < 360) {
-      sign = 0;
-    }*/
-    this.resizers.forEach((resizer) => {
-      resizer.clickStartX = (resizer.startX - (this.element.dimensions.startX + ((this.element.dimensions.width) / 2))) * Utilities.cos(-rotationAngle)
-        + (resizer.startY - (this.element.dimensions.startY + ((this.element.dimensions.height) / 2))) * Utilities.sin(-rotationAngle);
-      resizer.clickStartX += this.element.dimensions.startX + ((this.element.dimensions.width) / 2) + correcterX;
-      resizer.clickStartY = (resizer.startY - (this.element.dimensions.startY + ((this.element.dimensions.height) / 2))) * Utilities.cos(-rotationAngle)
-        - (resizer.startX - (this.element.dimensions.startX + ((this.element.dimensions.width) / 2))) * Utilities.sin(-rotationAngle);
-      resizer.clickStartY += this.element.dimensions.startY + ((this.element.dimensions.height) / 2) + correcterY;
-      console.log(this.element.transformation.rotationAngleDifference, 'rotation angle difference - rad - hold');
-      console.log(resizer.clickStartX, 'clickStartX');
-      console.log(resizer.clickStartY, 'clickStartY');
-    });
-
     const editor = this.element.editor.canvas.upperCanvas;
-    const transformation = this.element.transformation.rotationMatrix;
     editor.ctx.save();
+    const rotationAngle = Utilities.degreesToRadians(this.element.transformation.rotationAngle);
     for (let i = 0; i < this.resizers.length; i += 1) {
+      const clickers = Object.values(this.resizers[i].clickers);
+      const corners = Object.values(this.resizers[i].corners);
+      console.log(clickers);
+      for (let j = 0; j < clickers.length; j += 1) {
+        clickers[j].x = (corners[j].x - (this.element.dimensions.startX + ((this.element.dimensions.width) / 2))) * Utilities.cos(-rotationAngle)
+          + (corners[j].y - (this.element.dimensions.startY + ((this.element.dimensions.height) / 2))) * Utilities.sin(-rotationAngle);
+        clickers[j].x += this.element.dimensions.startX + ((this.element.dimensions.width) / 2);
+        clickers[j].y = (corners[j].y - (this.element.dimensions.startY + ((this.element.dimensions.height) / 2))) * Utilities.cos(-rotationAngle)
+          - (corners[j].x - (this.element.dimensions.startX + ((this.element.dimensions.width) / 2))) * Utilities.sin(-rotationAngle);
+        clickers[j].y += this.element.dimensions.startY + ((this.element.dimensions.height) / 2);
+        //console.log(this.element.transformation.rotationAngleDifference, 'rotation angle difference - rad - hold');
+        console.log(clickers[j].x, 'clickStartX');
+        console.log(clickers[j].y, 'clickStartY');
+      }
+      editor.ctx.beginPath();
       editor.ctx.fillStyle = '#FF0000';
-      editor.ctx.fillRect(
-        this.resizers[i].clickStartX,
-        this.resizers[i].clickStartY,
-        this.resizers[i].width,
-        this.resizers[i].height,
-      );
+      editor.ctx.moveTo(this.resizers[i].clickers.topLeft.x, this.resizers[i].clickers.topLeft.y);
+      editor.ctx.lineTo(this.resizers[i].clickers.topRight.x, this.resizers[i].clickers.topRight.y);
+      editor.ctx.lineTo(this.resizers[i].clickers.bottomRight.x, this.resizers[i].clickers.bottomRight.y);
+      editor.ctx.lineTo(this.resizers[i].clickers.bottomLeft.x, this.resizers[i].clickers.bottomLeft.y);
+      editor.ctx.fill();
+      editor.ctx.closePath();
     }
     editor.ctx.restore();
   }
@@ -303,8 +487,14 @@ export default class Hold {
   mouseInResizer(mousePositionX, mousePositionY) {
     let answer = null;
     this.resizers.forEach((resizer) => {
-      if ((resizer.clickStartX <= mousePositionX) && (resizer.clickStartX + resizer.width >= mousePositionX)
-        && (resizer.clickStartY <= mousePositionY) && (resizer.clickStartY + resizer.height >= mousePositionY)) {
+      if ((resizer.clickers.topLeft.x <= mousePositionX)
+        && (resizer.clickers.topRight.x >= mousePositionX)
+        && (resizer.clickers.bottomLeft.x <= mousePositionX)
+        && (resizer.clickers.bottomRight.x >= mousePositionX)
+        && (resizer.clickers.topLeft.y <= mousePositionY)
+        && (resizer.clickers.topRight.y <= mousePositionY)
+        && (resizer.clickers.bottomLeft.y >= mousePositionY)
+        && (resizer.clickers.bottomRight.y >= mousePositionY)) {
         answer = resizer;
       }
     });
