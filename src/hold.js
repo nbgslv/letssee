@@ -472,6 +472,7 @@ export default class Hold {
         console.log(clickers[j].x, 'clickStartX');
         console.log(clickers[j].y, 'clickStartY');
       }
+      /*
       editor.ctx.beginPath();
       editor.ctx.fillStyle = '#FF0000';
       editor.ctx.moveTo(this.resizers[i].clickers.topLeft.x, this.resizers[i].clickers.topLeft.y);
@@ -480,6 +481,7 @@ export default class Hold {
       editor.ctx.lineTo(this.resizers[i].clickers.bottomLeft.x, this.resizers[i].clickers.bottomLeft.y);
       editor.ctx.fill();
       editor.ctx.closePath();
+       */
     }
     editor.ctx.restore();
   }
@@ -487,14 +489,35 @@ export default class Hold {
   mouseInResizer(mousePositionX, mousePositionY) {
     let answer = null;
     this.resizers.forEach((resizer) => {
-      if ((resizer.clickers.topLeft.x <= mousePositionX)
-        && (resizer.clickers.topRight.x >= mousePositionX)
-        && (resizer.clickers.bottomLeft.x <= mousePositionX)
-        && (resizer.clickers.bottomRight.x >= mousePositionX)
-        && (resizer.clickers.topLeft.y <= mousePositionY)
-        && (resizer.clickers.topRight.y <= mousePositionY)
-        && (resizer.clickers.bottomLeft.y >= mousePositionY)
-        && (resizer.clickers.bottomRight.y >= mousePositionY)) {
+      const clickers = resizer.clickers;
+      const minX = Math.min(
+        clickers.topLeft.x,
+        clickers.topRight.x,
+        clickers.bottomLeft.x,
+        clickers.bottomRight.x,
+      );
+      const maxX = Math.max(
+        clickers.topLeft.x,
+        clickers.topRight.x,
+        clickers.bottomLeft.x,
+        clickers.bottomRight.x,
+      );
+      const minY = Math.min(
+        clickers.topLeft.y,
+        clickers.topRight.y,
+        clickers.bottomLeft.y,
+        clickers.bottomRight.y,
+      );
+      const maxY = Math.max(
+        clickers.topLeft.y,
+        clickers.topRight.y,
+        clickers.bottomLeft.y,
+        clickers.bottomRight.y,
+      );
+      if ((minX <= mousePositionX)
+        && (maxX >= mousePositionX)
+        && (minY <= mousePositionY)
+        && (maxY >= mousePositionY)) {
         answer = resizer;
       }
     });
