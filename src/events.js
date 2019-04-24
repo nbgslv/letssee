@@ -41,6 +41,12 @@ export default class Events {
   }
 
   mainEventHandler(e) {
+    const editor = this.editor.canvas.upperCanvas;
+    for (let i = 0; i < 301; i += 5) {
+      editor.ctx.moveTo(i, 300);
+      editor.ctx.lineTo(i, 290);
+    }
+    editor.ctx.stroke();
     e.preventDefault();
     e.stopPropagation();
     if (this.canvasEvent === null) this.initCanvasEvent(e);

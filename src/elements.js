@@ -263,10 +263,21 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    if ((this.resizer.topLeft.x <= mousePositionX)
-      && (this.resizer.topLeft.x + this.dimensions.width >= mousePositionX)
-      && (this.resizer.topLeft.y <= mousePositionY)
-      && (this.resizer.topLeft.y + this.dimensions.height >= mousePositionY)) {
+    const corners = Object.values(this.resizer);
+    let cornerX = 'x';
+    let cornerY = 'y';
+    if (this.transformation.rotationMatrix) {
+      cornerX = 'rotatedX';
+      cornerY = 'rotatedY';
+    }
+    corners.maxX = Math.max(corners[0][cornerX], corners[1][cornerX], corners[2][cornerX], corners[3][cornerX]);
+    corners.maxY = Math.max(corners[0][cornerY], corners[1][cornerY], corners[2][cornerY], corners[3][cornerY]);
+    corners.minX = Math.min(corners[0][cornerX], corners[1][cornerX], corners[2][cornerX], corners[3][cornerX]);
+    corners.minY = Math.min(corners[0][cornerY], corners[1][cornerY], corners[2][cornerY], corners[3][cornerY]);
+    if ((corners.minX <= mousePositionX)
+      && (corners.maxX >= mousePositionX)
+      && (corners.minY <= mousePositionY)
+      && (corners.maxY >= mousePositionY)) {
       return this;
     }
     return false;
