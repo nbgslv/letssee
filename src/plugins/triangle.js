@@ -92,15 +92,19 @@ export default class Triangle extends Element {
     if (endY > startY) {
       this.dimensions.startY = this.headPoint.y;
       this.dimensions.endY = this.rightPoint.y;
+      this.resizer.topLeft = this.headPoint;
+      this.resizer.topRight = this.resizer.topLeft;
+      this.resizer.bottomLeft = this.leftPoint;
+      this.resizer.bottomRight = this.rightPoint;
     } else {
       this.dimensions.startY = this.leftPoint.y;
       this.dimensions.endY = this.headPoint.y;
+      this.resizer.topLeft = this.leftPoint;
+      this.resizer.topRight = this.rightPoint;
+      this.resizer.bottomLeft = this.headPoint;
+      this.resizer.bottomRight = this.resizer.bottomLeft;
       this.upsideDown = true;
     }
-    this.resizer = {
-      topLeftX: Math.min(Math.max(endX, endX - width), startX - width / 2),
-      topLeftY: Math.min(endY, startY),
-    };
   }
 
   resize() {
@@ -125,12 +129,12 @@ export default class Triangle extends Element {
             this.dimensions.width -= mouseResize.deltaX;
             this.headPoint.x -= this.dimensions.width / 2 - oldWidth / 2;
             this.dimensions.startX += mouseResize.deltaX;
-            this.resizer.topLeftX += mouseResize.deltaX;
+            this.resizer.topLeft.x += mouseResize.deltaX;
             break;
           case 2:
             this.headPoint.y += mouseResize.deltaY;
             this.dimensions.startY += mouseResize.deltaY;
-            this.resizer.topLeftY += mouseResize.deltaY;
+            this.resizer.topLeft.y += mouseResize.deltaY;
             this.dimensions.height -= mouseResize.deltaY;
             break;
           case 3:
@@ -183,8 +187,8 @@ export default class Triangle extends Element {
       this.leftPoint.y += mouseMove.deltaY;
       this.rightPoint.x += mouseMove.deltaX;
       this.rightPoint.y += mouseMove.deltaY;
-      this.resizer.topLeftX += mouseMove.deltaX;
-      this.resizer.topLeftY += mouseMove.deltaY;
+      this.resizer.topLeft.x += mouseMove.deltaX;
+      this.resizer.topLeft.y += mouseMove.deltaY;
     }
   }
 }

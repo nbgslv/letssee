@@ -104,7 +104,13 @@ export default class CurvedRectangle extends Element {
     this.dimensions.height = height;
     this.curveX = width <= this.curveXY * 2 ? Math.abs(width) / 2 : this.curveXY;
     this.curveY = height <= this.curveXY * 2 ? Math.abs(height) / 2 : this.curveXY;
-    this.resizer.topLeftX = dimensions.startX;
-    this.resizer.topLeftY = dimensions.startY;
+    this.resizer.topLeft.x = dimensions.startX;
+    this.resizer.topLeft.y = dimensions.startY;
+    this.resizer.topRight.x = dimensions.endX;
+    this.resizer.topRight.y = dimensions.startY;
+    this.resizer.bottomLeft.x = dimensions.startX;
+    this.resizer.bottomLeft.y = dimensions.endY;
+    this.resizer.bottomRight.x = dimensions.endX;
+    this.resizer.bottomRight.y = dimensions.endY;
   }
 }

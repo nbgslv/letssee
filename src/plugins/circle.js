@@ -57,8 +57,14 @@ export default class Ellipse extends Element {
     this.dimensions.endY = endY;
     this.dimensions.width = width;
     this.dimensions.height = height;
-    this.resizer.topLeftX = startX;
-    this.resizer.topLeftY = startY;
+    this.resizer.topLeft.x = startX;
+    this.resizer.topLeft.y = startY;
+    this.resizer.topRight.x = endX;
+    this.resizer.topRight.y = startY;
+    this.resizer.bottomLeft.x = startX;
+    this.resizer.bottomLeft.y = endY;
+    this.resizer.bottomRight.x = endX;
+    this.resizer.bottomRight.y = endY;
     this.radiusX = width / 2;
     this.radiusY = height / 2;
     this.centerX = startX + this.radiusX;
@@ -80,28 +86,28 @@ export default class Ellipse extends Element {
             this.centerX += mouseResize.deltaX / 2;
             this.dimensions.width -= mouseResize.deltaX;
             this.radiusX -= mouseResize.deltaX / 2;
-            this.resizer.topLeftX = this.centerX - this.radiusX;
+            this.resizer.topLeft.x = this.centerX - this.radiusX;
             break;
           case 2:
             this.dimensions.startY += mouseResize.deltaY / 2;
             this.centerY += mouseResize.deltaY / 2;
             this.dimensions.height -= mouseResize.deltaY;
             this.radiusY -= mouseResize.deltaY / 2;
-            this.resizer.topLeftY = this.centerY - this.radiusY;
+            this.resizer.topLeft.y = this.centerY - this.radiusY;
             break;
           case 3:
             this.dimensions.startX += mouseResize.deltaX / 2;
             this.centerX += mouseResize.deltaX / 2;
             this.dimensions.width += mouseResize.deltaX;
             this.radiusX += mouseResize.deltaX / 2;
-            this.resizer.topLeftX = this.centerX - this.radiusX;
+            this.resizer.topLeft.x = this.centerX - this.radiusX;
             break;
           case 4:
             this.dimensions.startY += mouseResize.deltaY / 2;
             this.centerY += mouseResize.deltaY / 2;
             this.dimensions.height += mouseResize.deltaY;
             this.radiusY += mouseResize.deltaY / 2;
-            this.resizer.topLeftY = this.centerY - this.radiusY;
+            this.resizer.topLeft.y = this.centerY - this.radiusY;
             break;
           case 5: {
             this.transformation.transform = true;
@@ -138,8 +144,8 @@ export default class Ellipse extends Element {
       this.dimensions.endY += mouseMove.deltaY;
       this.centerX += mouseMove.deltaX;
       this.centerY += mouseMove.deltaY;
-      this.resizer.topLeftX += mouseMove.deltaX;
-      this.resizer.topLeftY += mouseMove.deltaY;
+      this.resizer.topLeft.x += mouseMove.deltaX;
+      this.resizer.topLeft.y += mouseMove.deltaY;
     }
   }
 }

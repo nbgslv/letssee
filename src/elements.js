@@ -19,8 +19,22 @@ export default class Element extends Tool {
       height: 0,
     };
     this.resizer = {
-      topLeftX: 0,
-      topLeftY: 0,
+      topLeft: {
+        x: 0,
+        y: 0,
+      },
+      topRight: {
+        x: 0,
+        y: 0,
+      },
+      bottomLeft: {
+        x: 0,
+        y: 0,
+      },
+      bottomRight: {
+        x: 0,
+        y: 0,
+      },
     };
     this.transformation = {
       activeAffecter: [],
@@ -83,8 +97,14 @@ export default class Element extends Tool {
     this.dimensions.endY = dimensions.endY;
     this.dimensions.width = dimensions.width;
     this.dimensions.height = dimensions.height;
-    this.resizer.topLeftX = dimensions.startX;
-    this.resizer.topLeftY = dimensions.startY;
+    this.resizer.topLeft.x = dimensions.startX;
+    this.resizer.topLeft.y = dimensions.startY;
+    this.resizer.topRight.x = dimensions.endX;
+    this.resizer.topRight.y = dimensions.startY;
+    this.resizer.bottomLeft.x = dimensions.startX;
+    this.resizer.bottomLeft.y = dimensions.endY;
+    this.resizer.bottomRight.x = dimensions.endX;
+    this.resizer.bottomRight.y = dimensions.endY;
   }
 
   select() {
@@ -105,13 +125,13 @@ export default class Element extends Tool {
           case 1:
             this.dimensions.width -= mouseResize.deltaX;
             this.dimensions.startX += mouseResize.deltaX;
-            this.resizer.topLeftX += mouseResize.deltaX;
+            this.resizer.topLeft.x += mouseResize.deltaX;
             this.transformation.transformed = true;
             break;
           case 2:
             this.dimensions.height -= mouseResize.deltaY;
             this.dimensions.startY += mouseResize.deltaY;
-            this.resizer.topLeftY += mouseResize.deltaY;
+            this.resizer.topLeft.y += mouseResize.deltaY;
             this.transformation.transformed = true;
             break;
           case 3:
@@ -157,8 +177,8 @@ export default class Element extends Tool {
       this.dimensions.startY += mouseMove.deltaY;
       this.dimensions.endX += mouseMove.deltaX;
       this.dimensions.endY += mouseMove.deltaY;
-      this.resizer.topLeftX += mouseMove.deltaX;
-      this.resizer.topLeftY += mouseMove.deltaY;
+      this.resizer.topLeft.x += mouseMove.deltaX;
+      this.resizer.topLeft.y += mouseMove.deltaY;
     }
   }
 
@@ -243,10 +263,10 @@ export default class Element extends Tool {
   }
 
   mouseInElement(mousePositionX, mousePositionY) {
-    if ((this.resizer.topLeftX <= mousePositionX)
-      && (this.resizer.topLeftX + this.dimensions.width >= mousePositionX)
-      && (this.resizer.topLeftY <= mousePositionY)
-      && (this.resizer.topLeftY + this.dimensions.height >= mousePositionY)) {
+    if ((this.resizer.topLeft.x <= mousePositionX)
+      && (this.resizer.topLeft.x + this.dimensions.width >= mousePositionX)
+      && (this.resizer.topLeft.y <= mousePositionY)
+      && (this.resizer.topLeft.y + this.dimensions.height >= mousePositionY)) {
       return this;
     }
     return false;
