@@ -270,17 +270,73 @@ export default class Element extends Tool {
       cornerX = 'rotatedX';
       cornerY = 'rotatedY';
     }
-    corners.maxX = Math.max(corners[0][cornerX], corners[1][cornerX], corners[2][cornerX], corners[3][cornerX]);
-    corners.maxY = Math.max(corners[0][cornerY], corners[1][cornerY], corners[2][cornerY], corners[3][cornerY]);
-    corners.minX = Math.min(corners[0][cornerX], corners[1][cornerX], corners[2][cornerX], corners[3][cornerX]);
-    corners.minY = Math.min(corners[0][cornerY], corners[1][cornerY], corners[2][cornerY], corners[3][cornerY]);
-    if ((corners.minX <= mousePositionX)
-      && (corners.maxX >= mousePositionX)
-      && (corners.minY <= mousePositionY)
-      && (corners.maxY >= mousePositionY)) {
+    // find X point of border by mouse point of Y
+    let m = Element.lineIncline(
+      corners[0][cornerX],
+      corners[0][cornerY],
+      corners[1][cornerX],
+      corners[1][cornerY],
+    );
+    const borderYTop = Element.borderY(mousePositionX, m);
+
+    m = Element.lineIncline(
+      corners[1][cornerX],
+      corners[1][cornerY],
+      corners[3][cornerX],
+      corners[3][cornerY],
+    );
+    let borderXRight = 0;
+    if (m.m === Infinity || m.m === -Infinity) {
+      borderXRight = corners[1][cornerX];
+    } else {
+      borderXRight = Element.borderX(mousePositionY, m);
+    }
+
+    m = Element.lineIncline(
+      corners[3][cornerX],
+      corners[3][cornerY],
+      corners[2][cornerX],
+      corners[2][cornerY],
+    );
+    const borderYBottom = Element.borderY(mousePositionX, m);
+
+    m = Element.lineIncline(
+      corners[2][cornerX],
+      corners[2][cornerY],
+      corners[0][cornerX],
+      corners[0][cornerY],
+    );
+    let borderXLeft = 0;
+    if (m.m === Infinity || m.m === -Infinity) {
+      borderXLeft = corners[0][cornerX];
+    } else {
+      borderXLeft = Element.borderX(mousePositionY, m);
+    }
+
+    if ((mousePositionY >= borderYTop)
+      && (mousePositionY <= borderYBottom)
+      && (mousePositionX <= borderXRight)
+      && (mousePositionX >= borderXLeft)) {
       return this;
     }
     return false;
+  }
+
+  static lineIncline(x1, y1, x2, y2) {
+    const m = (y1 - y2) / (x1 - x2);
+    const lineEq = -(m * x1) + y1;
+    return {
+      lineEq,
+      m,
+    };
+  }
+
+  static borderX(mousePositionY, m) {
+    return (m.lineEq - mousePositionY) / -(m.m);
+  }
+
+  static borderY(mousePositionX, m) {
+    return m.m * mousePositionX + m.lineEq;
   }
 
   static relativeMousePosition(e) {
