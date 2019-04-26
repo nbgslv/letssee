@@ -313,7 +313,8 @@ export default class Element extends Tool {
       borderXLeft = Element.borderX(mousePositionY, m);
     }
 
-    if ((mousePositionY >= borderYTop)
+    // eslint-disable-next-line no-restricted-globals
+    if ((isNaN(borderYTop) ? true : mousePositionY >= borderYTop)
       && (mousePositionY <= borderYBottom)
       && (mousePositionX <= borderXRight)
       && (mousePositionX >= borderXLeft)) {
