@@ -122,26 +122,35 @@ export default class Element extends Tool {
       };
       this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
         switch (affect) {
-          case 1:
+          case 1: {
             this.dimensions.width -= mouseResize.deltaX;
             this.dimensions.startX += mouseResize.deltaX;
-            this.resizer.topLeft.x += mouseResize.deltaX;
+            const resizersAdd = new Map();
+            resizersAdd.set('x', mouseResize.deltaX);
+            this.elementResizersAdd = resizersAdd;
             this.transformation.transformed = true;
             break;
-          case 2:
+          }
+          case 2: {
             this.dimensions.height -= mouseResize.deltaY;
             this.dimensions.startY += mouseResize.deltaY;
+            this.resizer.topRight.y += mouseResize.deltaY;
             this.resizer.topLeft.y += mouseResize.deltaY;
             this.transformation.transformed = true;
             break;
+          }
           case 3:
             this.dimensions.width += mouseResize.deltaX;
             this.dimensions.endX += mouseResize.deltaX;
+            this.resizer.bottomRight += mouseResize.deltaX;
+            this.resizer.bottomLeft += mouseResize.deltaX;
             this.transformation.transformed = true;
             break;
           case 4:
             this.dimensions.height += mouseResize.deltaY;
             this.dimensions.endY += mouseResize.deltaY;
+            this.resizer.bottomLeft += mouseResize.deltaY;
+            this.resizer.bottomRight += mouseResize.deltaY;
             this.transformation.transformed = true;
             break;
           case 5: {
@@ -177,11 +186,10 @@ export default class Element extends Tool {
       this.dimensions.startY += mouseMove.deltaY;
       this.dimensions.endX += mouseMove.deltaX;
       this.dimensions.endY += mouseMove.deltaY;
-      const elementResizers = Object.values(this.resizer);
-      elementResizers.forEach((resizer) => {
-        resizer.x += mouseMove.deltaX;
-        resizer.y += mouseMove.deltaY;
-      });
+      const resizersAdd = new Map();
+      resizersAdd.set('x', mouseMove.deltaX);
+      resizersAdd.set('y', mouseMove.deltaY);
+      this.elementResizersAdd = resizersAdd;
     }
   }
 
@@ -227,6 +235,28 @@ export default class Element extends Tool {
       x: this.dimensions.startX + translateX,
       y: this.dimensions.startY + translateY,
     };
+  }
+
+  set elementResizersAdd(map) {
+    if (!(map instanceof Map)) return 'property "map" of this function must be an instance of Map';
+    const elementResizers = Object.values(this.resizer);
+    elementResizers.forEach((resizer) => {
+      map.forEach((value, key) => {
+        resizer[key] += value;
+      });
+    });
+    return true;
+  }
+
+  set elementResizersSubtract(map) {
+    if (!(map instanceof Map)) return 'property "map" of this function must be an instance of Map';
+    const elementResizers = Object.values(this.resizer);
+    elementResizers.forEach((resizer) => {
+      map.forEach((value, key) => {
+        resizer[key] += value;
+      });
+    });
+    return true;
   }
 
   rotatePoint(rotateVector) {

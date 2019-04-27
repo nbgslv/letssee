@@ -92,12 +92,13 @@ export default class Triangle extends Element {
     if (endY > startY) {
       this.dimensions.startY = this.headPoint.y;
       this.dimensions.endY = this.rightPoint.y;
-      this.resizer.topLeft.x = this.headPoint.x - this.dimensions.width / 2;
+      this.resizer.topLeft.x = this.leftPoint.x;
       this.resizer.topLeft.y = this.headPoint.y;
-      this.resizer.topRight.x = this.headPoint.x + this.dimensions.width / 2;
+      this.resizer.topRight.x = this.rightPoint.x;
       this.resizer.topRight.y = this.headPoint.y;
       this.resizer.bottomLeft = this.leftPoint;
       this.resizer.bottomRight = this.rightPoint;
+      this.upsideDown = false;
     } else {
       this.dimensions.startY = this.leftPoint.y;
       this.dimensions.endY = this.headPoint.y;
@@ -121,11 +122,7 @@ export default class Triangle extends Element {
       };
       this.editor.events.canvasEvent.position.resizer.affect.forEach(((affect) => {
         let oldWidth;
-        if (this.upsideDown && affect === 2) {
-          affect = 4;
-        } else if (this.upsideDown && affect === 4) {
-          affect = 2;
-        }
+
         switch (affect) {
           case 1:
             oldWidth = this.dimensions.width;
@@ -133,12 +130,23 @@ export default class Triangle extends Element {
             this.dimensions.width -= mouseResize.deltaX;
             this.headPoint.x -= this.dimensions.width / 2 - oldWidth / 2;
             this.dimensions.startX += mouseResize.deltaX;
-            this.resizer.topLeft.x += mouseResize.deltaX;
+            if (this.upsideDown) {
+              this.resizer.bottomLeft.x += mouseResize.deltaX;
+            } else {
+              this.resizer.topLeft.x += mouseResize.deltaX;
+            }
             break;
           case 2:
-            this.headPoint.y += mouseResize.deltaY;
-            this.dimensions.startY += mouseResize.deltaY;
-            this.resizer.topLeft.y += mouseResize.deltaY;
+            if (this.upsideDown) {
+              this.leftPoint.y += mouseResize.deltaY;
+              this.rightPoint.y += mouseResize.deltaY;
+              this.dimensions.endY += mouseResize.deltaY;
+            } else {
+              this.headPoint.y += mouseResize.deltaY;
+              this.dimensions.startY += mouseResize.deltaY;
+              this.resizer.topLeft.y += mouseResize.deltaY;
+              this.resizer.topRight.y += mouseResize.deltaY;
+            }
             this.dimensions.height -= mouseResize.deltaY;
             break;
           case 3:
@@ -146,10 +154,25 @@ export default class Triangle extends Element {
             this.rightPoint.x += mouseResize.deltaX;
             this.dimensions.width += mouseResize.deltaX;
             this.headPoint.x += this.dimensions.width / 2 - oldWidth / 2;
+            if (this.upsideDown) {
+              this.resizer.bottomRight.x += mouseResize.deltaX;
+            } else {
+              this.resizer.topRight.x += mouseResize.deltaX;
+            }
             break;
           case 4:
-            this.leftPoint.y += mouseResize.deltaY;
-            this.rightPoint.y += mouseResize.deltaY;
+            if (this.upsideDown) {
+              this.headPoint.y += mouseResize.deltaY;
+              this.dimensions.startY += mouseResize.deltaY;
+              this.resizer.bottomLeft.y += mouseResize.deltaY;
+              this.resizer.bottomRight.y += mouseResize.deltaY;
+            } else {
+              this.leftPoint.y += mouseResize.deltaY;
+              this.rightPoint.y += mouseResize.deltaY;
+              this.dimensions.endY += mouseResize.deltaY;
+              this.resizer.bottomLeft.y += mouseResize.deltaY;
+              this.resizer.bottomRight.y += mouseResize.deltaY;
+            }
             this.dimensions.height += mouseResize.deltaY;
             break;
           case 5: {
@@ -181,21 +204,12 @@ export default class Triangle extends Element {
         deltaY: this.editor.events.canvasEvent.mouse.canvasY
           - this.editor.events.canvasEvent.mouse.startCanvasY,
       };
-      this.dimensions.startX += mouseMove.deltaX;
-      this.dimensions.startY += mouseMove.deltaY;
-      this.dimensions.endX += mouseMove.deltaX;
-      this.dimensions.endY += mouseMove.deltaY;
       this.headPoint.x += mouseMove.deltaX;
       this.headPoint.y += mouseMove.deltaY;
-      this.leftPoint.x += mouseMove.deltaX;
-      this.leftPoint.y += mouseMove.deltaY;
-      this.rightPoint.x += mouseMove.deltaX;
-      this.rightPoint.y += mouseMove.deltaY;
-      const elementResizers = Object.values(this.resizer);
-      elementResizers.forEach((resizer) => {
-        resizer.x += mouseMove.deltaX;
-        resizer.y += mouseMove.deltaY;
-      });
+      const resizersAdd = new Map();
+      resizersAdd.set('x', mouseMove.deltaX);
+      resizersAdd.set('y', mouseMove.deltaY);
+      this.elementResizersAdd = resizersAdd;
     }
   }
 }
