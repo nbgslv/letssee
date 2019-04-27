@@ -144,8 +144,11 @@ export default class Ellipse extends Element {
       this.dimensions.endY += mouseMove.deltaY;
       this.centerX += mouseMove.deltaX;
       this.centerY += mouseMove.deltaY;
-      this.resizer.topLeft.x += mouseMove.deltaX;
-      this.resizer.topLeft.y += mouseMove.deltaY;
+      const elementResizers = Object.values(this.resizer);
+      elementResizers.forEach((resizer) => {
+        resizer.x += mouseMove.deltaX;
+        resizer.y += mouseMove.deltaY;
+      });
     }
   }
 }

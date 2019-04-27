@@ -177,8 +177,11 @@ export default class Element extends Tool {
       this.dimensions.startY += mouseMove.deltaY;
       this.dimensions.endX += mouseMove.deltaX;
       this.dimensions.endY += mouseMove.deltaY;
-      this.resizer.topLeft.x += mouseMove.deltaX;
-      this.resizer.topLeft.y += mouseMove.deltaY;
+      const elementResizers = Object.values(this.resizer);
+      elementResizers.forEach((resizer) => {
+        resizer.x += mouseMove.deltaX;
+        resizer.y += mouseMove.deltaY;
+      });
     }
   }
 

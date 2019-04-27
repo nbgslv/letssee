@@ -191,8 +191,11 @@ export default class Triangle extends Element {
       this.leftPoint.y += mouseMove.deltaY;
       this.rightPoint.x += mouseMove.deltaX;
       this.rightPoint.y += mouseMove.deltaY;
-      this.resizer.topLeft.x += mouseMove.deltaX;
-      this.resizer.topLeft.y += mouseMove.deltaY;
+      const elementResizers = Object.values(this.resizer);
+      elementResizers.forEach((resizer) => {
+        resizer.x += mouseMove.deltaX;
+        resizer.y += mouseMove.deltaY;
+      });
     }
   }
 }
