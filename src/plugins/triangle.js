@@ -92,8 +92,10 @@ export default class Triangle extends Element {
     if (endY > startY) {
       this.dimensions.startY = this.headPoint.y;
       this.dimensions.endY = this.rightPoint.y;
-      this.resizer.topLeft = this.headPoint;
-      this.resizer.topRight = this.resizer.topLeft;
+      this.resizer.topLeft.x = this.headPoint.x - this.dimensions.width / 2;
+      this.resizer.topLeft.y = this.headPoint.y;
+      this.resizer.topRight.x = this.headPoint.x + this.dimensions.width / 2;
+      this.resizer.topRight.y = this.headPoint.y;
       this.resizer.bottomLeft = this.leftPoint;
       this.resizer.bottomRight = this.rightPoint;
     } else {
@@ -101,8 +103,10 @@ export default class Triangle extends Element {
       this.dimensions.endY = this.headPoint.y;
       this.resizer.topLeft = this.leftPoint;
       this.resizer.topRight = this.rightPoint;
-      this.resizer.bottomLeft = this.headPoint;
-      this.resizer.bottomRight = this.resizer.bottomLeft;
+      this.resizer.bottomLeft.x = this.headPoint.x - this.dimensions.width / 2;
+      this.resizer.bottomLeft.y = this.headPoint.y;
+      this.resizer.bottomRight.x = this.headPoint.x + this.dimensions.width / 2;
+      this.resizer.bottomRight.y = this.headPoint.y;
       this.upsideDown = true;
     }
   }
