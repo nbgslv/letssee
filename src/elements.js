@@ -125,9 +125,8 @@ export default class Element extends Tool {
           case 1: {
             this.dimensions.width -= mouseResize.deltaX;
             this.dimensions.startX += mouseResize.deltaX;
-            const resizersAdd = new Map();
-            resizersAdd.set('x', mouseResize.deltaX);
-            this.elementResizersAdd = resizersAdd;
+            this.resizer.topLeft.x += mouseResize.deltaX;
+            this.resizer.bottomLeft.x += mouseResize.deltaX;
             this.transformation.transformed = true;
             break;
           }
@@ -142,15 +141,15 @@ export default class Element extends Tool {
           case 3:
             this.dimensions.width += mouseResize.deltaX;
             this.dimensions.endX += mouseResize.deltaX;
-            this.resizer.bottomRight += mouseResize.deltaX;
-            this.resizer.bottomLeft += mouseResize.deltaX;
+            this.resizer.topRight.x += mouseResize.deltaX;
+            this.resizer.bottomRight.x += mouseResize.deltaX;
             this.transformation.transformed = true;
             break;
           case 4:
             this.dimensions.height += mouseResize.deltaY;
             this.dimensions.endY += mouseResize.deltaY;
-            this.resizer.bottomLeft += mouseResize.deltaY;
-            this.resizer.bottomRight += mouseResize.deltaY;
+            this.resizer.bottomLeft.y += mouseResize.deltaY;
+            this.resizer.bottomRight.y += mouseResize.deltaY;
             this.transformation.transformed = true;
             break;
           case 5: {
@@ -303,7 +302,7 @@ export default class Element extends Tool {
       cornerX = 'rotatedX';
       cornerY = 'rotatedY';
     }
-    // find X point of border by mouse point of Y
+
     let m = Element.lineIncline(
       corners[0][cornerX],
       corners[0][cornerY],
