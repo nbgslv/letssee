@@ -4,10 +4,16 @@ import Utilities from '../utilities';
 export default class Line extends Element {
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    //editor.ctx.save();
+    editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
+    editor.ctx.rotate(Utilities.degreesToRadians(this.transformation.rotationAngleDifference));
+    editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
     editor.ctx.beginPath();
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
-    editor.ctx.lineTo(this.dimensions.endX, this.dimensions.endY);
+    editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
     editor.ctx.stroke();
+    this.rotateResizer();
+    //editor.ctx.restore();
   }
 
   endDraw() {
@@ -48,9 +54,23 @@ export default class Line extends Element {
     this.resizer.bottomLeft.y = dimensions.startY + 10;
     this.resizer.bottomRight.x = dimensions.endX;
     this.resizer.bottomRight.y = dimensions.endY + 10;
-    this.transformation.rotationAngle += this.calculateLineAngle.angleDifference;
-    this.transformation.rotationAngleDifference = this.calculateLineAngle.angleDifference;
-    this.rotateResizer();
+    const lastAngleDifference = this.transformation.rotationAngleDifference;
+    const newAngle = this.calcRotateAngle;
+    this.transformation.rotationAngleDifference = newAngle - lastAngleDifference;
+    this.transformation.rotationAngle = Utilities.radiansToDegrees(
+      this.transformation.rotationAngleDifference,
+    ) + this.transformation.rotationAngle;
+    if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
+    this.transformation.rotationAngle %= 360;
+    console.log(Utilities.radiansToDegrees(this.transformation.rotationAngleDifference));
+    //this.rotateResizer();
+  }
+
+  get calcRotateAngle() {
+    return Math.atan2(
+      this.editor.events.canvasEvent.mouse.canvasY - this.dimensions.startY,
+      this.editor.events.canvasEvent.mouse.canvasX - this.dimensions.startX,
+    );
   }
 
   rotateResizer() {
