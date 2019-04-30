@@ -2,11 +2,17 @@ import Element from '../elements';
 import Utilities from '../utilities';
 
 export default class Line extends Element {
+  constructor(name, moduleName, properties, events, editor) {
+    super(name, moduleName, properties, events, editor);
+    // TODO get from tools options
+    this.transformation.translationOrigin = 'start';
+  }
+
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     //editor.ctx.save();
     editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
-    editor.ctx.rotate(Utilities.degreesToRadians(this.transformation.rotationAngleDifference));
+    editor.ctx.rotate(this.transformation.rotationAngleDifference);
     editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
     editor.ctx.beginPath();
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
@@ -54,28 +60,41 @@ export default class Line extends Element {
     this.resizer.bottomLeft.y = dimensions.startY + 10;
     this.resizer.bottomRight.x = dimensions.endX;
     this.resizer.bottomRight.y = dimensions.endY + 10;
-    const lastAngleDifference = this.transformation.rotationAngleDifference;
-    const newAngle = this.calcRotateAngle;
-    this.transformation.rotationAngleDifference = newAngle - lastAngleDifference;
+    const {
+      newAngle,
+      lastAngle,
+    } = this.calcRotateAngle;
+    this.transformation.rotationAngleDifference = newAngle - lastAngle;
     this.transformation.rotationAngle = Utilities.radiansToDegrees(
       this.transformation.rotationAngleDifference,
     ) + this.transformation.rotationAngle;
     if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
     this.transformation.rotationAngle %= 360;
-    console.log(Utilities.radiansToDegrees(this.transformation.rotationAngleDifference));
-    //this.rotateResizer();
+    console.log(lastAngle);
+    console.log(newAngle);
+    this.transformation.transform = true;
   }
 
   get calcRotateAngle() {
-    return Math.atan2(
-      this.editor.events.canvasEvent.mouse.canvasY - this.dimensions.startY,
-      this.editor.events.canvasEvent.mouse.canvasX - this.dimensions.startX,
-    );
+    console.log(`currentX: ${this.editor.events.canvasEvent.mouse.canvasX}
+    currentY: ${this.editor.events.canvasEvent.mouse.canvasY}
+    lastX: ${this.editor.events.canvasEvent.mouse.lastMoveX}
+    lastY: ${this.editor.events.canvasEvent.mouse.lastMoveY}`);
+    return {
+      newAngle: Math.atan2(
+        this.editor.events.canvasEvent.mouse.canvasY - this.dimensions.startY,
+        this.editor.events.canvasEvent.mouse.canvasX - this.dimensions.startX,
+      ),
+      lastAngle: Math.atan2(
+        this.editor.events.canvasEvent.mouse.lastMoveY - this.dimensions.startY,
+        this.editor.events.canvasEvent.mouse.lastMoveX - this.dimensions.startX,
+      ),
+    };
   }
 
   rotateResizer() {
     const corners = Object.values(this.resizer);
-    const rotationAngle = this.transformation.rotationAngle;
+    const rotationAngle = this.transformation.rotationAngleDifference;
     for (let i = 0; i < corners.length; i += 1) {
       corners[i].rotatedX = (corners[i].x - (this.dimensions.startX + ((this.dimensions.width) / 2))) * Utilities.cos(-rotationAngle)
         + (corners[i].y - (this.dimensions.startY + ((this.dimensions.height) / 2))) * Utilities.sin(-rotationAngle);
@@ -83,6 +102,14 @@ export default class Line extends Element {
       corners[i].rotatedY = (corners[i].y - (this.dimensions.startY + ((this.dimensions.height) / 2))) * Utilities.cos(-rotationAngle)
         - (corners[i].x - (this.dimensions.startX + ((this.dimensions.width) / 2))) * Utilities.sin(-rotationAngle);
       corners[i].rotatedY += this.dimensions.startY + ((this.dimensions.height) / 2);
+      const editor = this.editor.canvas.canvas;
+      editor.ctx.beginPath();
+      editor.ctx.moveTo(corners[0].rotatedX, corners[0].rotatedY);
+      editor.ctx.lineTo(corners[1].rotatedX, corners[1].rotatedY);
+      editor.ctx.lineTo(corners[3].rotatedX, corners[3].rotatedY);
+      editor.ctx.lineTo(corners[2].rotatedX, corners[2].rotatedY);
+      editor.ctx.closePath();
+      editor.ctx.stroke();
     }
   }
 

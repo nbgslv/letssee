@@ -176,20 +176,26 @@ export default class Hold {
             x: element.resizer.topRight.x
               + strokeDistX
               - resizerWidth / 2,
-            y: element.resizer.topRight.y + element.dimensions.height / 2 - resizerHeight / 2,
+            y: element.resizer.topRight.y
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              - resizerHeight / 2,
           },
           topRight: {
             x: (
               element.resizer.topRight.x + strokeDistX - resizerWidth / 2
             ) + resizerWidth,
-            y: element.resizer.topRight.y + element.dimensions.height / 2 - resizerHeight / 2,
+            y: element.resizer.topRight.y
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              - resizerHeight / 2,
           },
           bottomLeft: {
             x: element.resizer.topRight.x
               + strokeDistX
               - resizerWidth / 2,
             y: (
-              element.resizer.topRight.y + element.dimensions.height / 2 - resizerHeight / 2
+              element.resizer.topRight.y
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              - resizerHeight / 2
             ) + resizerHeight,
           },
           bottomRight: {
@@ -197,7 +203,9 @@ export default class Hold {
               element.resizer.topRight.x + strokeDistX - resizerWidth / 2
             ) + resizerWidth,
             y: (
-              element.resizer.topRight.y + element.dimensions.height / 2 - resizerHeight / 2
+              element.resizer.topRight.y
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              - resizerHeight / 2
             ) + resizerHeight,
           },
         },
@@ -495,6 +503,7 @@ export default class Hold {
   }
 
   updateResizersAfterRotation() {
+    if (this.element.name === 'line') return;
     const editor = this.element.editor.canvas.upperCanvas;
     editor.ctx.save();
     const rotationAngle = Utilities.degreesToRadians(this.element.transformation.rotationAngle);

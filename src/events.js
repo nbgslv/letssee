@@ -26,6 +26,8 @@ export default class Events {
         screenY: e.screenY,
         startCanvasX: null,
         startCanvasY: null,
+        lastMoveX: null,
+        lastMoveY: null,
         canvasX: null,
         canvasY: null,
       },
@@ -156,6 +158,8 @@ export default class Events {
       && this.canvasEvent.mouse.pageY <= canvasPositionTop + canvasHeight
     ) {
       const relativeMousePosition = this.relativeMousePosition;
+      this.canvasEvent.mouse.lastMoveX = this.canvasEvent.mouse.canvasX;
+      this.canvasEvent.mouse.lastMoveY = this.canvasEvent.mouse.canvasY;
       this.canvasEvent.mouse.canvasX = relativeMousePosition.x;
       this.canvasEvent.mouse.canvasY = relativeMousePosition.y;
       this.editor.elements.forEach((element) => {

@@ -43,6 +43,7 @@ export default class Element extends Tool {
       rotated: false,
       rotationAngle: 0,
       rotationAngleDifference: 0,
+      translationOrigin: 'center',
     };
     this.style = style;
     this.selected = false;
@@ -192,16 +193,39 @@ export default class Element extends Tool {
     }
   }
 
-  rotate() {
-    const editor = this.editor.canvas.canvas;
+  rotate(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     const matrix = this.rotationMatrix;
     this.transformation.rotationMatrix = matrix;
-    editor.ctx.translate(this.dimensions.startX + this.dimensions.width / 2,
-      this.dimensions.startY + this.dimensions.height / 2);
+    const {
+      translationX,
+      translationY,
+    } = this.translationPoints;
+    editor.ctx.translate(translationX, translationY);
     editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    editor.ctx.translate(-(this.dimensions.startX + this.dimensions.width / 2),
-      -(this.dimensions.startY + this.dimensions.height / 2));
+    editor.ctx.translate(-translationX, -translationY);
     this.transformation.rotated = true;
+  }
+
+  get translationPoints() {
+    let translationX;
+    let translationY;
+    switch (this.transformation.translationOrigin) {
+      case 'center':
+        translationX = this.dimensions.startX + this.dimensions.width / 2;
+        translationY = this.dimensions.startY + this.dimensions.height / 2;
+        break;
+      case 'start':
+        translationX = this.dimensions.startX;
+        translationY = this.dimensions.startY;
+        break;
+      default:
+        console.log('Translation Origin Point is not defined');
+    }
+    return {
+      translationX,
+      translationY,
+    };
   }
 
   get rotationMatrix() {
