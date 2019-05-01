@@ -38,6 +38,7 @@ export default class Element extends Tool {
     };
     this.transformation = {
       activeAffecter: [],
+      drawTransformed: false,
       transformed: false,
       rotationMatrix: null,
       rotated: false,
@@ -322,7 +323,7 @@ export default class Element extends Tool {
     const corners = Object.values(this.resizer);
     let cornerX = 'x';
     let cornerY = 'y';
-    if (this.transformation.rotationMatrix) {
+    if (this.transformation.rotationMatrix && !this.transformation.drawTransformed) {
       cornerX = 'rotatedX';
       cornerY = 'rotatedY';
     }

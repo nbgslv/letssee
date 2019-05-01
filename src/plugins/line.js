@@ -18,8 +18,18 @@ export default class Line extends Element {
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
     editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
     editor.ctx.stroke();
-    this.rotateResizer();
+    this.transformation.drawTransformed = true;
+    //this.rotateResizer();
     //editor.ctx.restore();
+    /*
+    editor.ctx.beginPath();
+    const corners = Object.values(this.resizer);
+    editor.ctx.moveTo(corners[0].x, corners[0].y);
+    editor.ctx.lineTo(corners[1].x, corners[1].y);
+    editor.ctx.lineTo(corners[3].x, corners[3].y);
+    editor.ctx.lineTo(corners[2].x, corners[2].y);
+    editor.ctx.closePath();
+    editor.ctx.stroke(); */
   }
 
   endDraw() {
@@ -102,14 +112,6 @@ export default class Line extends Element {
       corners[i].rotatedY = (corners[i].y - (this.dimensions.startY + ((this.dimensions.height) / 2))) * Utilities.cos(-rotationAngle)
         - (corners[i].x - (this.dimensions.startX + ((this.dimensions.width) / 2))) * Utilities.sin(-rotationAngle);
       corners[i].rotatedY += this.dimensions.startY + ((this.dimensions.height) / 2);
-      const editor = this.editor.canvas.canvas;
-      editor.ctx.beginPath();
-      editor.ctx.moveTo(corners[0].rotatedX, corners[0].rotatedY);
-      editor.ctx.lineTo(corners[1].rotatedX, corners[1].rotatedY);
-      editor.ctx.lineTo(corners[3].rotatedX, corners[3].rotatedY);
-      editor.ctx.lineTo(corners[2].rotatedX, corners[2].rotatedY);
-      editor.ctx.closePath();
-      editor.ctx.stroke();
     }
   }
 
