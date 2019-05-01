@@ -114,40 +114,39 @@ export default class Hold {
         corners: {
           topLeft: {
             x: element.resizer.topLeft.x
-              + Math.abs(element.resizer.topRight.x - element.resizer.topLeft.x) / 2
+              + element.dimensions.width / 2
               - resizerWidth / 2,
             y: element.resizer.topLeft.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.topLeft.y) / 2
               - strokeDistY
               - resizerHeight / 2,
           },
           topRight: {
-            x: (element.resizer.topLeft.x
-              + Math.abs(element.resizer.topRight.x - element.resizer.topLeft.x) / 2
-              - resizerWidth / 2)
-              + resizerWidth,
+            x: (
+              element.resizer.topLeft.x
+              + element.dimensions.width / 2
+              - resizerWidth / 2
+            ) + resizerWidth,
             y: element.resizer.topLeft.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.topLeft.y) / 2
               - strokeDistY
               - resizerHeight / 2,
           },
           bottomLeft: {
             x: element.resizer.topLeft.x
-              + Math.abs(element.resizer.topRight.x - element.resizer.topLeft.x) / 2
+              + element.dimensions.width / 2
               - resizerWidth / 2,
-            y: (element.resizer.topLeft.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.topLeft.y) / 2
+            y: (
+              element.resizer.topLeft.y
               - strokeDistY
-              - resizerHeight / 2)
-              + resizerHeight,
+              - resizerHeight / 2
+            ) + resizerHeight,
           },
           bottomRight: {
-            x: (element.resizer.topLeft.x
-              + Math.abs(element.resizer.topRight.x - element.resizer.topLeft.x) / 2
-              - resizerWidth / 2)
-              + resizerWidth,
+            x: (
+              element.resizer.topLeft.x
+              + element.dimensions.width / 2
+              - resizerWidth / 2
+            ) + resizerWidth,
             y: (element.resizer.topLeft.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.topLeft.y) / 2
               - strokeDistY
               - resizerHeight / 2)
               + resizerHeight,
@@ -215,15 +214,17 @@ export default class Hold {
               + strokeDistX
               - resizerWidth / 2,
             y: element.resizer.topRight.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2,
           },
           topRight: {
             x: (
-              element.resizer.topRight.x + strokeDistX - resizerWidth / 2
+              element.resizer.topRight.x
+              + strokeDistX
+              - resizerWidth / 2
             ) + resizerWidth,
             y: element.resizer.topRight.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2,
           },
           bottomLeft: {
@@ -232,17 +233,19 @@ export default class Hold {
               - resizerWidth / 2,
             y: (
               element.resizer.topRight.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
           bottomRight: {
             x: (
-              element.resizer.topRight.x + strokeDistX - resizerWidth / 2
+              element.resizer.topRight.x
+              + strokeDistX
+              - resizerWidth / 2
             ) + resizerWidth,
             y: (
               element.resizer.topRight.y
-              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
@@ -265,7 +268,9 @@ export default class Hold {
           },
           topRight: {
             x: (
-              element.resizer.bottomRight.x + strokeDistX - resizerWidth / 2
+              element.resizer.bottomRight.x
+              + strokeDistX
+              - resizerWidth / 2
             ) + resizerWidth,
             y: element.resizer.bottomRight.y
               + strokeDistY
@@ -283,7 +288,9 @@ export default class Hold {
           },
           bottomRight: {
             x: (
-              element.resizer.bottomRight.x + strokeDistX - resizerWidth / 2
+              element.resizer.bottomRight.x
+              + strokeDistX
+              - resizerWidth / 2
             ) + resizerWidth,
             y: (
               element.resizer.bottomRight.y
@@ -302,7 +309,7 @@ export default class Hold {
         corners: {
           topLeft: {
             x: element.resizer.bottomRight.x
-              - Math.abs(element.resizer.bottomRight.x - element.resizer.bottomLeft.x) / 2
+              - element.dimensions.width / 2
               - resizerWidth / 2,
             y: element.resizer.bottomRight.y
               - Math.abs(element.resizer.bottomRight.y - element.resizer.bottomLeft.y) / 2
@@ -312,21 +319,19 @@ export default class Hold {
           topRight: {
             x: (
               element.resizer.bottomRight.x
-              - Math.abs(element.resizer.bottomRight.x - element.resizer.bottomLeft.x) / 2
+              - element.dimensions.width / 2
               - resizerWidth / 2
             ) + resizerWidth,
             y: element.resizer.bottomRight.y
-              - Math.abs(element.resizer.bottomRight.y - element.resizer.bottomLeft.y) / 2
               + strokeDistY
               - resizerHeight / 2,
           },
           bottomLeft: {
             x: element.resizer.bottomRight.x
-              - Math.abs(element.resizer.bottomRight.x - element.resizer.bottomLeft.x) / 2
+              - element.dimensions.width / 2
               - resizerWidth / 2,
             y: (
               element.resizer.bottomRight.y
-              - Math.abs(element.resizer.bottomRight.y - element.resizer.bottomLeft.y) / 2
               + strokeDistY
               - resizerHeight / 2
             ) + resizerHeight,
@@ -334,12 +339,11 @@ export default class Hold {
           bottomRight: {
             x: (
               element.resizer.bottomRight.x
-              - Math.abs(element.resizer.bottomRight.x - element.resizer.bottomLeft.x) / 2
+              - element.dimensions.width / 2
               - resizerWidth / 2
             ) + resizerWidth,
             y: (
               element.resizer.bottomRight.y
-              - Math.abs(element.resizer.bottomRight.y - element.resizer.bottomLeft.y) / 2
               + strokeDistY
               - resizerHeight / 2
             ) + resizerHeight,
@@ -362,8 +366,11 @@ export default class Hold {
               - resizerHeight / 2,
           },
           topRight: {
-            x: (element.resizer.bottomLeft.x - strokeDistX - resizerWidth / 2)
-              + resizerWidth,
+            x: (
+              element.resizer.bottomLeft.x
+              - strokeDistX
+              - resizerWidth / 2
+            ) + resizerWidth,
             y: element.resizer.bottomLeft.y
               + strokeDistY
               - resizerHeight / 2,
@@ -379,8 +386,11 @@ export default class Hold {
             ) + resizerHeight,
           },
           bottomRight: {
-            x: (element.resizer.bottomLeft.x - strokeDistX - resizerWidth / 2)
-              + resizerWidth,
+            x: (
+              element.resizer.bottomLeft.x
+              - strokeDistX
+              - resizerWidth / 2
+            ) + resizerWidth,
             y: (
               element.resizer.bottomLeft.y
               + strokeDistY
@@ -397,30 +407,42 @@ export default class Hold {
       {
         corners: {
           topLeft: {
-            x: element.resizer.topLeft.x - strokeDistX - resizerWidth / 2,
+            x: element.resizer.topLeft.x
+              - strokeDistX
+              - resizerWidth / 2,
             y: element.resizer.topLeft.y
-              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2,
           },
           topRight: {
-            x: (element.resizer.topLeft.x - strokeDistX - resizerWidth / 2) + resizerWidth,
+            x: (
+              element.resizer.topLeft.x
+              - strokeDistX
+              - resizerWidth / 2
+            ) + resizerWidth,
             y: element.resizer.topLeft.y
-              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2,
           },
           bottomLeft: {
-            x: element.resizer.topLeft.x - strokeDistX - resizerWidth / 2,
+            x: element.resizer.topLeft.x
+              - strokeDistX
+              - resizerWidth / 2,
             y: (
               element.resizer.topLeft.y
-              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
           bottomRight: {
-            x: (element.resizer.topLeft.x - strokeDistX - resizerWidth / 2) + resizerWidth,
+            x: (
+              element.resizer.topLeft.x
+              - strokeDistX
+              - resizerWidth / 2
+            ) + resizerWidth,
             y: (
               element.resizer.topLeft.y
-              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
+              + element.dimensions.height / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
