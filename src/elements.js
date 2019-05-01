@@ -46,7 +46,7 @@ export default class Element extends Tool {
       rotationAngleDifference: 0,
       translationOrigin: 'center',
     };
-    this.style = style;
+    this.style = new Map();
     this.selected = false;
     this.layer = layer;
     this.addLayer();

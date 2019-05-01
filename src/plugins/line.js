@@ -4,8 +4,9 @@ import Utilities from '../utilities';
 export default class Line extends Element {
   constructor(name, moduleName, properties, events, editor) {
     super(name, moduleName, properties, events, editor);
-    // TODO get from tools options
     this.transformation.translationOrigin = 'start';
+    this.transformation.rotationFactor = -90;
+    this.style.set('lineWidth', 1);
   }
 
   draw(canvas = true) {
@@ -80,8 +81,8 @@ export default class Line extends Element {
     ) + this.transformation.rotationAngle;
     if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
     this.transformation.rotationAngle %= 360;
-    console.log(lastAngle);
-    console.log(newAngle);
+    console.log(this.transformation.rotationAngle);
+    console.log(this.transformation.rotationAngleDifference);
     this.transformation.transform = true;
   }
 

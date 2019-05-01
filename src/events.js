@@ -87,7 +87,10 @@ export default class Events {
       || (this.canvasEvent.dragging && !this.canvasEvent.position.resizer)
     ) {
       this.handleSelectionMouseMove();
-    } else if (this.canvasEvent.position.resizer || this.canvasEvent.resizing) {
+    } else if (
+      (this.canvasEvent.position.resizer && this.canvasEvent.resizing)
+      || this.canvasEvent.resizing
+    ) {
       this.handleResizerMouseMove();
     } else if (this.canvasEvent.position.inCanvas && this.canvasEvent.elementDrawn) {
       this.handleDrawMouseMove();
@@ -225,10 +228,10 @@ export default class Events {
       this.editor.selection.forEach((selection) => {
         selection.drag();
       });
+      this.editor.renderAll();
     } else {
       this.canvasEvent.element.drag();
     }
-    this.editor.renderAll();
     this.updatePosition();
     this.updateStartMousePosition();
   }
