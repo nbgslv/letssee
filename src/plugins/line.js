@@ -6,7 +6,7 @@ export default class Line extends Element {
     super(name, moduleName, properties, events, editor);
     this.transformation.translationOrigin = 'start';
     this.transformation.rotationFactor = -90;
-    this.style.set('lineWidth', 1);
+    this.style.set('lineWidth', 10);
   }
 
   draw(canvas = true) {
@@ -16,9 +16,11 @@ export default class Line extends Element {
     editor.ctx.rotate(this.transformation.rotationAngleDifference);
     editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
     editor.ctx.beginPath();
+    editor.ctx.lineWidth = this.style.get('lineWidth');
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
     editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
     editor.ctx.stroke();
+    editor.ctx.closePath();
     this.transformation.drawTransformed = true;
     //this.rotateResizer();
     //editor.ctx.restore();
@@ -50,7 +52,7 @@ export default class Line extends Element {
       endX,
       endY,
       width: Math.abs(startX - endX),
-      height: Math.abs(startY - endY),
+      height: this.style.get('lineWidth'),
     };
     this.editor.renderAll();
     this.draw(false);
@@ -64,13 +66,13 @@ export default class Line extends Element {
     this.dimensions.width = dimensions.width;
     this.dimensions.height = dimensions.height;
     this.resizer.topLeft.x = dimensions.startX;
-    this.resizer.topLeft.y = dimensions.startY - 10;
+    this.resizer.topLeft.y = dimensions.startY - dimensions.height;
     this.resizer.topRight.x = dimensions.endX;
-    this.resizer.topRight.y = dimensions.endY - 10;
+    this.resizer.topRight.y = dimensions.startY - dimensions.height;
     this.resizer.bottomLeft.x = dimensions.startX;
-    this.resizer.bottomLeft.y = dimensions.startY + 10;
+    this.resizer.bottomLeft.y = dimensions.startY + dimensions.height;
     this.resizer.bottomRight.x = dimensions.endX;
-    this.resizer.bottomRight.y = dimensions.endY + 10;
+    this.resizer.bottomRight.y = dimensions.startY + dimensions.height;
     const {
       newAngle,
       lastAngle,

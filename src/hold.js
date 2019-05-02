@@ -20,6 +20,7 @@ export default class Hold {
     const editor = canvas ? this.element.editor.canvas.canvas : this.element.canvas.upperCanvas;
     editor.ctx.beginPath();
     editor.ctx.fillStyle = '#000000';
+    editor.ctx.lineWidth = 1;
     for (let i = 0; i < this.resizers.length; i += 1) {
       editor.ctx.moveTo(this.resizers[i].corners.topLeft.x, this.resizers[i].corners.topLeft.y);
       editor.ctx.lineTo(this.resizers[i].corners.topRight.x, this.resizers[i].corners.topLeft.y);
@@ -36,6 +37,7 @@ export default class Hold {
     editor.ctx.closePath();
     editor.ctx.beginPath();
     editor.ctx.strokeStyle = '#000000';
+    editor.ctx.lineWidth = 1;
     for (let j = 0; j < this.lines.length; j += 1) {
       editor.ctx.moveTo(this.lines[j].startX, this.lines[j].startY);
       editor.ctx.lineTo(this.lines[j].x, this.lines[j].y);
@@ -214,7 +216,7 @@ export default class Hold {
               + strokeDistX
               - resizerWidth / 2,
             y: element.resizer.topRight.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
               - resizerHeight / 2,
           },
           topRight: {
@@ -224,7 +226,7 @@ export default class Hold {
               - resizerWidth / 2
             ) + resizerWidth,
             y: element.resizer.topRight.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
               - resizerHeight / 2,
           },
           bottomLeft: {
@@ -233,7 +235,7 @@ export default class Hold {
               - resizerWidth / 2,
             y: (
               element.resizer.topRight.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
@@ -245,7 +247,7 @@ export default class Hold {
             ) + resizerWidth,
             y: (
               element.resizer.topRight.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topRight.y - element.resizer.bottomRight.y) / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
@@ -411,7 +413,7 @@ export default class Hold {
               - strokeDistX
               - resizerWidth / 2,
             y: element.resizer.topLeft.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
               - resizerHeight / 2,
           },
           topRight: {
@@ -421,7 +423,7 @@ export default class Hold {
               - resizerWidth / 2
             ) + resizerWidth,
             y: element.resizer.topLeft.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
               - resizerHeight / 2,
           },
           bottomLeft: {
@@ -430,7 +432,7 @@ export default class Hold {
               - resizerWidth / 2,
             y: (
               element.resizer.topLeft.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
@@ -442,7 +444,7 @@ export default class Hold {
             ) + resizerWidth,
             y: (
               element.resizer.topLeft.y
-              + element.dimensions.height / 2
+              + Math.abs(element.resizer.topLeft.y - element.resizer.bottomLeft.y) / 2
               - resizerHeight / 2
             ) + resizerHeight,
           },
