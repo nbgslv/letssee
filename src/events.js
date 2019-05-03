@@ -130,6 +130,8 @@ export default class Events {
     console.log(`in canvas: ${this.canvasEvent.position.inCanvas}
     in element: ${this.canvasEvent.position.inElement}
     in resizer: ${this.canvasEvent.position.inResizer}`);
+    console.log(`mouseX: ${this.editor.events.canvasEvent.mouse.canvasX}
+    mouseY: ${this.editor.events.canvasEvent.mouse.canvasY}`);
   }
 
   updateStartMousePosition() {

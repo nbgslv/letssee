@@ -230,7 +230,7 @@ export default class Element extends Tool {
   }
 
   get rotationMatrix() {
-    const rotationAngel = Utilities.degreesToRadians(this.transformation.rotationAngle);
+    const rotationAngel = Utilities.degreesToRadians(this.transformation.rotationAngle + this.transformation.rotationFactor);
     const cos = Math.cos(rotationAngel);
     const sin = Math.sin(rotationAngel);
     return [cos, sin, -sin, cos, 0, 0];
@@ -323,10 +323,20 @@ export default class Element extends Tool {
     const corners = Object.values(this.resizer);
     let cornerX = 'x';
     let cornerY = 'y';
-    if (this.transformation.rotationMatrix && !this.transformation.drawTransformed) {
+    if (this.transformation.rotationMatrix) {
       cornerX = 'rotatedX';
       cornerY = 'rotatedY';
     }
+
+    console.log(`[rotateresizer]
+    lefttop rotated x: ${corners[0][cornerX]}
+    lefttop rotated y: ${corners[0][cornerY]}
+    righttop rotated x: ${corners[1][cornerX]}
+    righttop rotated y: ${corners[1][cornerY]}
+    bottomleft rotated x: ${corners[2][cornerX]}
+    bottomleft rotated y: ${corners[2][cornerY]}
+    bottomright rotated x: ${corners[3][cornerX]}
+    bottomright rotated y: ${corners[3][cornerY]}`);
 
     let m = Element.lineIncline(
       corners[0][cornerX],
@@ -370,6 +380,10 @@ export default class Element extends Tool {
       borderXLeft = Element.borderX(mousePositionY, m);
     }
 
+    console.log(`borderYTop: ${borderYTop}
+    borderYBottom: ${borderYBottom}
+    borderXRight: ${borderXRight}
+    borderXLeft: ${borderXLeft}`);
     // eslint-disable-next-line no-restricted-globals
     if ((isNaN(borderYTop) ? true : mousePositionY >= borderYTop)
       && (mousePositionY <= borderYBottom)

@@ -591,7 +591,7 @@ export default class Hold {
   }
 
   updateResizersAfterRotation() {
-    if (this.element.name === 'line') return;
+    //if (this.element.name === 'line') return;
     const editor = this.element.editor.canvas.upperCanvas;
     editor.ctx.save();
     const rotationAngle = Utilities.degreesToRadians(this.element.transformation.rotationAngle);
