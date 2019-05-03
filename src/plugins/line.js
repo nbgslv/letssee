@@ -19,8 +19,8 @@ export default class Line extends Element {
     editor.ctx.lineWidth = this.style.get('lineWidth');
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
     editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
-    editor.ctx.stroke();
     editor.ctx.closePath();
+    editor.ctx.stroke();
     this.transformation.drawTransformed = true;
     this.rotateResizer();
     //editor.ctx.restore();
@@ -109,27 +109,22 @@ export default class Line extends Element {
 
   rotateResizer() {
     const corners = Object.values(this.resizer);
-    const rotationAngle = Utilities.degreesToRadians(this.transformation.rotationAngleDifference);
+    const rotationAngle = Utilities.degreesToRadians(this.transformation.rotationAngle);
+    this.resizer.topLeft.rotatedX = this.resizer.topLeft.x;
+    this.resizer.topLeft.rotatedY = this.resizer.topLeft.y;
 
-    this.resizer.topLeft.rotatedX = this.resizer.topLeft.x * Utilities.cos(rotationAngle)
-    + this.resizer.topLeft.y * Utilities.sin(rotationAngle);
-    this.resizer.topLeft.rotatedY = this.resizer.topLeft.y * Utilities.cos(rotationAngle)
-    - this.resizer.topLeft.x * Utilities.sin(rotationAngle);
+    this.resizer.topRight.rotatedX = ((this.resizer.topRight.x - this.dimensions.startX) * Utilities.cos(-rotationAngle)
+      + (this.resizer.topRight.y - this.dimensions.startY) * Utilities.sin(-rotationAngle)) + this.dimensions.startX;
+    this.resizer.topRight.rotatedY = ((this.resizer.topRight.y - this.dimensions.startY) * Utilities.cos(-rotationAngle)
+      - (this.resizer.topRight.x - this.dimensions.startX) * Utilities.sin(-rotationAngle)) + this.dimensions.startY;
 
-    this.resizer.topRight.rotatedX = this.resizer.topRight.x * Utilities.cos(rotationAngle)
-      + this.resizer.topRight.y * Utilities.sin(rotationAngle);
-    this.resizer.topRight.rotatedY = this.resizer.topRight.y * Utilities.cos(rotationAngle)
-      - this.resizer.topRight.x * Utilities.sin(rotationAngle);
+    this.resizer.bottomLeft.rotatedX = this.resizer.bottomLeft.x;
+    this.resizer.bottomLeft.rotatedY = this.resizer.bottomLeft.y;
 
-    this.resizer.bottomLeft.rotatedX = this.resizer.bottomLeft.x * Utilities.cos(rotationAngle)
-      + this.resizer.bottomLeft.y * Utilities.sin(rotationAngle);
-    this.resizer.bottomLeft.rotatedY = this.resizer.bottomLeft.y * Utilities.cos(rotationAngle)
-      - this.resizer.bottomLeft.x * Utilities.sin(rotationAngle);
-
-    this.resizer.bottomRight.rotatedX = this.resizer.bottomRight.x * Utilities.cos(rotationAngle)
-      + this.resizer.bottomRight.y * Utilities.sin(rotationAngle);
-    this.resizer.bottomRight.rotatedY = this.resizer.bottomRight.y * Utilities.cos(rotationAngle)
-      - this.resizer.bottomRight.x * Utilities.sin(rotationAngle);
+    this.resizer.bottomRight.rotatedX = ((this.resizer.bottomRight.x - this.dimensions.startX) * Utilities.cos(-rotationAngle)
+      + (this.resizer.bottomRight.y - this.dimensions.startY) * Utilities.sin(-rotationAngle)) + this.dimensions.startX;
+    this.resizer.bottomRight.rotatedY = ((this.resizer.bottomRight.y - this.dimensions.startY) * Utilities.cos(-rotationAngle)
+      - (this.resizer.bottomRight.x - this.dimensions.startX) * Utilities.sin(-rotationAngle)) + this.dimensions.startY;
 
     console.log(`[line rotate resizer]
     lefttop rotated x: ${this.resizer.topLeft.rotatedX}
@@ -141,19 +136,23 @@ export default class Line extends Element {
     bottomright rotated x: ${this.resizer.bottomRight.rotatedX}
     bottomright rotated y: ${this.resizer.bottomRight.rotatedY}`);
 
-
-
-
 /*
     for (let i = 0; i < corners.length; i += 1) {
-      corners[i].rotatedX = (corners[i].x - (this.dimensions.startX + ((this.dimensions.width)))) * Utilities.cos(rotationAngle)
-        - (corners[i].y - (this.dimensions.startY + ((this.dimensions.height)))) * Utilities.sin(rotationAngle);
+      if (i === 0 || i === 2) continue;
+      corners[i].rotatedX = (corners[i].x - (this.dimensions.startX + ((this.dimensions.width)))) * Utilities.cos(-rotationAngle)
+        + (corners[i].y - (this.dimensions.startY + ((this.dimensions.height)))) * Utilities.sin(-rotationAngle);
       corners[i].rotatedX += this.dimensions.startX + this.dimensions.width;
-      corners[i].rotatedY = (corners[i].y - (this.dimensions.startY + ((this.dimensions.height)))) * Utilities.cos(rotationAngle)
-        + (corners[i].x - (this.dimensions.startX + ((this.dimensions.width)))) * Utilities.sin(rotationAngle);
+      corners[i].rotatedY = (corners[i].y - (this.dimensions.startY + ((this.dimensions.height)))) * Utilities.cos(-rotationAngle)
+        - (corners[i].x - (this.dimensions.startX + ((this.dimensions.width)))) * Utilities.sin(-rotationAngle);
       corners[i].rotatedY += this.dimensions.startY + this.dimensions.height;
     }
-*/
+    corners[0].rotatedX = corners[0].x;
+    corners[0].rotatedY = corners[0].y;
+    corners[2].rotatedX = corners[2].x;
+    corners[2].rotatedY = corners[2].y;
+
+ */
+
     const editor = this.editor.canvas.canvas;
     editor.ctx.strokeStyle = 'red';
     editor.ctx.beginPath();
