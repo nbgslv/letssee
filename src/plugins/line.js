@@ -24,15 +24,6 @@ export default class Line extends Element {
     this.transformation.drawTransformed = true;
     this.rotateResizer();
     //editor.ctx.restore();
-    /*
-    editor.ctx.beginPath();
-    const corners = Object.values(this.resizer);
-    editor.ctx.moveTo(corners[0].x, corners[0].y);
-    editor.ctx.lineTo(corners[1].x, corners[1].y);
-    editor.ctx.lineTo(corners[3].x, corners[3].y);
-    editor.ctx.lineTo(corners[2].x, corners[2].y);
-    editor.ctx.closePath();
-    editor.ctx.stroke(); */
   }
 
   endDraw() {
@@ -85,16 +76,10 @@ export default class Line extends Element {
     ) + this.transformation.rotationAngle;
     if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
     this.transformation.rotationAngle %= 360;
-    console.log(this.transformation.rotationAngle);
-    console.log(this.transformation.rotationAngleDifference);
     this.transformation.transform = true;
   }
 
   get calcRotateAngle() {
-    console.log(`currentX: ${this.editor.events.canvasEvent.mouse.canvasX}
-    currentY: ${this.editor.events.canvasEvent.mouse.canvasY}
-    lastX: ${this.editor.events.canvasEvent.mouse.lastMoveX}
-    lastY: ${this.editor.events.canvasEvent.mouse.lastMoveY}`);
     return {
       newAngle: Math.atan2(
         this.editor.events.canvasEvent.mouse.canvasY - this.dimensions.startY,
@@ -108,60 +93,53 @@ export default class Line extends Element {
   }
 
   rotateResizer() {
-    const corners = Object.values(this.resizer);
     const rotationAngle = Utilities.degreesToRadians(this.transformation.rotationAngle);
     this.resizer.topLeft.rotatedX = this.resizer.topLeft.x;
     this.resizer.topLeft.rotatedY = this.resizer.topLeft.y;
 
-    this.resizer.topRight.rotatedX = ((this.resizer.topRight.x - this.dimensions.startX) * Utilities.cos(-rotationAngle)
-      + (this.resizer.topRight.y - this.dimensions.startY) * Utilities.sin(-rotationAngle)) + this.dimensions.startX;
-    this.resizer.topRight.rotatedY = ((this.resizer.topRight.y - this.dimensions.startY) * Utilities.cos(-rotationAngle)
-      - (this.resizer.topRight.x - this.dimensions.startX) * Utilities.sin(-rotationAngle)) + this.dimensions.startY;
+    this.resizer.topRight.rotatedX = (
+      (
+        this.resizer.topRight.x
+        - this.dimensions.startX
+      ) * Utilities.cos(-rotationAngle)
+      + (
+        this.resizer.topRight.y
+      - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+    ) + this.dimensions.startX;
+    this.resizer.topRight.rotatedY = (
+      (
+        this.resizer.topRight.y
+        - this.dimensions.startY
+      ) * Utilities.cos(-rotationAngle)
+      - (
+        this.resizer.topRight.x
+      - this.dimensions.startX
+      ) * Utilities.sin(-rotationAngle)
+    ) + this.dimensions.startY;
 
     this.resizer.bottomLeft.rotatedX = this.resizer.bottomLeft.x;
     this.resizer.bottomLeft.rotatedY = this.resizer.bottomLeft.y;
 
-    this.resizer.bottomRight.rotatedX = ((this.resizer.bottomRight.x - this.dimensions.startX) * Utilities.cos(-rotationAngle)
-      + (this.resizer.bottomRight.y - this.dimensions.startY) * Utilities.sin(-rotationAngle)) + this.dimensions.startX;
-    this.resizer.bottomRight.rotatedY = ((this.resizer.bottomRight.y - this.dimensions.startY) * Utilities.cos(-rotationAngle)
-      - (this.resizer.bottomRight.x - this.dimensions.startX) * Utilities.sin(-rotationAngle)) + this.dimensions.startY;
-
-    console.log(`[line rotate resizer]
-    lefttop rotated x: ${this.resizer.topLeft.rotatedX}
-    lefttop rotated y: ${this.resizer.topLeft.rotatedY}
-    righttop rotated x: ${this.resizer.topRight.rotatedX}
-    righttop rotated y: ${this.resizer.topRight.rotatedY}
-    bottomleft rotated x: ${this.resizer.bottomLeft.rotatedX}
-    bottomleft rotated y: ${this.resizer.bottomLeft.rotatedY}
-    bottomright rotated x: ${this.resizer.bottomRight.rotatedX}
-    bottomright rotated y: ${this.resizer.bottomRight.rotatedY}`);
-
-/*
-    for (let i = 0; i < corners.length; i += 1) {
-      if (i === 0 || i === 2) continue;
-      corners[i].rotatedX = (corners[i].x - (this.dimensions.startX + ((this.dimensions.width)))) * Utilities.cos(-rotationAngle)
-        + (corners[i].y - (this.dimensions.startY + ((this.dimensions.height)))) * Utilities.sin(-rotationAngle);
-      corners[i].rotatedX += this.dimensions.startX + this.dimensions.width;
-      corners[i].rotatedY = (corners[i].y - (this.dimensions.startY + ((this.dimensions.height)))) * Utilities.cos(-rotationAngle)
-        - (corners[i].x - (this.dimensions.startX + ((this.dimensions.width)))) * Utilities.sin(-rotationAngle);
-      corners[i].rotatedY += this.dimensions.startY + this.dimensions.height;
-    }
-    corners[0].rotatedX = corners[0].x;
-    corners[0].rotatedY = corners[0].y;
-    corners[2].rotatedX = corners[2].x;
-    corners[2].rotatedY = corners[2].y;
-
- */
-
-    const editor = this.editor.canvas.canvas;
-    editor.ctx.strokeStyle = 'red';
-    editor.ctx.beginPath();
-    editor.ctx.moveTo(this.resizer.topLeft.rotatedX, this.resizer.topLeft.rotatedY);
-    editor.ctx.lineTo(this.resizer.topRight.rotatedX, this.resizer.topRight.rotatedY);
-    editor.ctx.lineTo(this.resizer.bottomRight.rotatedX, this.resizer.bottomRight.rotatedY);
-    editor.ctx.lineTo(this.resizer.bottomLeft.rotatedX, this.resizer.bottomLeft.rotatedY);
-    editor.ctx.closePath();
-    editor.ctx.stroke();
+    this.resizer.bottomRight.rotatedX = (
+      (
+        this.resizer.bottomRight.x
+        - this.dimensions.startX
+      ) * Utilities.cos(-rotationAngle)
+      + (
+        this.resizer.bottomRight.y
+      - this.dimensions.startY
+      ) * Utilities.sin(-rotationAngle)
+    ) + this.dimensions.startX;
+    this.resizer.bottomRight.rotatedY = (
+      (
+        this.resizer.bottomRight.y
+        - this.dimensions.startY
+      ) * Utilities.cos(-rotationAngle)
+      - (
+        this.resizer.bottomRight.x
+      - this.dimensions.startX
+      ) * Utilities.sin(-rotationAngle)
+    ) + this.dimensions.startY;
   }
 
   resize() {
@@ -223,14 +201,5 @@ export default class Line extends Element {
         }
       }));
     }
-  }
-
-  get calculateLineAngle() {
-    const lastAngle = this.transformation.rotationAngle;
-    const newAngle = Math.atan2(this.dimensions.endY - this.dimensions.startY, this.dimensions.endX - this.dimensions.startX);
-    return {
-      angleDifference: newAngle - lastAngle,
-      newAngle,
-    };
   }
 }
