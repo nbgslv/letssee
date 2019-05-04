@@ -610,6 +610,7 @@ export default class Hold {
         clickers[j].y += this.element.dimensions.startY + rotatePivotFactor.y;
       }
 
+      /*
       editor.ctx.beginPath();
       editor.ctx.fillStyle = '#FF0000';
       editor.ctx.moveTo(this.resizers[i].clickers.topLeft.x, this.resizers[i].clickers.topLeft.y);
@@ -618,6 +619,7 @@ export default class Hold {
       editor.ctx.lineTo(this.resizers[i].clickers.bottomLeft.x, this.resizers[i].clickers.bottomLeft.y);
       editor.ctx.fill();
       editor.ctx.closePath();
+       */
 
     }
     editor.ctx.restore();
@@ -631,6 +633,7 @@ export default class Hold {
       corners[i].rotatedY += this.element.dimensions.startY + rotatePivotFactor.y;
       console.log(this.element);
     }
+    /*
     editor.ctx.beginPath();
     editor.ctx.moveTo(corners[0].rotatedX, corners[0].rotatedY);
     editor.ctx.lineTo(corners[1].rotatedX, corners[1].rotatedY);
@@ -638,6 +641,7 @@ export default class Hold {
     editor.ctx.lineTo(corners[2].rotatedX, corners[2].rotatedY);
     editor.ctx.closePath();
     editor.ctx.stroke();
+     */
   }
 
   get rotationPivotFactor() {
