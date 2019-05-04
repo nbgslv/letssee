@@ -104,7 +104,8 @@ export default class Line extends Element {
       ) * Utilities.cos(-rotationAngle)
       + (
         this.resizer.topRight.y
-      - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+      - this.dimensions.startY
+      ) * Utilities.sin(-rotationAngle)
     ) + this.dimensions.startX;
     this.resizer.topRight.rotatedY = (
       (
@@ -140,6 +141,188 @@ export default class Line extends Element {
       - this.dimensions.startX
       ) * Utilities.sin(-rotationAngle)
     ) + this.dimensions.startY;
+  }
+
+  rotateClickers() {
+    const editor = this.editor.canvas.upperCanvas;
+    editor.ctx.save();
+    const rotationAngle = Utilities.degreesToRadians(this.transformation.rotationAngle);
+
+    for (let i = 0; i < this.holder.resizers.clickers.length; i += 1) {
+
+    }
+    this.holder.resizers.clickers = {
+      topLeft: {
+        x: (
+          (
+            this.resizer.topRight.clickers.topLeft.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.topRight.clickers.topLeft.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.topRight.clickers.topLeft.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.topRight.clickers.topLeft.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      },
+      topRight: {
+        x: (
+          (
+            this.resizer.topRight.clickers.topRight.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.topRight.clickers.topRight.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.topRight.clickers.topRight.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.topRight.clickers.topRight.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      },
+      bottomLeft: {
+        x: (
+          (
+            this.resizer.topRight.clickers.bottomLeft.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.topRight.clickers.bottomLeft.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.topRight.clickers.bottomLeft.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.topRight.clickers.bottomLeft.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      },
+      bottomRight: {
+        x: (
+          (
+            this.resizer.topRight.clickers.bottomRight.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.topRight.clickers.bottomRight.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.topRight.clickers.bottomRight.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.topRight.clickers.bottomRight.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      }
+    };
+    this.resizer.bottomLeft.clickers = {
+      topLeft: {
+        x: (
+          (
+            this.resizer.bottomLeft.clickers.topLeft.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.bottomLeft.clickers.topLeft.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.bottomLeft.clickers.topLeft.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.bottomLeft.clickers.topLeft.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      },
+      topRight: {
+        x: (
+          (
+            this.resizer.bottomLeft.clickers.topRight.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.bottomLeft.clickers.topRight.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.bottomLeft.clickers.topRight.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.bottomLeft.clickers.topRight.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      },
+      bottomLeft: {
+        x: (
+          (
+            this.resizer.bottomLeft.clickers.bottomLeft.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.bottomLeft.clickers.bottomLeft.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.bottomLeft.clickers.bottomLeft.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.bottomLeft.clickers.bottomLeft.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      },
+      bottomRight: {
+        x: (
+          (
+            this.resizer.bottomLeft.clickers.bottomRight.x
+            - this.dimensions.startX
+          ) * Utilities.cos(-rotationAngle)
+          + (
+            this.resizer.bottomLeft.clickers.bottomRight.y
+            - this.dimensions.startY) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startX,
+        y: (
+          (
+            this.resizer.bottomLeft.clickers.bottomRight.y
+            - this.dimensions.startY
+          ) * Utilities.cos(-rotationAngle)
+          - (
+            this.resizer.bottomLeft.clickers.bottomRight.x
+            - this.dimensions.startX
+          ) * Utilities.sin(-rotationAngle)
+        ) + this.dimensions.startY,
+      }
+    };
   }
 
   resize() {
