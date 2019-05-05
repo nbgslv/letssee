@@ -731,3 +731,4 @@ export default class Hold {
 
 // TODO rotate
 // TODO hold line and hold text
+// TODO Sticky resizing clicks

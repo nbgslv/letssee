@@ -5,23 +5,25 @@ export default class Line extends Element {
   constructor(name, moduleName, properties, events, editor) {
     super(name, moduleName, properties, events, editor);
     this.transformation.translationOrigin = 'start';
+    this.transformation.drawTransformed = true;
     this.transformation.rotationFactor = 0;
-    this.style.set('lineWidth', 1);
+    this.style.set('lineWidth', 20);
   }
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
     //editor.ctx.save();
-    editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
-    editor.ctx.rotate(this.transformation.rotationAngleDifference);
-    editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
+    if (this.transformation.drawTransformed) {
+      editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
+      editor.ctx.rotate(this.transformation.rotationAngleDifference);
+      editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
+    }
     editor.ctx.beginPath();
     editor.ctx.lineWidth = this.style.get('lineWidth');
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
     editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
     editor.ctx.closePath();
     editor.ctx.stroke();
-    this.transformation.drawTransformed = true;
     this.rotateResizer();
     //editor.ctx.restore();
   }
@@ -30,6 +32,8 @@ export default class Line extends Element {
     //this.updateElement();
     this.editor.elements.push(this);
     this.editor.renderAll();
+    this.transformation.drawTransformed = false;
+    console.log(this.dimensions.startY, 'starty');
   }
 
   updateElement() {
@@ -59,13 +63,13 @@ export default class Line extends Element {
     this.dimensions.width = dimensions.width;
     this.dimensions.height = dimensions.height;
     this.resizer.topLeft.x = dimensions.startX;
-    this.resizer.topLeft.y = dimensions.startY - dimensions.height;
+    this.resizer.topLeft.y = dimensions.startY - dimensions.height / 2;
     this.resizer.topRight.x = dimensions.endX;
-    this.resizer.topRight.y = dimensions.startY - dimensions.height;
+    this.resizer.topRight.y = dimensions.startY - dimensions.height / 2;
     this.resizer.bottomLeft.x = dimensions.startX;
-    this.resizer.bottomLeft.y = dimensions.startY + dimensions.height;
+    this.resizer.bottomLeft.y = dimensions.startY + dimensions.height / 2;
     this.resizer.bottomRight.x = dimensions.endX;
-    this.resizer.bottomRight.y = dimensions.startY + dimensions.height;
+    this.resizer.bottomRight.y = dimensions.startY + dimensions.height / 2;
     const {
       newAngle,
       lastAngle,
@@ -163,10 +167,11 @@ export default class Line extends Element {
           }
           case 2: {
             let lineWidth = this.dimensions.height;
-            lineWidth += -1 * mouseResize.deltaY;
-            this.style.set('lineWidth', lineWidth);
-            this.dimensions.height += mouseResize.deltaY;
-            this.dimensions.startY += mouseResize.deltaY;
+            lineWidth += mouseResize.deltaY;
+            console.log(mouseResize.deltaY, 'mouseresizey');
+            this.style.set('lineWidth', Math.abs(lineWidth));
+            this.dimensions.height -= mouseResize.deltaY;
+            this.dimensions.startY += mouseResize.deltaY / 2;
             this.resizer.topRight.y += mouseResize.deltaY;
             this.resizer.topLeft.y += mouseResize.deltaY;
             this.transformation.transformed = true;
@@ -182,9 +187,9 @@ export default class Line extends Element {
           case 4: {
             let lineWidth = this.dimensions.height;
             lineWidth += mouseResize.deltaY;
-            this.style.set('lineWidth', lineWidth);
+            this.style.set('lineWidth', Math.abs(lineWidth));
             this.dimensions.height += mouseResize.deltaY;
-            this.dimensions.endY += mouseResize.deltaY;
+            this.dimensions.startY += mouseResize.deltaY / 2;
             this.resizer.bottomLeft.y += mouseResize.deltaY;
             this.resizer.bottomRight.y += mouseResize.deltaY;
             this.transformation.transformed = true;
@@ -192,11 +197,12 @@ export default class Line extends Element {
           }
           case 5: {
             this.transformation.transform = true;
+            this.transformation.translationOrigin = 'center';
             const {
-              lastAngel,
-              newAngel,
+              newAngle,
+              lastAngle,
             } = this.calcRotateAngle;
-            this.transformation.rotationAngleDifference = newAngel - lastAngel;
+            this.transformation.rotationAngleDifference = newAngle - lastAngle;
             this.transformation.rotationAngle = Utilities.radiansToDegrees(
               this.transformation.rotationAngleDifference,
             ) + this.transformation.rotationAngle;
@@ -209,5 +215,27 @@ export default class Line extends Element {
         }
       }));
     }
+  }
+
+  get translationPoints() {
+    let translationX;
+    let translationY;
+    switch (this.transformation.translationOrigin) {
+      case 'center':
+        translationX = this.dimensions.startX + this.dimensions.width / 2;
+        translationY = this.dimensions.startY;
+        console.log(this.dimensions.startY, 'starty');
+        break;
+      case 'start':
+        translationX = this.dimensions.startX;
+        translationY = this.dimensions.startY;
+        break;
+      default:
+        console.log('Translation Origin Point is not defined');
+    }
+    return {
+      translationX,
+      translationY,
+    };
   }
 }
