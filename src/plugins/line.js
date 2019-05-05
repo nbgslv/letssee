@@ -12,7 +12,6 @@ export default class Line extends Element {
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    //editor.ctx.save();
     if (this.transformation.drawTransformed) {
       editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
       editor.ctx.rotate(this.transformation.rotationAngleDifference);
@@ -25,7 +24,7 @@ export default class Line extends Element {
     editor.ctx.closePath();
     editor.ctx.stroke();
     this.rotateResizer();
-    //editor.ctx.restore();
+    console.log(this.transformation.rotationAngle, 'rotationangle');
   }
 
   endDraw() {
@@ -34,6 +33,7 @@ export default class Line extends Element {
     this.editor.renderAll();
     this.transformation.drawTransformed = false;
     console.log(this.dimensions.startY, 'starty');
+    console.log(this.dimensions.width, 'width');
   }
 
   updateElement() {
@@ -94,6 +94,20 @@ export default class Line extends Element {
         this.editor.events.canvasEvent.mouse.lastMoveX - this.dimensions.startX,
       ),
     };
+  }
+
+  rotate(canvas = true) {
+    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
+    const matrix = this.rotationMatrix;
+    this.transformation.rotationMatrix = matrix;
+    const {
+      translationX,
+      translationY,
+    } = this.translationPoints;
+    editor.ctx.translate(translationX, translationY);
+    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    editor.ctx.translate(-translationX, -translationY);
+    this.transformation.rotated = true;
   }
 
   rotateResizer() {
@@ -208,6 +222,7 @@ export default class Line extends Element {
             ) + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
+            console.log(this.transformation.rotationAngle, 'rotationangle');
             break;
           }
           default:
@@ -225,6 +240,7 @@ export default class Line extends Element {
         translationX = this.dimensions.startX + this.dimensions.width / 2;
         translationY = this.dimensions.startY;
         console.log(this.dimensions.startY, 'starty');
+        console.log(this.dimensions.width, 'width');
         break;
       case 'start':
         translationX = this.dimensions.startX;

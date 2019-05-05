@@ -210,10 +210,7 @@ export default class Editor {
     element.holder.draw();
     if (element.transformation.rotationMatrix) {
       element.holder.updateResizersAfterRotation();
-    } /*else {
-      element.rotateResizer();
-      element.rotateClickers();
-    }*/
+    }
   }
 
   deselectAll() {

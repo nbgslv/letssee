@@ -330,7 +330,7 @@ export default class Element extends Tool {
 
     console.log(`[rotateresizer]
     lefttop rotated x: ${corners[0][cornerX]}
-    lefttop rotated y: ${corners[0][cornerY]}
+    lefttop   y: ${corners[0][cornerY]}
     righttop rotated x: ${corners[1][cornerX]}
     righttop rotated y: ${corners[1][cornerY]}
     bottomleft rotated x: ${corners[2][cornerX]}
