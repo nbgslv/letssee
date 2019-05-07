@@ -1,6 +1,7 @@
 import Tool from './tools';
 import Hold from './hold';
 import Utilities from './utilities';
+import Transformation from './transformations';
 
 export default class Element extends Tool {
   constructor(name, moduleName, properties, events, editor, style = null, layer = 1) {
@@ -45,6 +46,7 @@ export default class Element extends Tool {
       rotationAngle: 0,
       rotationAngleDifference: 0,
       translationOrigin: 'center',
+      operation: [],
     };
     this.style = new Map();
     this.selected = false;
@@ -166,6 +168,12 @@ export default class Element extends Tool {
             ) + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
+            const operation = {
+              rotationAngle: this.transformation.rotationAngle,
+              kind: 'matrix',
+            };
+            const rotation = new Transformation('rotate', operation);
+            this.transformation.operation.push(rotation);
             break;
           }
           default:
@@ -195,17 +203,43 @@ export default class Element extends Tool {
   }
 
   rotate(canvas = true) {
+    const operation = this.operationDetails('rotate');
+    if (!operation) {
+      console.log('couldn\'t find operation details');
+      return;
+    }
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    const matrix = this.rotationMatrix;
-    this.transformation.rotationMatrix = matrix;
+    const rotation = this.rotation(operation);
     const {
       translationX,
       translationY,
     } = this.translationPoints;
     editor.ctx.translate(translationX, translationY);
-    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    if (operation.kind === 'angle') {
+      editor.ctx.rotate(rotation);
+    } else if (operation.kind === 'matrix') {
+      editor.ctx.transform(
+        rotation[0],
+        rotation[1],
+        rotation[2],
+        rotation[3],
+        rotation[4],
+        rotation[5],
+      );
+    }
     editor.ctx.translate(-translationX, -translationY);
     this.transformation.rotated = true;
+  }
+
+  operationDetails(operationName) {
+    const operations = this.transformation.operation;
+    let operationReturn;
+    operations.forEach((operation) => {
+      if (operation.name === operationName) {
+        operationReturn = operation.operation;
+      }
+    });
+    return operationReturn;
   }
 
   get translationPoints() {
@@ -227,6 +261,16 @@ export default class Element extends Tool {
       translationX,
       translationY,
     };
+  }
+
+  rotation(operation) {
+    switch (operation.kind) {
+      case 'angle': return operation.rotationAngle;
+      case 'matrix': return this.rotationMatrix;
+      default:
+        console.log('rotation operation kind is not defined');
+    }
+    return false;
   }
 
   get rotationMatrix() {
@@ -323,7 +367,7 @@ export default class Element extends Tool {
     const corners = Object.values(this.resizer);
     let cornerX = 'x';
     let cornerY = 'y';
-    if (this.transformation.rotationMatrix) {
+    if (this.transformation.rotated) {
       cornerX = 'rotatedX';
       cornerY = 'rotatedY';
     }

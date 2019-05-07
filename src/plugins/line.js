@@ -1,5 +1,6 @@
 import Element from '../elements';
 import Utilities from '../utilities';
+import Transformation from '../transformations';
 
 export default class Line extends Element {
   constructor(name, moduleName, properties, events, editor) {
@@ -12,28 +13,40 @@ export default class Line extends Element {
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    if (this.transformation.drawTransformed) {
-      editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
-      editor.ctx.rotate(this.transformation.rotationAngleDifference);
-      editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
-    }
+    if (this.transformation.drawTransformed) this.rotate(canvas);
     editor.ctx.beginPath();
     editor.ctx.lineWidth = this.style.get('lineWidth');
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
     editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
     editor.ctx.closePath();
     editor.ctx.stroke();
-    this.rotateResizer();
     console.log(this.transformation.rotationAngle, 'rotationangle');
   }
 
   endDraw() {
     //this.updateElement();
+    this.rotateResizer();
+    this.transformation.drawTransformed = false;
+    this.transformation.operation = [];
+    const operation = {
+      rotationAngle: Utilities.degreesToRadians(this.transformation.rotationAngle),
+      kind: 'angle',
+    };
+    const rotation = new Transformation('rotate', operation);
+    this.transformation.operation.push(rotation);
     this.editor.elements.push(this);
     this.editor.renderAll();
-    this.transformation.drawTransformed = false;
     console.log(this.dimensions.startY, 'starty');
     console.log(this.dimensions.width, 'width');
+  }
+
+  rotateLine() {
+    const editor = this.editor.canvas.upperCanvas;
+    const {
+      translationX,
+      translationY,
+    } = this.translationPoints;
+    editor.ctx.translate();
   }
 
   updateElement() {
@@ -70,16 +83,13 @@ export default class Line extends Element {
     this.resizer.bottomLeft.y = dimensions.startY + dimensions.height / 2;
     this.resizer.bottomRight.x = dimensions.endX;
     this.resizer.bottomRight.y = dimensions.startY + dimensions.height / 2;
-    const {
-      newAngle,
-      lastAngle,
-    } = this.calcRotateAngle;
-    this.transformation.rotationAngleDifference = newAngle - lastAngle;
-    this.transformation.rotationAngle = Utilities.radiansToDegrees(
-      this.transformation.rotationAngleDifference,
-    ) + this.transformation.rotationAngle;
-    if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
-    this.transformation.rotationAngle %= 360;
+    this.calcRotateAngle = this.calcRotateAngle;
+    const operation = {
+      rotationAngle: this.transformation.rotationAngleDifference,
+      kind: 'angle',
+    };
+    const rotation = new Transformation('rotate', operation);
+    this.transformation.operation.push(rotation);
     this.transformation.transform = true;
   }
 
@@ -96,18 +106,17 @@ export default class Line extends Element {
     };
   }
 
-  rotate(canvas = true) {
-    const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    const matrix = this.rotationMatrix;
-    this.transformation.rotationMatrix = matrix;
+  set calcRotateAngle(angleInfo) {
     const {
-      translationX,
-      translationY,
-    } = this.translationPoints;
-    editor.ctx.translate(translationX, translationY);
-    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    editor.ctx.translate(-translationX, -translationY);
-    this.transformation.rotated = true;
+      newAngle,
+      lastAngle,
+    } = angleInfo;
+    this.transformation.rotationAngleDifference = newAngle - lastAngle;
+    this.transformation.rotationAngle = Utilities.radiansToDegrees(
+      this.transformation.rotationAngleDifference,
+    ) + this.transformation.rotationAngle;
+    if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
+    this.transformation.rotationAngle %= 360;
   }
 
   rotateResizer() {

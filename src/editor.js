@@ -195,7 +195,11 @@ export default class Editor {
     this.canvas.canvas.ctx.transform(1, 0, 0, 1, 0, 0);
     this.elements.forEach((element) => {
       this.canvas.canvas.ctx.save();
-      if (element.transformation.rotationAngle > 0) element.rotate();
+      if (element.transformation.operation.length > 0) {
+        element.transformation.operation.forEach((operation) => {
+          element[operation.name]();
+        });
+      }
       element.draw();
       if (element.selected) {
         Editor.updateSelection(element);
