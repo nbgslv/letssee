@@ -323,7 +323,7 @@ export default class Element extends Tool {
     const corners = Object.values(this.resizer);
     let cornerX = 'x';
     let cornerY = 'y';
-    if (this.transformation.rotationMatrix) {
+    if (this.transformation.rotated) {
       cornerX = 'rotatedX';
       cornerY = 'rotatedY';
     }

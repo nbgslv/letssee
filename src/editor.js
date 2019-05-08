@@ -208,7 +208,7 @@ export default class Editor {
   static updateSelection(element) {
     element.holder.updateResizersArrays();
     element.holder.draw();
-    if (element.transformation.rotationMatrix) {
+    if (element.transformation.rotated) {
       element.holder.updateResizersAfterRotation();
     }
   }

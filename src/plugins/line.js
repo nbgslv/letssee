@@ -6,7 +6,8 @@ export default class Line extends Element {
     super(name, moduleName, properties, events, editor);
     this.transformation.translationOrigin = 'start';
     this.transformation.drawTransformed = true;
-    this.transformation.rotationFactor = 0;
+    this.transformation.resizedRotation = false;
+    this.transformation.lineRotationAngle = 0;
     this.style.set('lineWidth', 20);
   }
 
@@ -23,12 +24,13 @@ export default class Line extends Element {
     editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
     editor.ctx.closePath();
     editor.ctx.stroke();
-    this.rotateResizer();
     console.log(this.transformation.rotationAngle, 'rotationangle');
   }
 
   endDraw() {
     //this.updateElement();
+    this.transformation.lineRotationAngle = this.transformation.rotationAngle;
+    this.rotateResizer();
     this.editor.elements.push(this);
     this.editor.renderAll();
     this.transformation.drawTransformed = false;
@@ -98,15 +100,26 @@ export default class Line extends Element {
 
   rotate(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    const matrix = this.rotationMatrix;
-    this.transformation.rotationMatrix = matrix;
+    this.transformation.translationOrigin = 'start';
     const {
-      translationX,
-      translationY,
+      translationX: lineTranslationX,
+      translationY: lineTranslationY,
     } = this.translationPoints;
-    editor.ctx.translate(translationX, translationY);
-    editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    editor.ctx.translate(-translationX, -translationY);
+    editor.ctx.translate(lineTranslationX, lineTranslationY);
+    editor.ctx.rotate(Utilities.degreesToRadians(this.transformation.lineRotationAngle));
+    if (this.transformation.resizedRotation) {
+      const matrix = this.rotationMatrix;
+      this.transformation.rotationMatrix = matrix;
+      this.transformation.translationOrigin = 'center';
+      const {
+        translationX,
+        translationY,
+      } = this.translationPoints;
+      editor.ctx.translate(translationX, translationY);
+      editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+      editor.ctx.translate(-translationX, -translationY);
+    }
+    editor.ctx.translate(-lineTranslationX, -lineTranslationY);
     this.transformation.rotated = true;
   }
 
@@ -211,7 +224,6 @@ export default class Line extends Element {
           }
           case 5: {
             this.transformation.transform = true;
-            this.transformation.translationOrigin = 'center';
             const {
               newAngle,
               lastAngle,
@@ -222,6 +234,7 @@ export default class Line extends Element {
             ) + this.transformation.rotationAngle;
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
+            this.transformation.resizedRotation = true;
             console.log(this.transformation.rotationAngle, 'rotationangle');
             break;
           }
