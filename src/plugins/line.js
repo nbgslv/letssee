@@ -115,9 +115,9 @@ export default class Line extends Element {
         translationX,
         translationY,
       } = this.translationPoints;
-      editor.ctx.translate(translationX, translationY);
+      editor.ctx.translate(translationX - lineTranslationX, translationY - lineTranslationY);
       editor.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-      editor.ctx.translate(-translationX, -translationY);
+      editor.ctx.translate(-(translationX - lineTranslationX), -(translationY - lineTranslationY));
     }
     editor.ctx.translate(-lineTranslationX, -lineTranslationY);
     this.transformation.rotated = true;

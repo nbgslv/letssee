@@ -230,7 +230,7 @@ export default class Element extends Tool {
   }
 
   get rotationMatrix() {
-    const rotationAngel = Utilities.degreesToRadians(this.transformation.rotationAngle + this.transformation.rotationFactor);
+    const rotationAngel = Utilities.degreesToRadians(this.transformation.rotationAngle);
     const cos = Math.cos(rotationAngel);
     const sin = Math.sin(rotationAngel);
     return [cos, sin, -sin, cos, 0, 0];

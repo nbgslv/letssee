@@ -9,6 +9,5 @@ export default class Rectangle extends Element {
       this.dimensions.width,
       this.dimensions.height,
     );
-    console.log(this);
   }
 }

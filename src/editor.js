@@ -191,8 +191,8 @@ export default class Editor {
 
   renderCanvas() {
     // Layers.sortByLayers();
-    this.canvas.canvas.ctx.save();
     this.canvas.canvas.ctx.transform(1, 0, 0, 1, 0, 0);
+    this.canvas.canvas.ctx.save();
     this.elements.forEach((element) => {
       this.canvas.canvas.ctx.save();
       if (element.transformation.rotationAngle > 0) element.rotate();

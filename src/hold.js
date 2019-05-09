@@ -592,24 +592,21 @@ export default class Hold {
     this.lines = this.resizersArrays.lines;
   }
 
-  updateResizersAfterRotation() {
-    //if (this.element.name === 'line') return;
+  updateResizersAfterRotation(rotationAngleDeg = this.element.transformation.rotationAngle) {
     const rotatePivotFactor = this.rotationPivotFactor;
     const editor = this.element.editor.canvas.upperCanvas;
-    editor.ctx.save();
-    const rotationAngle = Utilities.degreesToRadians(this.element.transformation.rotationAngle);
+    const rotationAngleRad = Utilities.degreesToRadians(rotationAngleDeg);
     for (let i = 0; i < this.resizers.length; i += 1) {
       const clickers = Object.values(this.resizers[i].clickers);
       const corners = Object.values(this.resizers[i].corners);
       for (let j = 0; j < clickers.length; j += 1) {
-        clickers[j].x = (corners[j].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.cos(-rotationAngle)
-          + (corners[j].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.sin(-rotationAngle);
+        clickers[j].x = (corners[j].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.cos(-rotationAngleRad)
+          + (corners[j].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.sin(-rotationAngleRad);
         clickers[j].x += this.element.dimensions.startX + rotatePivotFactor.x;
-        clickers[j].y = (corners[j].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.cos(-rotationAngle)
-          - (corners[j].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.sin(-rotationAngle);
+        clickers[j].y = (corners[j].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.cos(-rotationAngleRad)
+          - (corners[j].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.sin(-rotationAngleRad);
         clickers[j].y += this.element.dimensions.startY + rotatePivotFactor.y;
       }
-
 
       editor.ctx.beginPath();
       editor.ctx.fillStyle = '#FF0000';
@@ -619,20 +616,19 @@ export default class Hold {
       editor.ctx.lineTo(this.resizers[i].clickers.bottomLeft.x, this.resizers[i].clickers.bottomLeft.y);
       editor.ctx.fill();
       editor.ctx.closePath();
-
-
     }
-    editor.ctx.restore();
+
     const corners = Object.values(this.element.resizer);
     for (let i = 0; i < corners.length; i += 1) {
-      corners[i].rotatedX = (corners[i].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.cos(-rotationAngle)
-        + (corners[i].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.sin(-rotationAngle);
+      corners[i].rotatedX = (corners[i].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.cos(-rotationAngleRad)
+        + (corners[i].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.sin(-rotationAngleRad);
       corners[i].rotatedX += this.element.dimensions.startX + rotatePivotFactor.x;
-      corners[i].rotatedY = (corners[i].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.cos(-rotationAngle)
-        - (corners[i].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.sin(-rotationAngle);
+      corners[i].rotatedY = (corners[i].y - (this.element.dimensions.startY + rotatePivotFactor.y)) * Utilities.cos(-rotationAngleRad)
+        - (corners[i].x - (this.element.dimensions.startX + rotatePivotFactor.x)) * Utilities.sin(-rotationAngleRad);
       corners[i].rotatedY += this.element.dimensions.startY + rotatePivotFactor.y;
       console.log(this.element);
     }
+    console.log(this.resizers, 'resizerafterrotation')
 
     editor.ctx.beginPath();
     editor.ctx.moveTo(corners[0].rotatedX, corners[0].rotatedY);
@@ -660,6 +656,7 @@ export default class Hold {
     }
     return false;
   }
+
   mouseInResizer(mousePositionX, mousePositionY) {
     let answer = null;
     this.resizers.forEach((resizer) => {
