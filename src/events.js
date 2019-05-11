@@ -263,6 +263,7 @@ export default class Events {
     this.canvasEventCache.canvasX = this.canvasEvent.mouse.canvasX;
     this.canvasEventCache.canvasY = this.canvasEvent.mouse.canvasY;
     this.canvasEvent = null;
+    this.editor.canvas.upperCanvas.ctx.transform(1, 0, 0, 1, 0, 0);
   }
 
   recordUndo() {

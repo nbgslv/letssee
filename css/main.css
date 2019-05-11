@@ -37,6 +37,14 @@
     /* visibility: hidden; */
 }
 
+#letse-test-canvas{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border: 1px solid;
+    /* visibility: hidden; */
+}
+
 .tool{
     background-size: 100%;
     position: relative;

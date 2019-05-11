@@ -594,7 +594,10 @@ export default class Hold {
 
   updateResizersAfterRotation(rotationAngleDeg = this.element.transformation.rotationAngle) {
     const rotatePivotFactor = this.rotationPivotFactor;
-    const editor = this.element.editor.canvas.upperCanvas;
+    const editor = this.element.editor.canvas.testCanvas;
+    if (this.element.transformation.lineRotationAngle > 0) {
+      rotationAngleDeg += this.element.transformation.lineRotationAngle;
+    }
     const rotationAngleRad = Utilities.degreesToRadians(rotationAngleDeg);
     for (let i = 0; i < this.resizers.length; i += 1) {
       const clickers = Object.values(this.resizers[i].clickers);
@@ -608,14 +611,18 @@ export default class Hold {
         clickers[j].y += this.element.dimensions.startY + rotatePivotFactor.y;
       }
 
+      editor.ctx.clearRect(0, 0, 300, 300);
+
       editor.ctx.beginPath();
       editor.ctx.fillStyle = '#FF0000';
       editor.ctx.moveTo(this.resizers[i].clickers.topLeft.x, this.resizers[i].clickers.topLeft.y);
       editor.ctx.lineTo(this.resizers[i].clickers.topRight.x, this.resizers[i].clickers.topRight.y);
       editor.ctx.lineTo(this.resizers[i].clickers.bottomRight.x, this.resizers[i].clickers.bottomRight.y);
       editor.ctx.lineTo(this.resizers[i].clickers.bottomLeft.x, this.resizers[i].clickers.bottomLeft.y);
-      editor.ctx.fill();
       editor.ctx.closePath();
+      editor.ctx.fill();
+
+
     }
 
     const corners = Object.values(this.element.resizer);
@@ -630,6 +637,8 @@ export default class Hold {
     }
     console.log(this.resizers, 'resizerafterrotation')
 
+
+    editor.ctx.strokeStyle = 'black';
     editor.ctx.beginPath();
     editor.ctx.moveTo(corners[0].rotatedX, corners[0].rotatedY);
     editor.ctx.lineTo(corners[1].rotatedX, corners[1].rotatedY);
@@ -637,6 +646,7 @@ export default class Hold {
     editor.ctx.lineTo(corners[2].rotatedX, corners[2].rotatedY);
     editor.ctx.closePath();
     editor.ctx.stroke();
+
   }
 
   get rotationPivotFactor() {

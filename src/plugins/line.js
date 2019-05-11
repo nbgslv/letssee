@@ -30,6 +30,8 @@ export default class Line extends Element {
   endDraw() {
     //this.updateElement();
     this.transformation.lineRotationAngle = this.transformation.rotationAngle;
+    this.transformation.rotationAngle = 0;
+    this.transformation.rotated = true;
     this.rotateResizer();
     this.editor.elements.push(this);
     this.editor.renderAll();
@@ -82,6 +84,7 @@ export default class Line extends Element {
     ) + this.transformation.rotationAngle;
     if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
     this.transformation.rotationAngle %= 360;
+    console.log(this.transformation.rotationAngle, 'rotatioangleline');
     this.transformation.transform = true;
   }
 
@@ -120,11 +123,10 @@ export default class Line extends Element {
       editor.ctx.translate(-(translationX - lineTranslationX), -(translationY - lineTranslationY));
     }
     editor.ctx.translate(-lineTranslationX, -lineTranslationY);
-    this.transformation.rotated = true;
   }
 
   rotateResizer() {
-    const rotationAngle = Utilities.degreesToRadians(this.transformation.rotationAngle);
+    const rotationAngle = Utilities.degreesToRadians(this.transformation.lineRotationAngle);
     this.resizer.topLeft.rotatedX = this.resizer.topLeft.x;
     this.resizer.topLeft.rotatedY = this.resizer.topLeft.y;
 
@@ -172,6 +174,16 @@ export default class Line extends Element {
       - this.dimensions.startX
       ) * Utilities.sin(-rotationAngle)
     ) + this.dimensions.startY;
+
+    const editor = this.editor.canvas.upperCanvas;
+    editor.ctx.strokeStyle = 'red';
+    editor.ctx.beginPath();
+    editor.ctx.moveTo(this.resizer.topLeft.x, this.resizer.topLeft.y);
+    editor.ctx.lineTo(this.resizer.topRight.x, this.resizer.topRight.y);
+    editor.ctx.lineTo(this.resizer.bottomRight.x, this.resizer.bottomRight.y);
+    editor.ctx.lineTo(this.resizer.bottomLeft.x, this.resizer.bottomLeft.y);
+    editor.ctx.closePath();
+
   }
 
   resize() {
@@ -235,6 +247,7 @@ export default class Line extends Element {
             if (this.transformation.rotationAngle < 0) this.transformation.rotationAngle += 360;
             this.transformation.rotationAngle %= 360;
             this.transformation.resizedRotation = true;
+            this.transformation.translationOrigin = 'center';
             console.log(this.transformation.rotationAngle, 'rotationangle');
             break;
           }

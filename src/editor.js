@@ -80,6 +80,16 @@ export default class Editor {
     canvas.secondToolbar.style.height = `${this.height}px`;
     canvas.rowB.appendChild(canvas.secondToolbar);
 
+    // test canvas
+    canvas.testCanvas = document.createElement('canvas');
+    canvas.canvasContainer.appendChild(canvas.testCanvas);
+    canvas.testCanvas.setAttribute('height', this.height);
+    canvas.testCanvas.height = this.height;
+    canvas.testCanvas.setAttribute('width', this.width);
+    canvas.testCanvas.width = this.width;
+    canvas.testCanvas.setAttribute('id', 'letse-test-canvas');
+    canvas.testCanvas.ctx = canvas.testCanvas.getContext('2d');
+
     // upper canvas
     canvas.upperCanvas = document.createElement('canvas');
     canvas.canvasContainer.appendChild(canvas.upperCanvas);
@@ -195,7 +205,7 @@ export default class Editor {
     this.canvas.canvas.ctx.save();
     this.elements.forEach((element) => {
       this.canvas.canvas.ctx.save();
-      if (element.transformation.rotationAngle > 0) element.rotate();
+      if (element.transformation.rotated) element.rotate();
       element.draw();
       if (element.selected) {
         Editor.updateSelection(element);
@@ -203,6 +213,7 @@ export default class Editor {
       this.canvas.canvas.ctx.restore();
     });
     this.canvas.canvas.ctx.restore();
+    this.canvas.upperCanvas.ctx.transform(1, 0, 0, 1, 0, 0);
   }
 
   static updateSelection(element) {
