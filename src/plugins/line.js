@@ -9,35 +9,41 @@ export default class Line extends Element {
     this.transformation.resizedRotation = false;
     this.transformation.lineRotationAngle = 0;
     this.style.set('lineWidth', 20);
+    this.drawn = false;
   }
 
   draw(canvas = true) {
     const editor = canvas ? this.editor.canvas.canvas : this.editor.canvas.upperCanvas;
-    if (this.transformation.drawTransformed) {
-      editor.ctx.translate(this.dimensions.startX, this.dimensions.startY);
-      editor.ctx.rotate(this.transformation.rotationAngleDifference);
-      editor.ctx.translate(-this.dimensions.startX, -this.dimensions.startY);
-    }
     editor.ctx.beginPath();
     editor.ctx.lineWidth = this.style.get('lineWidth');
     editor.ctx.moveTo(this.dimensions.startX, this.dimensions.startY);
-    editor.ctx.lineTo(this.dimensions.startX + this.dimensions.width, this.dimensions.startY);
+    editor.ctx.lineTo(this.dimensions.endX, this.dimensions.endY);
     editor.ctx.closePath();
     editor.ctx.stroke();
     console.log(this.transformation.rotationAngle, 'rotationangle');
   }
 
   endDraw() {
-    //this.updateElement();
+    this.draw = function () {
+
+    }
+    //this.drawTransformed();
     this.transformation.lineRotationAngle = this.transformation.rotationAngle;
     this.transformation.rotationAngle = 0;
     this.transformation.rotated = true;
-    this.rotateResizer();
     this.editor.elements.push(this);
     this.editor.renderAll();
     this.transformation.drawTransformed = false;
-    console.log(this.dimensions.startY, 'starty');
-    console.log(this.dimensions.width, 'width');
+
+    const editor = this.editor.canvas.testCanvas;
+    editor.ctx.strokeStyle = 'red';
+    editor.ctx.beginPath();
+    editor.ctx.moveTo(this.resizer.topLeft.rotatedX, this.resizer.topLeft.rotatedY);
+    editor.ctx.lineTo(this.resizer.topRight.rotatedX, this.resizer.topRight.rotatedY);
+    editor.ctx.lineTo(this.resizer.bottomRight.rotatedX, this.resizer.bottomRight.rotatedY);
+    editor.ctx.lineTo(this.resizer.bottomLeft.rotatedX, this.resizer.bottomLeft.rotatedY);
+    editor.ctx.closePath();
+    editor.ctx.stroke();
   }
 
   updateElement() {
@@ -50,7 +56,7 @@ export default class Line extends Element {
       startY,
       endX,
       endY,
-      width: Math.abs(startX - endX),
+      width: Math.sqrt((Math.abs(startX - endX) ** 2) + (Math.abs(startY - endY) ** 2)),
       height: this.style.get('lineWidth'),
     };
     this.editor.renderAll();
@@ -69,11 +75,19 @@ export default class Line extends Element {
     this.resizer.topLeft.x = dimensions.startX;
     this.resizer.topLeft.y = dimensions.startY - dimensions.height / 2;
     this.resizer.topRight.x = dimensions.endX;
-    this.resizer.topRight.y = dimensions.startY - dimensions.height / 2;
+    this.resizer.topRight.y = dimensions.endY - dimensions.height / 2;
     this.resizer.bottomLeft.x = dimensions.startX;
     this.resizer.bottomLeft.y = dimensions.startY + dimensions.height / 2;
     this.resizer.bottomRight.x = dimensions.endX;
-    this.resizer.bottomRight.y = dimensions.startY + dimensions.height / 2;
+    this.resizer.bottomRight.y = dimensions.endY + dimensions.height / 2;
+    this.resizer.topLeft.rotatedX = dimensions.startX + this.rotatedCornerSelectorFactor;
+    this.resizer.topLeft.rotatedY = dimensions.startY - dimensions.height / 2;
+    this.resizer.topRight.rotatedX = dimensions.endX + this.rotatedCornerSelectorFactor;
+    this.resizer.topRight.rotatedY = dimensions.endY - dimensions.height / 2;
+    this.resizer.bottomLeft.rotatedX = dimensions.startX - this.rotatedCornerSelectorFactor;
+    this.resizer.bottomLeft.rotatedY = dimensions.startY + dimensions.height / 2;
+    this.resizer.bottomRight.rotatedX = dimensions.endX - this.rotatedCornerSelectorFactor;
+    this.resizer.bottomRight.rotatedY = dimensions.endY + dimensions.height / 2;
     const {
       newAngle,
       lastAngle,
@@ -86,6 +100,8 @@ export default class Line extends Element {
     this.transformation.rotationAngle %= 360;
     console.log(this.transformation.rotationAngle, 'rotatioangleline');
     this.transformation.transform = true;
+
+
   }
 
   get calcRotateAngle() {
@@ -95,8 +111,8 @@ export default class Line extends Element {
         this.editor.events.canvasEvent.mouse.canvasX - this.dimensions.startX,
       ),
       lastAngle: Math.atan2(
-        this.editor.events.canvasEvent.mouse.lastMoveY - this.dimensions.startY,
-        this.editor.events.canvasEvent.mouse.lastMoveX - this.dimensions.startX,
+        this.dimensions.startY,
+        this.dimensions.startX + this.dimensions.width,
       ),
     };
   }
@@ -109,7 +125,7 @@ export default class Line extends Element {
       translationY: lineTranslationY,
     } = this.translationPoints;
     editor.ctx.translate(lineTranslationX, lineTranslationY);
-    editor.ctx.rotate(Utilities.degreesToRadians(this.transformation.lineRotationAngle));
+    editor.ctx.rotate(Utilities.degreesToRadians(this.transformation.rotationAngle));
     if (this.transformation.resizedRotation) {
       const matrix = this.rotationMatrix;
       this.transformation.rotationMatrix = matrix;
@@ -123,6 +139,19 @@ export default class Line extends Element {
       editor.ctx.translate(-(translationX - lineTranslationX), -(translationY - lineTranslationY));
     }
     editor.ctx.translate(-lineTranslationX, -lineTranslationY);
+  }
+
+  get rotatedCornerSelectorFactor() {
+    return Math.sqrt((this.ribOfCornerTriangle.a ** 2) - (this.ribOfCornerTriangle.b ** 2));
+  }
+
+  get ribOfCornerTriangle() {
+    const a = this.dimensions.height / 2;
+    const b = Math.cos(this.transformation.rotationAngle) * a;
+    return {
+      a,
+      b,
+    };
   }
 
   rotateResizer() {
@@ -175,14 +204,7 @@ export default class Line extends Element {
       ) * Utilities.sin(-rotationAngle)
     ) + this.dimensions.startY;
 
-    const editor = this.editor.canvas.upperCanvas;
-    editor.ctx.strokeStyle = 'red';
-    editor.ctx.beginPath();
-    editor.ctx.moveTo(this.resizer.topLeft.x, this.resizer.topLeft.y);
-    editor.ctx.lineTo(this.resizer.topRight.x, this.resizer.topRight.y);
-    editor.ctx.lineTo(this.resizer.bottomRight.x, this.resizer.bottomRight.y);
-    editor.ctx.lineTo(this.resizer.bottomLeft.x, this.resizer.bottomLeft.y);
-    editor.ctx.closePath();
+
 
   }
 

@@ -644,7 +644,7 @@ export default class Hold {
     editor.ctx.lineTo(corners[1].rotatedX, corners[1].rotatedY);
     editor.ctx.lineTo(corners[3].rotatedX, corners[3].rotatedY);
     editor.ctx.lineTo(corners[2].rotatedX, corners[2].rotatedY);
-    editor.ctx.closePath();
+    //editor.ctx.closePath();
     editor.ctx.stroke();
 
   }
@@ -659,7 +659,7 @@ export default class Hold {
       case 'center':
         return {
           x: this.element.dimensions.width / 2,
-          y: this.element.dimensions.height / 2,
+          y: 0,
         };
       default:
         console.log('wrong origin point in transformationm');
